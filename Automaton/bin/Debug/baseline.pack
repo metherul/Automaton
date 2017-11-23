@@ -1,0 +1,86 @@
+{
+  "PackName": "Test Pack",
+  "PackAuthor": "metherul",
+  "PackVersion": "v0",
+  "SourceUrl": "test.com",
+  "OptionalInstallation": {
+    "Title": "Test Header",
+    "DefaultImage": "C:/Users/Ethan/Downloads/us.jpg",
+    "DefaultDescription": "Welcome to the very first test optional installer!",
+    "Groups": [
+      {
+        "Header": "Test Header",
+        "Elements": [
+          {
+            "Type": "checkbox",
+            "Text": "Test Checkbox",
+            "Image": null,
+            "Description": "This is a test description",
+            "Flags": [
+              {
+                "Name": "someFlag",
+                "Value": "true",
+                "Event": "checked",
+                "Action": "set"
+              },
+              {
+                "Name": "someFlag",
+                "Value": "false",
+                "Event": "unchecked",
+                "Action": "set"
+              }
+            ]
+          },
+		      {
+            "Type": "checkbox",
+            "Text": "Test Checkbox 1",
+            "Image": null,
+            "Description": "This is a test description",
+            "Flags": [
+              {
+                "Name": "someFlag1",
+                "Value": "true",
+                "Event": "checked",
+                "Action": "set"
+              },
+              {
+                "Name": "someFlag1",
+                "Value": "false",
+                "Event": "unchecked",
+                "Action": "set"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "Mods": [
+    {
+      "ModName": "Test Mod Name",
+      "FileName": "A amb forts 2k-49710-2.7z",
+      "FileSize": "95453235",
+      "CheckSum": "DAWIODWAIO78DW8A78W7D8989721389712",
+      "LoadOrder": 1,
+      "Installations": [
+        {
+          "Source": "textures",
+          "Target": "data/textures"
+        }
+      ]
+    },
+	{
+      "ModName": "Test Mod Name",
+      "FileName": "Magic Casting Animations Overhaul-58418-1-1.7z",
+      "FileSize": "2027686",
+      "CheckSum": "DAWIODWAIO78DW8A78W7D8989721389712",
+      "LoadOrder": 1,
+      "Installations": [
+        {
+          "Source": "sourceFile.bmp",
+          "Target": "targetFile.bmp"
+        }
+      ]
+    }
+  ]
+}

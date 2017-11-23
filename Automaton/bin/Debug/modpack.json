@@ -1,0 +1,21 @@
+{
+  "PackName": "Test Pack",
+  "PackAuthor": "metherul",
+  "PackVersion": "v0",
+  "SourceUrl": "test.com",
+  "Mods": [
+    {
+      "ModName": "Test Mod Name",
+      "FileName": "A amb forts 2k-49710-2.7z",
+      "FileSize": "95453235",
+      "CheckSum": "DAWIODWAIO78DW8A78W7D8989721389712",
+      "LoadOrder": 1,
+      "Installations": [
+        {
+          "Source": "textures/dungeons/imperial/impdirt01.dds",
+          "Target": "automaton/installs/work/yay.dds"
+        }
+      ]
+    }
+  ]
+}
