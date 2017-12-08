@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="MaterialDesignBackground" Color="#E4E4E4"/>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
 
             <vm:DialogHandler x:Key="DialogHandler"/>
         </ResourceDictionary>

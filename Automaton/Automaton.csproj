@@ -99,21 +99,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\SevenZipHandler.cs" />
-    <Compile Include="SetLocationsDialog.xaml.cs">
-      <DependentUpon>SetLocationsDialog.xaml</DependentUpon>
+    <Compile Include="InitialSetupDialog.xaml.cs">
+      <DependentUpon>InitialSetupDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\SevenZipHandler.cs" />
     <Compile Include="Model\FlagHandler.cs" />
     <Compile Include="Model\MessengerToken.cs" />
     <Compile Include="OptionalsInstaller.xaml.cs">
       <DependentUpon>OptionalsInstaller.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\DialogHandler.cs" />
+    <Compile Include="ViewModel\InitialSetupViewModel.cs" />
     <Compile Include="ViewModel\SetLocationsDialogViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\OptionalsInstallerViewModel.cs" />
     <Compile Include="Model\PackFile.cs" />
-    <Page Include="SetLocationsDialog.xaml">
+    <Page Include="InitialSetupDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

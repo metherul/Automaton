@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Automaton
 {
     /// <summary>
-    /// Interaction logic for LoadPackDialog.xaml
+    /// Interaction logic for InitialSetupDialog.xaml
     /// </summary>
-    public partial class SetLocationsDialog : UserControl
+    public partial class InitialSetupDialog : UserControl
     {
-        public SetLocationsDialog()
+        public InitialSetupDialog()
         {
             InitializeComponent();
         }

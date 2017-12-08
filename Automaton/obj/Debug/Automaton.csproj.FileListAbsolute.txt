@@ -25,7 +25,7 @@ C:\Programming\Automaton\Automaton\bin\Debug\MaterialDesignThemes.Wpf.xml
 C:\Programming\Automaton\Automaton\bin\Debug\Microsoft.WindowsAPICodePack.xml
 C:\Programming\Automaton\Automaton\bin\Debug\Microsoft.WindowsAPICodePack.Shell.xml
 C:\Programming\Automaton\Automaton\bin\Debug\Newtonsoft.Json.xml
-C:\Programming\Automaton\Automaton\obj\Debug\SetLocationsDialog.g.cs
+C:\Programming\Automaton\Automaton\obj\Debug\InitialSetupDialog.g.cs
 C:\Programming\Automaton\Automaton\obj\Debug\MainWindow.g.cs
 C:\Programming\Automaton\Automaton\obj\Debug\OptionalsInstaller.g.cs
 C:\Programming\Automaton\Automaton\obj\Debug\App.g.cs
@@ -33,7 +33,7 @@ C:\Programming\Automaton\Automaton\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Programming\Automaton\Automaton\obj\Debug\Automaton_MarkupCompile.cache
 C:\Programming\Automaton\Automaton\obj\Debug\Automaton_MarkupCompile.lref
 C:\Programming\Automaton\Automaton\obj\Debug\App.baml
-C:\Programming\Automaton\Automaton\obj\Debug\SetLocationsDialog.baml
+C:\Programming\Automaton\Automaton\obj\Debug\InitialSetupDialog.baml
 C:\Programming\Automaton\Automaton\obj\Debug\MainWindow.baml
 C:\Programming\Automaton\Automaton\obj\Debug\OptionalsInstaller.baml
 C:\Programming\Automaton\Automaton\obj\Debug\Automaton.g.resources

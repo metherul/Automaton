@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Automaton"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:vm="clr-namespace:Automaton.ViewModel"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -19,7 +20,7 @@
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -29,11 +30,11 @@
         <!-- Header -->
         <materialDesign:ColorZone Mode="PrimaryMid" materialDesign:ShadowAssist.ShadowDepth="Depth3" Grid.Row="0" VerticalAlignment="Stretch">
             <Grid Margin="10,0,5,0">
-                <TextBlock FontSize="18" FontWeight="Regular" VerticalAlignment="Center" Text="{Binding PackName, Mode=TwoWay}"/>
+                <TextBlock FontSize="18" FontWeight="Regular" VerticalAlignment="Center" Text="{Binding PackName, Mode=TwoWay}" Margin="15,0,0,0"/>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
 
                     <Button Style="{StaticResource MaterialDesignToolButton}" Foreground="{DynamicResource MaterialDesignPaper}"
-                            Command="{Binding OpenSetLocationsDialogCommand}" FontSize="15" FontWeight="Medium" Margin="0,0,10,0">LOAD PACK</Button>
+                            Command="{Binding OpenSetLocationsDialogCommand}" FontSize="15" FontWeight="Medium" Margin="0,0,10,0">INSTALL PACK</Button>
 
                     <materialDesign:PopupBox>
                     </materialDesign:PopupBox>
@@ -43,7 +44,7 @@
 
         <!-- Mod viewer -->
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-            <materialDesign:Card Margin="8" VerticalAlignment="Stretch">
+            <materialDesign:Card Margin="4" VerticalAlignment="Stretch">
                 <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ModsList}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
                           IsHitTestVisible="False" Margin="5,0,5,0" CanUserAddRows="False" Background="White">
                     <DataGrid.Columns>
@@ -55,12 +56,13 @@
             </materialDesign:Card>
         </ScrollViewer>
 
-        <!-- FAB button -->
-        <Button Style="{StaticResource MaterialDesignFloatingActionButton}" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20">
-            <materialDesign:PackIcon Kind="Plus" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Button>
-
         <!-- Dialog root -->
-        <materialDesign:DialogHost Identifier="RootDialog" Panel.ZIndex="0" Grid.RowSpan="2"/>
+        <materialDesign:DialogHost Identifier="RootDialog" Grid.RowSpan="2">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Loaded">
+                    <i:InvokeCommandAction Command="{Binding OpenIntialSetupCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </materialDesign:DialogHost>
     </Grid>
 </Window>

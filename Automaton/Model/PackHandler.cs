@@ -63,7 +63,15 @@ namespace Automaton.Model
 
                 packFileLocation = Path.Combine(modPackExtractedPath, "modpack.json");
 
-                ModPackContents = File.ReadAllText(packFileLocation);
+                if (File.Exists(packFileLocation))
+                {
+                    ModPackContents = File.ReadAllText(packFileLocation);
+                }
+
+                else
+                {
+                    return null;
+                }
             }
 
             try

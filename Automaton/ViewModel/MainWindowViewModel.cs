@@ -15,7 +15,7 @@ namespace Automaton.ViewModel
         public ObservableCollection<Mod> ModsList { get; set; }
 
         public RelayCommand InstallModPackCommand { get; set; }
-        public RelayCommand OpenSetLocationsDialogCommand { get; set; }
+        public RelayCommand OpenIntialSetupCommand { get; set; }
 
         public string PackName { get; set; }
         public double GridHeight { get; set; }
@@ -26,7 +26,8 @@ namespace Automaton.ViewModel
             Messenger.Default.Register<ModPack>(this, MessengerToken.FinalModPack, OnModPackUpdate);
 
             InstallModPackCommand = new RelayCommand(InstallModPack);
-            OpenSetLocationsDialogCommand = new RelayCommand(OpenSetLocationsDialog);
+            OpenIntialSetupCommand = new RelayCommand(OpenInitialSetupDialog);
+
         }
 
         private void OnModPackUpdate(ModPack modPack)
@@ -35,29 +36,10 @@ namespace Automaton.ViewModel
             PackName = modPack.PackName;
         }
 
-        private async void OpenSetLocationsDialog()
+        private async void OpenInitialSetupDialog()
         {
-            // Get the path of the .pack file
-            var dialog = new OpenFileDialog()
-            {
-                Title = "Select a packfile",
-                Filter = "PACK FILES (*.7z, *.rar, *.zip)|*.7z; *.rar; *.zip;"
-            };
-
-            var result = dialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                PackHandler.PackLocation = dialog.FileName;
-                var readPackResponse = PackHandler.ReadPack(PackHandler.PackLocation, true);
-
-                // Open the main installation dialog.
-                if (readPackResponse != null)
-                {
-                    var view = new SetLocationsDialog();
-                    await DialogHost.Show(view, "RootDialog", OnMainDialogClosing);
-                }
-            }
+            var view = new InitialSetupDialog();
+            await DialogHost.Show(view, "RootDialog", OnMainDialogClosing);
         }
 
         private void OnMainDialogClosing(object sender, DialogClosingEventArgs eventargs)
