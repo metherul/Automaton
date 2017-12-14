@@ -105,6 +105,12 @@
     <Compile Include="Model\SevenZipHandler.cs" />
     <Compile Include="Model\FlagHandler.cs" />
     <Compile Include="Model\MessengerToken.cs" />
+    <Compile Include="ModValidationDialog.xaml.cs">
+      <DependentUpon>ModValidationDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OptionalInstallerDialog.xaml.cs">
+      <DependentUpon>OptionalInstallerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OptionalsInstaller.xaml.cs">
       <DependentUpon>OptionalsInstaller.xaml</DependentUpon>
     </Compile>
@@ -130,6 +136,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ModValidationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OptionalInstallerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OptionalsInstaller.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

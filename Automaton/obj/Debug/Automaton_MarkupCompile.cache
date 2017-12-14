@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Programming\Automaton\Automaton\obj\Debug\
+C:\Programming\C#\Automaton\Automaton\obj\Debug\
 Automaton
 none
 false
 DEBUG;TRACE
-C:\Programming\Automaton\Automaton\App.xaml
-31907829962
+C:\Programming\C#\Automaton\Automaton\App.xaml
+5-1648353010
 
-172096306670
-82-1660741795
-InitialSetupDialog.xaml;MainWindow.xaml;OptionalsInstaller.xaml;
+19-1662335235
+82-298134653
+InitialSetupDialog.xaml;MainWindow.xaml;ModValidationDialog.xaml;OptionalInstallerDialog.xaml;OptionalsInstaller.xaml;
 
 False
 

@@ -22,8 +22,8 @@
         <vm:InitialSetupViewModel/>
     </UserControl.DataContext>
 
-    <materialDesign:Card>
-        <Grid Width="400" Margin="8,8,8,8">
+    <materialDesign:Card HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <Grid Margin="8,8,8,8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -73,7 +73,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBox HorizontalAlignment="Stretch" Text="{Binding InstallationLocation, Mode=TwoWay}" Grid.Column="0">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
@@ -92,6 +92,4 @@
 
         </Grid>
     </materialDesign:Card>
-    
-    
 </UserControl>

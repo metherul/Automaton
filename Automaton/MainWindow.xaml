@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         UseLayoutRounding="True"
-        Title="Automaton" Height="600" Width="1000" SizeChanged="Window_SizeChanged">
+        Title="Automaton" Height="600" Width="1000" AllowsTransparency="False" SizeChanged="Window_SizeChanged">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
@@ -26,7 +26,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        
         <!-- Header -->
         <materialDesign:ColorZone Mode="PrimaryMid" materialDesign:ShadowAssist.ShadowDepth="Depth3" Grid.Row="0" VerticalAlignment="Stretch">
             <Grid Margin="10,0,5,0">
@@ -56,13 +56,34 @@
             </materialDesign:Card>
         </ScrollViewer>
 
-        <!-- Dialog root -->
+        <!-- Dialog root --><!--
         <materialDesign:DialogHost Identifier="RootDialog" Grid.RowSpan="2">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Loaded">
                     <i:InvokeCommandAction Command="{Binding OpenIntialSetupCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </materialDesign:DialogHost>
+        </materialDesign:DialogHost>-->
+
+        <!-- Pre-installation dialog container -->
+        <Grid Grid.RowSpan="2">
+            <Image Source="C:\Users\Ethan\Downloads\test2.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+            <materialDesign:Transitioner SelectedIndex="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                    <local:InitialSetupDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                    <local:OptionalInstallerDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/> 
+                </materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                    <local:ModValidationDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/>
+                </materialDesign:TransitionerSlide>
+
+            </materialDesign:Transitioner>
+        </Grid>
     </Grid>
 </Window>
