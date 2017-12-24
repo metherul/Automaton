@@ -6,14 +6,14 @@
   "Mods": [
     {
       "ModName": "Test Mod Name",
-      "FileName": "A amb forts 2k-49710-2.7z",
-      "FileSize": "95453235",
+      "FileName": "LooksMenu v1-6-4.7z-12631-1-6-4.7z",
+      "FileSize": "430466",
       "CheckSum": "DAWIODWAIO78DW8A78W7D8989721389712",
       "LoadOrder": 1,
       "Installations": [
         {
-          "Source": "textures/dungeons/imperial/impdirt01.dds",
-          "Target": "automaton/installs/work/yay.dds"
+          "Source": "",
+          "Target": ""
         }
       ]
     }

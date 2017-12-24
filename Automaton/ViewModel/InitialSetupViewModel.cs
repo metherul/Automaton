@@ -1,5 +1,6 @@
 ﻿using Automaton.Model;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.ComponentModel;
 using System.IO;
@@ -15,6 +16,7 @@ namespace Automaton.ViewModel
         public RelayCommand BrowseSourceLocationCommand { get; set; }
         public RelayCommand BrowseInstallationLocationCommand { get; set; }
         public RelayCommand CheckFormStatusCommand { get; set; }
+        public RelayCommand NextCardCommand { get; set; }
 
         public bool IsPackLoaded { get; set; }
         public bool IsFormCompleted { get; set; }
@@ -28,6 +30,7 @@ namespace Automaton.ViewModel
             BrowseSourceLocationCommand = new RelayCommand(BrowseSourceLocation);
             BrowseInstallationLocationCommand = new RelayCommand(BrowseInstallationLocation);
             CheckFormStatusCommand = new RelayCommand(CheckFormStatus);
+            NextCardCommand = new RelayCommand(NextCard);
 
             IsPackLoaded = false;
             IsFormCompleted = false;
@@ -47,7 +50,7 @@ namespace Automaton.ViewModel
             if (result == DialogResult.OK)
             {
                 PackHandler.PackLocation = dialog.FileName;
-                var readPackResponse = PackHandler.ReadPack(PackHandler.PackLocation, true);
+                var readPackResponse = PackHandler.ReadPack(PackHandler.PackLocation);
 
                 if (readPackResponse != null)
                 {
@@ -106,6 +109,28 @@ namespace Automaton.ViewModel
             {
                 IsFormCompleted = false;
             }
+        }
+
+        private void NextCard()
+        {
+            var modPack = PackHandler.ModPack;
+
+            // Check if the optional setup has no null required values. 
+            if (PackHandler.DoesOptionalExist(modPack))
+            {
+                Messenger.Default.Send(CardIndex.OptionalSetup);
+                return;
+            }
+
+            PackHandler.GenerateFinalModPack();
+
+            if (PackHandler.ValidateSourceLocation(SourceLocation).Count > 0)
+            {
+                Messenger.Default.Send(CardIndex.ModValidation);
+                return;
+            }
+
+            Messenger.Default.Send(CardIndex.CompletedSetup);
         }
     }
 }

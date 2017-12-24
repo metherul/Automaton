@@ -49,7 +49,7 @@ namespace Automaton.Model
 
         private static string ModPackContents;
 
-        public static ModPack ReadPack(string packFileLocation, bool saveToPackHandler = false)
+        public static ModPack ReadPack(string packFileLocation)
         {
             // Decompress and place into the temp directory
             var metaLocation = AppDomain.CurrentDomain.BaseDirectory;
@@ -78,10 +78,7 @@ namespace Automaton.Model
             {
                 var modPack = JsonConvert.DeserializeObject<ModPack>(ModPackContents);
 
-                if (saveToPackHandler == true)
-                {
-                    ModPack = modPack;
-                }
+                ModPack = modPack;
 
                 return modPack;
             }
@@ -103,11 +100,11 @@ namespace Automaton.Model
             File.WriteAllText(target, JsonConvert.SerializeObject(modPack, Formatting.Indented));
         }
 
-        public static ModPack GenerateFinalModPack(ModPack modPack)
+        public static ModPack GenerateFinalModPack()
         {
             // Will compare the FilterList and ModPack for all required mods -- remove anything which doesn't match conditional parameters.
-            var workingModPack = modPack;
-            var mods = modPack.Mods;
+            var workingModPack = ModPack;
+            var mods = workingModPack.Mods;
             var modsToRemove = new List<Mod>();
 
             foreach (var mod in mods)
@@ -194,6 +191,23 @@ namespace Automaton.Model
                     }
                 }
             }
+        }
+
+        public static bool DoesOptionalExist(ModPack modPack)
+        {
+            var modPackOptionals = modPack.OptionalInstallation;
+
+            if (modPackOptionals == null || modPackOptionals.Title == null || modPackOptionals.Groups == null)
+            {
+                return false;
+            }
+
+            if (modPackOptionals.Groups.Count == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static List<FileInfo> GetSourceFiles(ModPack modPack, string sourceLocation)

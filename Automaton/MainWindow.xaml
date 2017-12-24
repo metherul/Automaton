@@ -56,20 +56,11 @@
             </materialDesign:Card>
         </ScrollViewer>
 
-        <!-- Dialog root --><!--
-        <materialDesign:DialogHost Identifier="RootDialog" Grid.RowSpan="2">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Loaded">
-                    <i:InvokeCommandAction Command="{Binding OpenIntialSetupCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </materialDesign:DialogHost>-->
-
         <!-- Pre-installation dialog container -->
-        <Grid Grid.RowSpan="2">
+        <Grid Grid.RowSpan="2" DataContext="{StaticResource DialogHandler}" Visibility="{Binding IsCardOpen, Converter={StaticResource BoolToVisibility}}">
             <Image Source="C:\Users\Ethan\Downloads\test2.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
-            <materialDesign:Transitioner SelectedIndex="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <materialDesign:Transitioner DataContext="{StaticResource DialogHandler}" SelectedIndex="{Binding CurrentCardIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 
                 <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
                     <local:InitialSetupDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -81,6 +72,10 @@
 
                 <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
                     <local:ModValidationDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/>
+                </materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                    <local:CompletedDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </materialDesign:TransitionerSlide>
 
             </materialDesign:Transitioner>

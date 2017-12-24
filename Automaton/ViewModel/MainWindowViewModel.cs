@@ -44,7 +44,7 @@ namespace Automaton.ViewModel
 
         private void OnMainDialogClosing(object sender, DialogClosingEventArgs eventargs)
         {
-            PackHandler.GenerateFinalModPack(PackHandler.ModPack);
+            PackHandler.GenerateFinalModPack();
         }
 
         private void InstallModPack()

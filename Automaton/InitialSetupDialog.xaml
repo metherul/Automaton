@@ -88,7 +88,7 @@
             </StackPanel>
 
             <Button Style="{DynamicResource MaterialDesignFlatButton}" Grid.Row="4" HorizontalAlignment="Right" Margin="0,20,0,0" 
-                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsEnabled="{Binding IsFormCompleted}">DONE</Button>
+                    Command="{Binding NextCardCommand}" IsEnabled="{Binding IsFormCompleted}">NEXT</Button>
 
         </Grid>
     </materialDesign:Card>

@@ -70,7 +70,6 @@ C:\Programming\C#\Automaton\Automaton\bin\Debug\MaterialDesignThemes.Wpf.xml
 C:\Programming\C#\Automaton\Automaton\bin\Debug\Microsoft.WindowsAPICodePack.xml
 C:\Programming\C#\Automaton\Automaton\bin\Debug\Microsoft.WindowsAPICodePack.Shell.xml
 C:\Programming\C#\Automaton\Automaton\bin\Debug\Newtonsoft.Json.xml
-C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.csprojResolveAssemblyReference.cache
 C:\Programming\C#\Automaton\Automaton\obj\Debug\InitialSetupDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\MainWindow.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\OptionalsInstaller.g.cs
@@ -92,3 +91,5 @@ C:\Programming\C#\Automaton\Automaton\obj\Debug\OptionalInstallerDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\OptionalInstallerDialog.baml
 C:\Programming\C#\Automaton\Automaton\obj\Debug\ModValidationDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\ModValidationDialog.baml
+C:\Programming\C#\Automaton\Automaton\obj\Debug\CompletedDialog.g.cs
+C:\Programming\C#\Automaton\Automaton\obj\Debug\CompletedDialog.baml

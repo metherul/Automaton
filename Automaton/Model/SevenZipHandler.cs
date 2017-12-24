@@ -124,7 +124,7 @@ namespace Automaton.Model
         public void Dispose()
         {
             // Delete the temp directory
-            Directory.Delete(TempPath, true);
+            //Directory.Delete(TempPath, true);
         }
     }
 }
