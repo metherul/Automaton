@@ -113,6 +113,9 @@ namespace Automaton.ViewModel
 
         private void NextCard()
         {
+            PackHandler.SourceLocation = SourceLocation;
+            PackHandler.InstallationLocation = InstallationLocation;
+
             var modPack = PackHandler.ModPack;
 
             // Check if the optional setup has no null required values. 

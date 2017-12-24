@@ -93,3 +93,4 @@ C:\Programming\C#\Automaton\Automaton\obj\Debug\ModValidationDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\ModValidationDialog.baml
 C:\Programming\C#\Automaton\Automaton\obj\Debug\CompletedDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\CompletedDialog.baml
+C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.csprojResolveAssemblyReference.cache

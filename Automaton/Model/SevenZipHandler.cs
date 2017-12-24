@@ -117,7 +117,7 @@ namespace Automaton.Model
                     Directory.CreateDirectory(parentTargetDirectory);
                 }
 
-                File.Copy(source, target);
+                File.Copy(source, target, true);
             }
         }
 

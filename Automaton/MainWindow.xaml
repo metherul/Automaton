@@ -34,7 +34,7 @@
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
 
                     <Button Style="{StaticResource MaterialDesignToolButton}" Foreground="{DynamicResource MaterialDesignPaper}"
-                            Command="{Binding OpenSetLocationsDialogCommand}" FontSize="15" FontWeight="Medium" Margin="0,0,10,0">INSTALL PACK</Button>
+                            Command="{Binding InstallModPackCommand}" FontSize="15" FontWeight="Medium" Margin="0,0,10,0">INSTALL PACK</Button>
 
                     <materialDesign:PopupBox>
                     </materialDesign:PopupBox>
