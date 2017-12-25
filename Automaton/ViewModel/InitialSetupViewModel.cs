@@ -126,10 +126,12 @@ namespace Automaton.ViewModel
             }
 
             PackHandler.GenerateFinalModPack();
+            var missingMods = PackHandler.ValidateSourceLocation(SourceLocation);
 
-            if (PackHandler.ValidateSourceLocation(SourceLocation).Count > 0)
+            if (missingMods.Count > 0)
             {
                 Messenger.Default.Send(CardIndex.ModValidation);
+                Messenger.Default.Send(missingMods, MessengerToken.MissingMods);
                 return;
             }
 

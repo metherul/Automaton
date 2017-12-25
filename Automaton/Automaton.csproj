@@ -122,6 +122,7 @@
     <Compile Include="ViewModel\DialogHandler.cs" />
     <Compile Include="ViewModel\InitialSetupViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\ModValidationViewModel.cs" />
     <Compile Include="ViewModel\OptionalsInstallerViewModel.cs" />
     <Compile Include="Model\PackFile.cs" />
     <Page Include="CompletedDialog.xaml">
@@ -188,7 +189,12 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Content\alduinvpaarthurnax.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\alduin.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

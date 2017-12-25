@@ -17,6 +17,10 @@
             RenderOptions.ClearTypeHint="Enabled"
             mc:Ignorable="d" 
             d:DesignHeight="300">
+    <UserControl.DataContext>
+        <vm:ModValidationViewModel/>
+    </UserControl.DataContext>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -32,10 +36,27 @@
             <StackPanel>
                 <TextBlock FontSize="25" HorizontalAlignment="Center" Margin="5,20,5,5">Missing Mods</TextBlock>
 
-                <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                    <ListBox>
-                        
-                    </ListBox>
+                <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="8">
+                    <ItemsControl ItemsSource="{Binding MissingMods}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding LoadOrder}" Grid.Column="0" FontSize="15" Margin="5,0,0,0"/>
+                                    <TextBlock Text="{Binding ModName}" Margin="30,0,0,0" Grid.Column="1" FontSize="15"/>
+                                    <Button Grid.Column="2" Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Right" 
+                                            CommandParameter="{Binding ModName}">
+                                        <materialDesign:PackIcon Kind="HelpCircleOutline" Width="20" Height="20"/>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </StackPanel>
         </materialDesign:Card>
@@ -54,19 +75,17 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" FontSize="25" HorizontalAlignment="Center" Margin="5">MODNAME</TextBlock>
-                    
+                    <TextBlock Grid.Row="0" FontSize="25" HorizontalAlignment="Center" Margin="5" Text="{Binding ModName}" />
+
                     <StackPanel Grid.Row="1" Margin="5">
-                        <TextBlock FontFamily="Consolas" FontSize="18">FILENAME.7z</TextBlock>
-                        <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15">FILESIZE</TextBlock>
-                        <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15">CHECKSUM</TextBlock>
+                        <TextBlock FontFamily="Consolas" FontSize="18" Text="{Binding FileName}"/>
+                        <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15" Text="{Binding FileSize}"/>
+                        <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15" Text="{Binding ModLink}"/>
                     </StackPanel>
 
-                    <Grid Background="LightGray" Grid.Row="2">
-                        <TextBlock FontFamily="Consolas">
-                        </TextBlock>
-                    </Grid>
-                    
+                    <ScrollViewer Grid.Row="2">
+                        <TextBlock Background="LightGray" FontFamily="Consolas" Text="{Binding ModJson}" />
+                    </ScrollViewer>
                 </Grid>
             </materialDesign:Card>
 

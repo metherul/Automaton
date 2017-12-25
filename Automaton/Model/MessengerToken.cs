@@ -8,6 +8,7 @@
         WindowWidth,
         MainDialogOpen,
         DialogIndex,
-        CloseMainDialog
+        CloseMainDialog,
+        MissingMods
     }
 }

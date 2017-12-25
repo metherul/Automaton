@@ -58,7 +58,7 @@
 
         <!-- Pre-installation dialog container -->
         <Grid Grid.RowSpan="2" DataContext="{StaticResource DialogHandler}" Visibility="{Binding IsCardOpen, Converter={StaticResource BoolToVisibility}}">
-            <Image Source="C:\Users\Ethan\Downloads\test2.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Image Source="/Automaton;component/Content/alduinvpaarthurnax.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
             <materialDesign:Transitioner DataContext="{StaticResource DialogHandler}" SelectedIndex="{Binding CurrentCardIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 
