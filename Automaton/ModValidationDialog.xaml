@@ -5,6 +5,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+            xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
             xmlns:vm="clr-namespace:Automaton.ViewModel"
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -36,29 +37,22 @@
             <StackPanel>
                 <TextBlock FontSize="25" HorizontalAlignment="Center" Margin="5,20,5,5">Missing Mods</TextBlock>
 
-                <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="8">
-                    <ItemsControl ItemsSource="{Binding MissingMods}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding MissingMods}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
+                          IsHitTestVisible="True" Margin="5,0,5,0" CanUserAddRows="False" Background="White" Cursor="Hand">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <cmd:EventToCommand Command="{Binding ViewModInfoCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
-                                    <TextBlock Text="{Binding LoadOrder}" Grid.Column="0" FontSize="15" Margin="5,0,0,0"/>
-                                    <TextBlock Text="{Binding ModName}" Margin="30,0,0,0" Grid.Column="1" FontSize="15"/>
-                                    <Button Grid.Column="2" Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Right" 
-                                            CommandParameter="{Binding ModName}">
-                                        <materialDesign:PackIcon Kind="HelpCircleOutline" Width="20" Height="20"/>
-                                    </Button>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Load Order" Binding="{Binding LoadOrder}" Width="100" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Mod Name" Binding="{Binding ModName}" Width="*" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
             </StackPanel>
+
         </materialDesign:Card>
 
         <Grid Grid.Column="1" Margin="2,0,0,0">
@@ -78,19 +72,20 @@
                     <TextBlock Grid.Row="0" FontSize="25" HorizontalAlignment="Center" Margin="5" Text="{Binding ModName}" />
 
                     <StackPanel Grid.Row="1" Margin="5">
-                        <TextBlock FontFamily="Consolas" FontSize="18" Text="{Binding FileName}"/>
+                        <TextBlock FontFamily="Consolas" FontSize="16" Text="{Binding FileName}"/>
                         <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15" Text="{Binding FileSize}"/>
                         <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15" Text="{Binding ModLink}"/>
                     </StackPanel>
 
-                    <ScrollViewer Grid.Row="2">
-                        <TextBlock Background="LightGray" FontFamily="Consolas" Text="{Binding ModJson}" />
+                    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBlock Background="#e0e0e0" FontFamily="Consolas" Text="{Binding ModJson}"/>
                     </ScrollViewer>
                 </Grid>
             </materialDesign:Card>
 
             <materialDesign:Card Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,2,0,0">
-                <Button Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Margin="0,0,0.2,7.4">
+                <Button Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Margin="0,0,0.2,7.4"
+                        Command="{Binding ValidateCommand}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Sync"/>
                         <TextBlock Text="RESCAN SOURCE MODS FOLDER" Margin="10,0,0,0"/>

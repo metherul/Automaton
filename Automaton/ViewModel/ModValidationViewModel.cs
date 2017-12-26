@@ -1,9 +1,10 @@
 ﻿using Automaton.Model;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
+using System.Windows.Input;
 
 namespace Automaton.ViewModel
 {
@@ -12,6 +13,7 @@ namespace Automaton.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         public RelayCommand ValidateCommand { get; set; }
+        public RelayCommand<object> ViewModInfoCommand { get; set; }
 
         public List<Mod> MissingMods { get; set; }
 
@@ -24,6 +26,7 @@ namespace Automaton.ViewModel
         public ModValidationViewModel()
         {
             ValidateCommand = new RelayCommand(Validate);
+            ViewModInfoCommand = new RelayCommand<object>((x) => ViewModInfo(x));
 
             ModName = "null";
             FileName = "null";
@@ -35,7 +38,22 @@ namespace Automaton.ViewModel
 
         public void Validate()
         {
-            ModJson = File.ReadAllText(@"C:\Programming\C# Projects\Automaton\Automaton\bin\Debug\modpack.json");
+
+        }
+
+        public void ViewModInfo(object parameter)
+        {
+            var targetMod = (Mod)((parameter as MouseButtonEventArgs).OriginalSource as dynamic).DataContext;
+
+            ModName = targetMod.ModName;
+            FileName = targetMod.FileName;
+            FileSize = $"{targetMod.FileSize} Bytes";
+            ModLink = "-";
+            ModJson = JsonConvert.SerializeObject(targetMod, Formatting.Indented,
+            new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
         }
     }
 }
