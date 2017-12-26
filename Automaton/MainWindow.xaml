@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         UseLayoutRounding="True"
-        Title="Automaton" Height="600" Width="1000" AllowsTransparency="False">
+        Title="Automaton" Height="700" Width="1100" AllowsTransparency="False">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
@@ -58,7 +58,11 @@
 
         <!-- Pre-installation dialog container -->
         <Grid Grid.RowSpan="2" DataContext="{StaticResource DialogHandler}" Visibility="{Binding IsCardOpen, Converter={StaticResource BoolToVisibility}}">
-            <Image Source="/Automaton;component/Content/alduinvpaarthurnax.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Image Source="/Automaton;component/Content/alduin.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-5">
+                <Image.Effect>
+                    <BlurEffect Radius="5"/>
+                </Image.Effect>
+            </Image>
 
             <materialDesign:Transitioner DataContext="{StaticResource DialogHandler}" SelectedIndex="{Binding CurrentCardIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 

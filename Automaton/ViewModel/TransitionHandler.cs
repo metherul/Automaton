@@ -35,6 +35,7 @@ namespace Automaton.ViewModel
 
                 else if (missingMods.Count > 0)
                 {
+                    PackHandler.ValidateSourceLocation();
                     Messenger.Default.Send(CardIndex.ModValidation);
                 }
 
@@ -50,6 +51,7 @@ namespace Automaton.ViewModel
 
                 if (missingMods.Count > 0)
                 {
+                    PackHandler.ValidateSourceLocation();
                     Messenger.Default.Send(CardIndex.ModValidation);
                 }
 

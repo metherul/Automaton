@@ -48,6 +48,7 @@ namespace Automaton.Model
         public string ModName { get; set; }
         public string FileName { get; set; }
         public string FileSize { get; set; }
+        public string ModLink { get; set; }
         public string CheckSum { get; set; }
         public int? LoadOrder { get; set; }
         public List<Installation> Installations { get; set; }

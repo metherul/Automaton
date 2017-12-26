@@ -130,6 +130,8 @@ namespace Automaton.Model
                 }
             }
 
+            Messenger.Default.Send(missingMods, MessengerToken.MissingMods);
+
             return missingMods;
         }
 
