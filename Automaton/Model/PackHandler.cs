@@ -1,116 +1,90 @@
-﻿using ExtraTools;
-using GalaSoft.MvvmLight.Messaging;
-using MaterialDesignThemes.Wpf;
+﻿using GalaSoft.MvvmLight.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 
 namespace Automaton.Model
 {
     class PackHandler
     {
-        private static ModPack modPack;
-        public static ModPack ModPack
+        public static ModPack ModPack { get; set; }
+        public static List<Mod> ModsList { get; set; }
+
+        public static string ModPackLocation { get; set; }
+        public static string SourceLocation { get; set; }
+        public static string InstallationLocation { get; set; }
+
+        /// <summary>
+        /// Initializes the PackHandler class with required source and installation locations.
+        /// </summary>
+        /// <param name="sourceLocation">The mod source location.</param>
+        /// <param name="installationLocation">The mod pack installation location.</param>
+        public static void Initialize(string sourceLocation, string installationLocation)
         {
-            get { return modPack; }
-            set
-            {
-                modPack = value;
-
-                if (modPack != null)
-                {
-                    Messenger.Default.Send(modPack, MessengerToken.ModPack);
-                }
-            }
-
+            SourceLocation = sourceLocation;
+            InstallationLocation = installationLocation;
         }
 
-        private static ModPack finalModPack;
-        public static ModPack FinalModPack
+        /// <summary>
+        /// Reads the targeted file for valid JSON and converts it to a ModPack object. This is save within the PackHandler
+        /// </summary>
+        public static ModPack ReadPack(string modPackLocation)
         {
-            get { return finalModPack; }
-            set
-            {
-                finalModPack = value;
+            ModPackLocation = modPackLocation;
 
-                if (finalModPack != null)
-                {
-                    Messenger.Default.Send(finalModPack, MessengerToken.FinalModPack);
-                }
+            if (!File.Exists(ModPackLocation))
+            {
+                return null;
             }
-        }
 
-        public static string PackLocation;
-        public static string SourceLocation;
-        public static string InstallationLocation;
+            var tempDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
 
-        private static string ModPackContents;
-
-        public static ModPack ReadPack(string packFileLocation)
-        {
-            // Decompress and place into the temp directory
-            var metaLocation = AppDomain.CurrentDomain.BaseDirectory;
-            var tempDirectory = Path.Combine(metaLocation, "temp");
-
-            using (var sevenZipHandler = new SevenZipHandler(packFileLocation))
+            // Unzip the file into the temporary directory
+            using (var sevenZipHandler = new SevenZipHandler(ModPackLocation, false))
             {
-                var modPackName = Path.GetFileNameWithoutExtension(packFileLocation);
-                var modPackExtractedPath = Path.Combine(tempDirectory, modPackName);
-                var contentDirectory = Path.Combine(modPackExtractedPath, "content");
+                var extractedModPackName = Path.GetFileNameWithoutExtension(ModPackLocation);
+                var extractedModPackPath = Path.Combine(tempDirectory, extractedModPackName);
 
-                packFileLocation = Path.Combine(modPackExtractedPath, "modpack.json");
+                var packFileLocation = Path.Combine(extractedModPackPath, "modpack.json");
 
-                if (File.Exists(packFileLocation))
-                {
-                    ModPackContents = File.ReadAllText(packFileLocation);
-                }
-
-                else
+                if (!File.Exists(packFileLocation))
                 {
                     return null;
                 }
-            }
 
-            try
-            {
-                var modPack = JsonConvert.DeserializeObject<ModPack>(ModPackContents);
+                var modPackContents = File.ReadAllText(packFileLocation);
 
-                ModPack = modPack;
-
-                return modPack;
-            }
-
-            catch (Exception e)
-            {
-                DialogBox.Show("ERROR", e.Message, "COPY", "ABORT");
-                if (DialogBox.Result == DialogBox.ResultEnum.LeftButtonClicked)
+                try
                 {
-                    Clipboard.SetText(e.Message);
+                    ModPack = JsonConvert.DeserializeObject<ModPack>(modPackContents);
+                    ModsList = ModPack.Mods;
+
+                    return ModPack;
                 }
 
-                return null;
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
             }
         }
 
-        public static void WritePack(ModPack modPack, string target)
+        /// <summary>
+        /// Filters the ModPack with optional installer parameters.
+        /// </summary>
+        /// <returns></returns>
+        public static ModPack FilterModPack()
         {
-            File.WriteAllText(target, JsonConvert.SerializeObject(modPack, Formatting.Indented));
-        }
-
-        public static ModPack GenerateFinalModPack()
-        {
-            // Will compare the FilterList and ModPack for all required mods -- remove anything which doesn't match conditional parameters.
             var workingModPack = ModPack;
-            var mods = workingModPack.Mods;
+            var mods = ModsList;
             var modsToRemove = new List<Mod>();
 
             foreach (var mod in mods)
             {
                 var conditionals = new List<Conditional>();
-                var doesCollectionHaveElements= mod.Installations.Where(x => x.Conditionals != null).Any();
+                var doesCollectionHaveElements = mod.Installations.Where(x => x.Conditionals != null).Any();
 
                 if (doesCollectionHaveElements)
                 {
@@ -118,15 +92,8 @@ namespace Automaton.Model
 
                     foreach (var conditional in conditionals)
                     {
-                        if (FlagHandler.FlagList.Where(x => x.FlagName == conditional.Name && x.FlagValue != conditional.Value).Count() > 0)
+                        if (PackHandlerHelper.ShouldRemoveMod(conditional))
                         {
-                            // Matching names, but different values were found. 
-                            modsToRemove.Add(mod);
-                        }
-
-                        else if (FlagHandler.FlagList.Where(x => x.FlagName == conditional.Name).Count() == 0)
-                        {
-                            // No matching names, the conditional is missing it's flag. 
                             modsToRemove.Add(mod);
                         }
                     }
@@ -134,26 +101,30 @@ namespace Automaton.Model
             }
 
             workingModPack.Mods = workingModPack.Mods.Where(x => !modsToRemove.Contains(x)).ToList();
+            ModPack = workingModPack;
 
-            FinalModPack = workingModPack;
+            // Broadcast the modpack to the application
+            Messenger.Default.Send(ModPack, MessengerToken.ModPack);
 
             return workingModPack;
         }
 
-        public static List<Mod> ValidateSourceLocation(string sourceLocation)
+        /// <summary>
+        /// Validate the source mod location for all required mod files, as generated by the optionals list.
+        /// </summary>
+        public static List<Mod> ValidateSourceLocation()
         {
-            var sourceFiles = Directory.GetFiles(sourceLocation);
-            var sourceFileSizes = sourceFiles.Select(x => new FileInfo(x));
-            var workingModPack = FinalModPack;
+            var files = Directory.GetFiles(SourceLocation);
+            var fileSizes = files.Select(x => new FileInfo(x).Length);
+            var modPack = ModPack;
             var missingMods = new List<Mod>();
 
-            foreach (var mod in workingModPack.Mods)
+            foreach (var mod in modPack.Mods)
             {
-                // Gets count of source files which match the file size of the filter. 
-                var filteredFilesBySize = sourceFileSizes.Where(x => x.Length.ToString() == mod.FileSize);
+                // Gets files from sourceLocation which match the size of the modPack mod
+                var filteredFileSizes = fileSizes.Where(x => x.ToString() == mod.FileSize);
 
-                // When there are no source file size matches
-                if (filteredFilesBySize.Count() == 0)
+                if (filteredFileSizes.Count() == 0)
                 {
                     missingMods.Add(mod);
                 }
@@ -162,13 +133,15 @@ namespace Automaton.Model
             return missingMods;
         }
 
-        public static void InstallModPack(ModPack modPack, string sourceLocation, string installationLocation)
+        /// <summary>
+        /// Installs the mod pack into the installation location.
+        /// </summary>
+        public static void InstallModPack()
         {
-            var sourceFiles = GetSourceFiles(modPack, sourceLocation);
-            var mods = modPack.Mods;
+            var sourceFiles = PackHandlerHelper.GetSourceFiles(ModsList, SourceLocation);
+            var mods = ModsList;
 
-            // There were no sourceFiles found, return. 
-            // Shouldn't be used when proper mod validation is enabled.
+            // No mods were found in the source -- should not occur with proper mod validation.
             if (sourceFiles.Count() == 0)
             {
                 return;
@@ -176,60 +149,17 @@ namespace Automaton.Model
 
             foreach (var mod in mods)
             {
-                var workingModFile = sourceFiles.Where(x => x.Length.ToString() == mod.FileSize).First();
+                var workingModFile = sourceFiles.Where(x => x.Length.ToString() == mod.FileSize || x.Name == mod.FileName).First();
                 var installations = mod.Installations;
 
-                using (var extractHandler = new SevenZipHandler(workingModFile.FullName))
+                using (var extractionHandler = new SevenZipHandler(workingModFile.FullName, true))
                 {
                     foreach (var installation in installations)
                     {
-                        var sourcePath = installation.Source;
-                        var targetPath = installation.Target;
-                        var outputPath = Path.Combine(installationLocation, targetPath);
-
-                        extractHandler.Install(sourcePath, installationLocation, targetPath);
+                        extractionHandler.Install(installation.Source, InstallationLocation, installation.Target);
                     }
                 }
             }
-        }
-
-        public static bool DoesOptionalExist(ModPack modPack)
-        {
-            var modPackOptionals = modPack.OptionalInstallation;
-
-            if (modPackOptionals == null || modPackOptionals.Title == null || modPackOptionals.Groups == null)
-            {
-                return false;
-            }
-
-            if (modPackOptionals.Groups.Count == 0)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static List<FileInfo> GetSourceFiles(ModPack modPack, string sourceLocation)
-        {
-            var sourceFiles = Directory.GetFiles(sourceLocation);
-            var sourceFileInfos = sourceFiles.Select(x => new FileInfo(x)).ToList();
-            var modPackFiles = modPack.Mods;
-            var matchingSourceFiles = new List<FileInfo>();
-
-            foreach (var mod in modPackFiles)
-            {
-                var matchingMod = sourceFileInfos.Where(x => x.Length.ToString() == mod.FileSize);
-
-                if (matchingMod.Count() > 0)
-                {
-                    matchingSourceFiles.Add(matchingMod.First());
-                }
-            }
-
-            // Sort the matching files into the order defined by the mod pack
-
-            return matchingSourceFiles;
         }
     }
 }

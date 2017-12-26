@@ -142,7 +142,7 @@ namespace Automaton.ViewModel
                     // To prevent nesting, skip the remainder of the foreach loop
                     continue;
                 }
-                    
+
                 var tempFlag = FlagHandler.FlagList.Where(x => x.FlagName == flag.Name).First();
 
                 if (flag.Action == null || flag.Action == "set")

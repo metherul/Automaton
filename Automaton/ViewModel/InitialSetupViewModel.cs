@@ -1,6 +1,5 @@
 ﻿using Automaton.Model;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.ComponentModel;
 using System.IO;
@@ -49,8 +48,7 @@ namespace Automaton.ViewModel
 
             if (result == DialogResult.OK)
             {
-                PackHandler.PackLocation = dialog.FileName;
-                var readPackResponse = PackHandler.ReadPack(PackHandler.PackLocation);
+                var readPackResponse = PackHandler.ReadPack(dialog.FileName);
 
                 if (readPackResponse != null)
                 {
@@ -113,29 +111,9 @@ namespace Automaton.ViewModel
 
         private void NextCard()
         {
-            PackHandler.SourceLocation = SourceLocation;
-            PackHandler.InstallationLocation = InstallationLocation;
+            PackHandler.Initialize(SourceLocation, InstallationLocation);
 
-            var modPack = PackHandler.ModPack;
-
-            // Check if the optional setup has no null required values. 
-            if (PackHandler.DoesOptionalExist(modPack))
-            {
-                Messenger.Default.Send(CardIndex.OptionalSetup);
-                return;
-            }
-
-            PackHandler.GenerateFinalModPack();
-            var missingMods = PackHandler.ValidateSourceLocation(SourceLocation);
-
-            if (missingMods.Count > 0)
-            {
-                Messenger.Default.Send(CardIndex.ModValidation);
-                Messenger.Default.Send(missingMods, MessengerToken.MissingMods);
-                return;
-            }
-
-            Messenger.Default.Send(CardIndex.CompletedSetup);
+            TransitionHandler.CalculateNextCard(CardIndex.InitialSetup);
         }
     }
 }

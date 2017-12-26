@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         UseLayoutRounding="True"
-        Title="Automaton" Height="600" Width="1000" AllowsTransparency="False" SizeChanged="Window_SizeChanged">
+        Title="Automaton" Height="600" Width="1000" AllowsTransparency="False">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>

@@ -1,10 +1,6 @@
 ﻿using Automaton.Model;
-using GalaSoft.MvvmLight.Messaging;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Automaton
 {
@@ -134,7 +130,7 @@ namespace Automaton
                             }
                         }
                     },
-               
+
                     Mods = new List<Mod>()
                     {
                         new Mod()
@@ -256,14 +252,8 @@ namespace Automaton
                     }
                 };
 
-                PackHandler.WritePack(modPack, @"C:\Programming\Automaton\Automaton\bin\Debug\someOtherTest.json");
+                //PackHandler.WritePack(modPack, @"C:\Programming\Automaton\Automaton\bin\Debug\someOtherTest.json");
             }
-        }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Messenger.Default.Send(e.NewSize.Width, MessengerToken.WindowWidth);
-            Messenger.Default.Send(e.NewSize.Height, MessengerToken.WindowHeight);
         }
     }
 }

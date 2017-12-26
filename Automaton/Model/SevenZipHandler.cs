@@ -1,12 +1,7 @@
-﻿using SevenZipExtractor;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 
 namespace Automaton.Model
 {
@@ -17,9 +12,12 @@ namespace Automaton.Model
         private string DLLPath;
         private string TempPath;
         private string ExtractionPath;
-        
-        public SevenZipHandler(string archivePath)
+        private bool DeleteAfterCompletion;
+
+        public SevenZipHandler(string archivePath, bool deleteAfterCompletion)
         {
+
+            DeleteAfterCompletion = deleteAfterCompletion;
             ExecutablePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"7za.exe");
             ArchivePath = archivePath;
             DLLPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
@@ -39,7 +37,7 @@ namespace Automaton.Model
         {
             var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
             var sourcePath = Path.Combine(ExtractionPath, source);
-            var targetPath = Path.Combine(installationPath, $"{PackHandler.FinalModPack.PackName} ({currentTime})", target);
+            var targetPath = Path.Combine(installationPath, $"{PackHandler.ModPack.PackName} ({currentTime})", target);
 
             // Check if the sourceFile is a directory
             if (Path.GetExtension(sourcePath) == string.Empty)
@@ -124,7 +122,11 @@ namespace Automaton.Model
         public void Dispose()
         {
             // Delete the temp directory
-            //Directory.Delete(TempPath, true);
+
+            if (DeleteAfterCompletion)
+            {
+                Directory.Delete(TempPath, true);
+            }
         }
     }
 }

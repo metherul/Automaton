@@ -14,7 +14,7 @@ namespace Automaton.ViewModel
 
         public void CloseCard()
         {
-            Messenger.Default.Send(CardControl.IsCardOpen);
+            Messenger.Default.Send(CardControl.CloseCard);
         }
     }
 }

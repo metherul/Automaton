@@ -105,7 +105,8 @@
     <Compile Include="InitialSetupDialog.xaml.cs">
       <DependentUpon>InitialSetupDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\PackHandler_Rewrite.cs" />
+    <Compile Include="Model\PackHandlerHelper.cs" />
+    <Compile Include="Model\PackHandler.cs" />
     <Compile Include="Model\SevenZipHandler.cs" />
     <Compile Include="Model\FlagHandler.cs" />
     <Compile Include="Model\MessengerToken.cs" />
@@ -119,7 +120,7 @@
       <DependentUpon>OptionalsInstaller.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CompletedDialogViewModel.cs" />
-    <Compile Include="ViewModel\DialogHandler.cs" />
+    <Compile Include="ViewModel\TransitionHandler.cs" />
     <Compile Include="ViewModel\InitialSetupViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ModValidationViewModel.cs" />
@@ -159,7 +160,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\PackHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
