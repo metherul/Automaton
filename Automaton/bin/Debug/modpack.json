@@ -1,19 +1,34 @@
 {
-  "PackName": "Test Pack",
-  "PackAuthor": "metherul",
-  "PackVersion": "v0",
-  "SourceUrl": "test.com",
-  "Mods": [
+  "pack_name": "Test Pack",
+  "pack_author": "metherul",
+  "pack_version": "v0",
+  "source_url": "test.com",
+  "mods": [
     {
-      "ModName": "Test Mod Name",
-      "FileName": "LooksMenu v1-6-4.7z-12631-1-6-4.7z",
-      "FileSize": "430466",
-      "CheckSum": "DAWIODWAIO78DW8A78W7D8989721389712",
-      "LoadOrder": 1,
-      "Installations": [
+      "mod_name": "Test Mod Name",
+      "file_name": "LooksMenu v1-6-4.7z-12631-1-6-4.7z",
+      "file_size": "430466",
+      "mod_link": "https://www.nexusmods.com/fallout4/mods/12631/",
+      "checksum": "DAWIODWAIO78DW8A78W7D8989721389712",
+      "load_order": 1,
+      "installations": [
         {
-          "Source": "",
-          "Target": ""
+          "source": "",
+          "target": ""
+        }
+      ]
+    },
+    {
+      "mod_name": "Static Mesh Improvement Mod",
+      "file_name": "SMIM 2-07-8655-2-07.7z",
+      "file_size": "1075014723",
+      "mod_link": "https://www.nexusmods.com/skyrim/mods/8655/?",
+      "checksum": "DAWIODWAIO78DW8A78W7D8989721389712",
+      "load_order": 3,
+      "installations": [
+        {
+          "source": "",
+          "target": ""
         }
       ]
     }
