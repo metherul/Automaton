@@ -46,7 +46,7 @@
                     </i:Interaction.Triggers>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Load Order" Binding="{Binding LoadOrder}" Width="100" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Load Order" Binding="{Binding LoadOrder}" Width="100" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Mod Name" Binding="{Binding ModName}" Width="*" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -69,16 +69,18 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" FontSize="25" HorizontalAlignment="Center" Margin="5" Text="{Binding ModName}" />
+                    <Button Grid.Row="0" HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding OpenModLinkCommand}">
+                        <materialDesign:PackIcon Kind="{Binding LinkType}" Height="25" Width="25"/>
+                    </Button>
+                    <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Stretch" Margin="30,5,30,5" Text="{Binding ModName}" TextAlignment="Center" TextWrapping="Wrap"/>
 
                     <StackPanel Grid.Row="1" Margin="5">
                         <TextBlock FontFamily="Consolas" FontSize="16" Text="{Binding FileName}"/>
                         <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15" Text="{Binding FileSize}"/>
-                        <TextBlock FontFamily="Consolas" Foreground="Gray" FontSize="15" Text="{Binding ModLink}"/>
                     </StackPanel>
 
                     <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <TextBlock Background="#e0e0e0" FontFamily="Consolas" Text="{Binding ModJson}"/>
+                        <TextBlock Background="#e0e0e0" FontFamily="Consolas" Text="{Binding ModJson}" TextWrapping="Wrap"/> 
                     </ScrollViewer>
                 </Grid>
             </materialDesign:Card>

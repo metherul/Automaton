@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Messaging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Automaton.ViewModel
@@ -13,6 +14,7 @@ namespace Automaton.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         public RelayCommand ValidateCommand { get; set; }
+        public RelayCommand OpenModLinkCommand { get; set; }
         public RelayCommand<object> ViewModInfoCommand { get; set; }
 
         public List<Mod> MissingMods { get; set; }
@@ -23,37 +25,70 @@ namespace Automaton.ViewModel
         public string ModLink { get; set; }
         public string ModJson { get; set; }
 
+        public string LinkType { get; set; }
+
         public ModValidationViewModel()
         {
             ValidateCommand = new RelayCommand(Validate);
+            OpenModLinkCommand = new RelayCommand(OpenModLink);
             ViewModInfoCommand = new RelayCommand<object>((x) => ViewModInfo(x));
 
-            ModName = "null";
-            FileName = "null";
-            FileSize = "null";
-            ModLink = "null";
+            //ModName = "";
+            //FileName = "";
+            //FileSize = "";
+            //ModLink = "";
+
+            LinkType = "LinkVariantOff";
 
             Messenger.Default.Register<List<Mod>>(this, MessengerToken.MissingMods, x => MissingMods = x);
         }
 
-        public void Validate()
+        private void Validate()
         {
 
         }
 
-        public void ViewModInfo(object parameter)
+        private void OpenModLink()
         {
-            var targetMod = (Mod)((parameter as MouseButtonEventArgs).OriginalSource as dynamic).DataContext;
-
-            ModName = targetMod.ModName;
-            FileName = targetMod.FileName;
-            FileSize = $"{targetMod.FileSize} Bytes";
-            ModLink = "-";
-            ModJson = JsonConvert.SerializeObject(targetMod, Formatting.Indented,
-            new JsonSerializerSettings
+            if (!string.IsNullOrEmpty(ModLink))
             {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+                Process.Start(ModLink);
+            }
+        }
+
+        private void ViewModInfo(object parameter)
+        {
+            try
+            {
+                var targetMod = (Mod)((parameter as MouseButtonEventArgs).OriginalSource as dynamic).DataContext;
+
+                ModName = targetMod.ModName;
+                FileName = targetMod.FileName;
+                FileSize = $"{targetMod.FileSize} Bytes";
+                ModLink = targetMod.ModLink;
+                ModJson = JsonConvert.SerializeObject(targetMod, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+                if (string.IsNullOrEmpty(ModLink))
+                {
+                    LinkType = "LinkVariantOff";
+                }
+
+                else
+                {
+                    LinkType = "LinkVariant";
+                }
+            }
+
+            catch
+            {
+                return;
+            }
+
+
         }
     }
 }
