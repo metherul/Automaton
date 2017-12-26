@@ -26,6 +26,10 @@ namespace Automaton.ViewModel
         public string ModJson { get; set; }
 
         public string LinkType { get; set; }
+        public string UtilityButton { get; set; }
+        public string UtilityButtonIcon { get; set; }
+
+        public bool IsValidationComplete { get; set; }
 
         public ModValidationViewModel()
         {
@@ -33,19 +37,39 @@ namespace Automaton.ViewModel
             OpenModLinkCommand = new RelayCommand(OpenModLink);
             ViewModInfoCommand = new RelayCommand<object>((x) => ViewModInfo(x));
 
-            //ModName = "";
-            //FileName = "";
-            //FileSize = "";
-            //ModLink = "";
-
             LinkType = "LinkVariantOff";
+            UtilityButton = "RESCAN SOURCE MODS FOLDER";
+            UtilityButtonIcon = "Sync";
+
+            IsValidationComplete = false;
 
             Messenger.Default.Register<List<Mod>>(this, MessengerToken.MissingMods, x => MissingMods = x);
         }
 
         private void Validate()
         {
+            var missingMods = PackHandler.ValidateSourceLocation();
 
+            if (missingMods.Count == 0)
+            {
+                UtilityButton = "NEXT";
+                UtilityButtonIcon = "ArrowRight";
+
+                ModName = "";
+                FileName = "";
+                FileSize = "";
+                ModJson = "";
+                ModLink = "";
+
+                IsValidationComplete = true;
+
+                ValidateCommand = new RelayCommand(NextCard);
+            }
+        }
+
+        private void NextCard()
+        {
+            TransitionHandler.CalculateNextCard(CardIndex.InitialSetup);
         }
 
         private void OpenModLink()

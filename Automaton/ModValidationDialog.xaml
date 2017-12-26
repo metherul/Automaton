@@ -34,11 +34,16 @@
         </Grid.RowDefinitions>
 
         <materialDesign:Card Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,2,0">
-            <StackPanel>
-                <TextBlock FontSize="25" HorizontalAlignment="Center" Margin="5,20,5,5">Missing Mods</TextBlock>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/> 
+                </Grid.RowDefinitions>
+                
+                <TextBlock FontSize="25" HorizontalAlignment="Center" Margin="5,20,5,5" Grid.Row="0">Missing Mods</TextBlock>
 
                 <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding MissingMods}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
-                          IsHitTestVisible="True" Margin="5,0,5,0" CanUserAddRows="False" Background="White" Cursor="Hand">
+                          IsHitTestVisible="True" Margin="5,0,5,0" CanUserAddRows="False" Background="White" Cursor="Hand" Grid.Row="1">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeftButtonUp">
                             <cmd:EventToCommand Command="{Binding ViewModInfoCommand}" PassEventArgsToCommand="True"/>
@@ -51,7 +56,14 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-            </StackPanel>
+                <StackPanel Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Visibility="{Binding IsValidationComplete, Converter={StaticResource BoolToVisibility}}">
+                    <Label Foreground="Gray" FontSize="16" HorizontalAlignment="Center">You're all set!</Label>
+                    
+                    <materialDesign:PackIcon Kind="CheckCircleOutline" HorizontalAlignment="Center" Height="130" Width="Auto" Foreground="Green"/>
+                </StackPanel>
+
+            </Grid>
 
         </materialDesign:Card>
 
@@ -87,10 +99,10 @@
 
             <materialDesign:Card Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,2,0,0">
                 <Button Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Margin="0,0,0.2,7.4"
-                        Command="{Binding ValidateCommand}">
+                        Background="White" Command="{Binding ValidateCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Sync"/>
-                        <TextBlock Text="RESCAN SOURCE MODS FOLDER" Margin="10,0,0,0"/>
+                        <materialDesign:PackIcon Kind="{Binding UtilityButtonIcon}"/>
+                        <TextBlock Text="{Binding UtilityButton}" Margin="10,0,0,0"/>
                     </StackPanel>
                 </Button>
             </materialDesign:Card>
