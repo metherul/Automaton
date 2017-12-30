@@ -5,85 +5,58 @@ using System.Linq;
 
 namespace Automaton.Model
 {
-    class SevenZipHandler : IDisposable
+    public class SevenZipHandler : IDisposable
     {
-        private string ExecutablePath;
-        private string ArchivePath;
-        private string DLLPath;
-        private string TempPath;
-        private string ExtractionPath;
-        private bool DeleteAfterCompletion;
+        private static string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        private static string TempDirectory = Path.Combine(BaseDirectory, "temp");
+        private static string ExePath = Path.Combine(BaseDirectory, "7za.exe");
 
-        public SevenZipHandler(string archivePath, bool deleteAfterCompletion)
+        private static string ExtractedFilePath;
+        private static string InstallationLocation;
+
+        public SevenZipHandler()
         {
+            // Load the embedded resource into memory, and write to temporary file.
+            var embeddedBytes = Properties.Resources._7za;
 
-            DeleteAfterCompletion = deleteAfterCompletion;
-            ExecutablePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"7za.exe");
-            ArchivePath = archivePath;
-            DLLPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
-            TempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
-            ExtractionPath = Path.Combine(TempPath, Path.GetFileNameWithoutExtension(archivePath));
-
-            if (Directory.Exists(TempPath))
+            if (File.Exists(ExePath))
             {
-                var directoryInfo = new DirectoryInfo(TempPath);
-                directoryInfo.Delete(true);
+                File.Delete(ExePath);
             }
 
-            ExtractArchive();
+            using (var fileStream = new FileStream(ExePath, FileMode.CreateNew))
+            {
+                fileStream.Write(embeddedBytes, 0, embeddedBytes.Length);
+            }
+
+            InstallationLocation = PackHandler.InstallationLocation;
         }
 
-        public void Install(string source, string installationPath, string target)
+        /// <summary>
+        /// Will extract the archive to the temp directory and target it within the class.
+        /// </summary>
+        /// <param name="path">The path of the archive file (.7z, .zip, .rar)</param>
+        public void ExtractArchive(string path)
         {
-            var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-            var sourcePath = Path.Combine(ExtractionPath, source);
-            var targetPath = Path.Combine(installationPath, $"{PackHandler.ModPack.PackName} ({currentTime})", target);
-
-            // Check if the sourceFile is a directory
-            if (Path.GetExtension(sourcePath) == string.Empty)
+            if (Directory.Exists(ExtractedFilePath))
             {
-                // Grab a list of all of its contents
-                var subDirectories = Directory.GetDirectories(sourcePath).ToList();
-                var subFiles = Directory.GetFiles(sourcePath).ToList();
-
-                var rootSubDirectories = subDirectories.Select(x => x.Replace($"{ExtractionPath}\\{source}\\", ""));
-                var rootSubFiles = subFiles.Select(x => x.Replace($"{ExtractionPath}\\{source}\\", ""));
-
-                foreach (var directory in subDirectories)
-                {
-                    var directoryName = new DirectoryInfo(directory).Name;
-                    var directoryTarget = Path.Combine(targetPath, directoryName);
-
-                    CopyFile(directory, directoryTarget, true);
-                }
-
-                foreach (var file in subFiles)
-                {
-                    var fileName = new FileInfo(file).Name;
-                    var fileTarget = Path.Combine(targetPath, fileName);
-
-                    CopyFile(file, fileTarget);
-                }
+                Directory.Delete(ExtractedFilePath, true);
             }
 
-            // It's a file
-            else
-            {
-                CopyFile(sourcePath, targetPath);
-            }
-        }
+            var extractedPath = Path.Combine(TempDirectory, Path.GetFileNameWithoutExtension(path));
 
-        private void ExtractArchive()
-        {
-            if (!Directory.Exists(TempPath))
+            if (Directory.Exists(extractedPath))
             {
-                Directory.CreateDirectory(TempPath);
+                Directory.Delete(extractedPath, true);
             }
 
+            Directory.CreateDirectory(extractedPath);
+
+            // Spool up a process to extract the file using 7za.exe
             var processStartInfo = new ProcessStartInfo()
             {
-                FileName = ExecutablePath,
-                Arguments = $"x \"{ArchivePath}\" -o\"{ExtractionPath}\" -y",
+                FileName = ExePath,
+                Arguments = $"x \"{path}\" -o\"{extractedPath}\" -y",
                 RedirectStandardError = false,
                 RedirectStandardOutput = false,
                 UseShellExecute = true,
@@ -95,37 +68,102 @@ namespace Automaton.Model
                 process.StartInfo = processStartInfo;
                 process.Start();
 
+                // Note that this method must be async to prevent blocking UI calls
                 process.WaitForExit();
+            }
+
+            ExtractedFilePath = extractedPath;
+        }
+
+        /// <summary>
+        /// Copies a file/directory from a location within the extracted archive to a target.
+        /// </summary>
+        /// <param name="source">The source location -- denoted in a locational offset within the archive.</param>
+        /// <param name="target">The target location -- denoted in a location offset within the installation location.</param>
+        public void Copy(Mod mod, string source, string target)
+        {
+            string realSourceLocation = Path.Combine(ExtractedFilePath, source);
+            string realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
+
+            if (!DoesPathExist(realSourceLocation))
+            {
+                throw new Exception($"Targeted source location does not exist: {realSourceLocation}");
+            }
+
+            if (IsPathDirectory(realSourceLocation))
+            {
+                var childDirectories = Directory.GetDirectories(realSourceLocation).ToList();
+                var childFiles = Directory.GetFiles(realSourceLocation).ToList();
+
+                childDirectories.ForEach(x => new Microsoft.VisualBasic.Devices.Computer().FileSystem
+                    .CopyDirectory(x, Path.Combine(realTargetLocation, new DirectoryInfo(x).Name)));
+
+                childFiles.ForEach(x => File.Copy(x, Path.Combine(realTargetLocation, new FileInfo(x).Name)));
+            }
+
+            else
+            {
+                var parentDirectory = new FileInfo(realTargetLocation).DirectoryName;
+
+                if (Directory.Exists(parentDirectory))
+                {
+                    Directory.Delete(parentDirectory, true);
+                }
+
+                Directory.CreateDirectory(parentDirectory);
+
+                File.Copy(realSourceLocation, realTargetLocation);
             }
         }
 
-        private void CopyFile(string source, string target, bool isDirectory = false)
+        /// <summary>
+        /// Determines whether a specified path is a directory, or a file.
+        /// </summary>
+        /// <param name="path">A file or directory.</param>
+        /// <returns></returns>
+        private bool IsPathDirectory(string path)
         {
-            if (isDirectory)
+            var fileAttributes = File.GetAttributes(path);
+
+            if (fileAttributes.HasFlag(FileAttributes.Directory))
             {
-                Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(source, target);
+                return true;
             }
 
-            else if (!isDirectory)
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether a specfied path exists on the drive.
+        /// </summary>
+        /// <param name="path">A file or directory.</param>
+        /// <returns></returns>
+        private bool DoesPathExist(string path)
+        {
+            if (Directory.Exists(path))
             {
-                var parentTargetDirectory = new FileInfo(target).DirectoryName;
-
-                if (!Directory.Exists(parentTargetDirectory))
-                {
-                    Directory.CreateDirectory(parentTargetDirectory);
-                }
-
-                File.Copy(source, target, true);
+                return true;
             }
+
+            if (File.Exists(path))
+            {
+                return true;
+            }
+
+            return false;
+
         }
 
         public void Dispose()
         {
-            // Delete the temp directory
-
-            if (DeleteAfterCompletion)
+            if (File.Exists(ExePath))
             {
-                Directory.Delete(TempPath, true);
+                File.Delete(ExePath);
+            }
+
+            if (Directory.Exists(TempDirectory))
+            {
+                Directory.Delete(TempDirectory, true);
             }
         }
     }

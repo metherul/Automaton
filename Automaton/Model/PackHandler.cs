@@ -36,16 +36,17 @@ namespace Automaton.Model
 
             if (!File.Exists(ModPackLocation))
             {
-                return null;
+                throw new Exception($"Modpack location not found: {ModPackLocation}");
             }
 
-            var tempDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
-
             // Unzip the file into the temporary directory
-            using (var sevenZipHandler = new SevenZipHandler(ModPackLocation, false))
+            using (var sevenZipHandler = new SevenZipHandler())
             {
+                var tempDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
                 var extractedModPackName = Path.GetFileNameWithoutExtension(ModPackLocation);
                 var extractedModPackPath = Path.Combine(tempDirectory, extractedModPackName);
+
+                sevenZipHandler.ExtractArchive(modPackLocation);
 
                 var packFileLocation = Path.Combine(extractedModPackPath, "modpack.json");
 
@@ -151,16 +152,18 @@ namespace Automaton.Model
                 return;
             }
 
-            foreach (var mod in mods)
+            using (var sevenZipExtractor = new SevenZipHandler())
             {
-                var workingModFile = sourceFiles.Where(x => x.Length.ToString() == mod.FileSize || x.Name == mod.FileName).First();
-                var installations = mod.Installations;
-
-                using (var extractionHandler = new SevenZipHandler(workingModFile.FullName, true))
+                foreach (var mod in mods)
                 {
+                    var workingModFile = sourceFiles.Where(x => x.Length.ToString() == mod.FileSize || x.Name == mod.FileName).First();
+                    var installations = mod.Installations;
+
+                    sevenZipExtractor.ExtractArchive(workingModFile.FullName);
+
                     foreach (var installation in installations)
                     {
-                        extractionHandler.Install(installation.Source, InstallationLocation, installation.Target);
+                        sevenZipExtractor.Copy(mod, installation.Source, installation.Target);
                     }
                 }
             }
