@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 
-namespace Automaton.ViewModel
+namespace Automaton.Handles
 {
     class LoadingDialogHandle
     {

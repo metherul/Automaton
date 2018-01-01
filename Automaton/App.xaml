@@ -7,7 +7,8 @@
              d1p1:Ignorable="d" 
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:math="http://hexinnovation.com/math"
-             xmlns:vm="clr-namespace:Automaton.ViewModel">
+             xmlns:vm="clr-namespace:Automaton.ViewModel"
+             xmlns:handle="clr-namespace:Automaton.Handles">
     
   <Application.Resources>
         <ResourceDictionary>
@@ -21,7 +22,7 @@
             <SolidColorBrush x:Key="MaterialDesignBackground" Color="#E4E4E4"/>
             <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
 
-            <vm:TransitionHandler x:Key="DialogHandler"/>
+            <handle:TransitionHandler x:Key="DialogHandler"/>
         </ResourceDictionary>
   </Application.Resources>
 </Application>

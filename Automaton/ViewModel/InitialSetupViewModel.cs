@@ -1,4 +1,5 @@
-﻿using Automaton.Model;
+﻿using Automaton.Handles;
+using Automaton.Model;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.ComponentModel;

@@ -21,24 +21,31 @@
     </UserControl.DataContext>
 
     <materialDesign:DialogHost IsOpen="{Binding IsOpen}">
-        <materialDesign:DialogHost.Background>
-            <SolidColorBrush Color="Black" Opacity=".9"/>
-        </materialDesign:DialogHost.Background>
+
         <materialDesign:DialogHost.DialogContent>
-            <Grid Margin="5" Height="250" MaxHeight="250" Width="400">
+            
+            <Grid Margin="5" Height="250" MaxHeight="250" Width="400" MaxWidth="400">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,5" Text="{Binding Title}"/>
 
-                <ScrollViewer Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden"
                               vm:ScrollViewerExtensions.AlwaysScrollToEnd="True">
-                    <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}" ScrollViewer.CanContentScroll="False"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                    <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding ErrorMessage}" Margin="5"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                             TextWrapping="Wrap"/>
                 </ScrollViewer>
+
+                <Button Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding CloseDialogCommand}">
+                    DONE
+                </Button>
             </Grid>
+            
         </materialDesign:DialogHost.DialogContent>
     </materialDesign:DialogHost>
 </UserControl>

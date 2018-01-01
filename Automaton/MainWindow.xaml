@@ -84,7 +84,9 @@
 
             </materialDesign:Transitioner>
 
+            <!-- Application Dialogs -->
             <local:LoadingDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <local:GenericErrorDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

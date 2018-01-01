@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.ComponentModel;
 
-namespace Automaton.ViewModel
+namespace Automaton.Handles
 {
     class TransitionHandler : INotifyPropertyChanged
     {

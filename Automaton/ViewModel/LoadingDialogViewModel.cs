@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using Automaton.Handles;
+using GalaSoft.MvvmLight.Messaging;
 using System.ComponentModel;
 
 namespace Automaton.ViewModel
