@@ -57,10 +57,10 @@ namespace Automaton.Model
             {
                 FileName = ExePath,
                 Arguments = $"x \"{path}\" -o\"{extractedPath}\" -y",
-                RedirectStandardError = false,
-                RedirectStandardOutput = false,
-                UseShellExecute = true,
-                CreateNoWindow = false
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
             };
 
             using (var process = new Process())

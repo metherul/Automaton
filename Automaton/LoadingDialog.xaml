@@ -15,37 +15,29 @@
             Background="{DynamicResource MaterialDesignPaper}"
             FontFamily="{DynamicResource MaterialDesignFont}"
             RenderOptions.ClearTypeHint="Enabled"
-            mc:Ignorable="d" 
-            d:DesignHeight="300" d:DesignWidth="300">
+            mc:Ignorable="d">
     <UserControl.DataContext>
         <vm:LoadingDialogViewModel/>
     </UserControl.DataContext>
 
-    <materialDesign:DialogHost IsOpen="{Binding IsOpen}">
-        <materialDesign:DialogHost.Background>
-            <SolidColorBrush Color="Black" Opacity=".9"/>
-        </materialDesign:DialogHost.Background>
-        <materialDesign:DialogHost.DialogContent>
-            <Grid Margin="5" Height="250" MaxHeight="250" Width="400">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+    <Grid Margin="5" Height="250" MaxHeight="250" Width="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,5" Text="{Binding Title}"/>
-                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="13" Foreground="Gray" Text="{Binding Message}"/>
-                
-                <ProgressBar Grid.Row="2" IsIndeterminate="true" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
-                <ProgressBar Grid.Row="2" Value="100" Visibility="{Binding IsDoneLoading, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
-                
-                <ScrollViewer Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,5" Text="{Binding Title}"/>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="13" Foreground="Gray" Text="{Binding Message}"/>
+
+        <ProgressBar Grid.Row="2" IsIndeterminate="true" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
+        <ProgressBar Grid.Row="2" Value="100" Visibility="{Binding IsDoneLoading, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
+
+        <ScrollViewer Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                               vm:ScrollViewerExtensions.AlwaysScrollToEnd="True">
-                    <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}" ScrollViewer.CanContentScroll="False"
+            <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}" ScrollViewer.CanContentScroll="False"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                </ScrollViewer>
-            </Grid>
-        </materialDesign:DialogHost.DialogContent>
-    </materialDesign:DialogHost>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

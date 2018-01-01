@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using Automaton.Handles;
+using GalaSoft.MvvmLight.Messaging;
 using System.ComponentModel;
 
 namespace Automaton.ViewModel
@@ -11,7 +12,6 @@ namespace Automaton.ViewModel
         public string Message { get; set; }
         public string DebugText { get; set; }
 
-        public bool IsOpen { get; set; }
         public bool IsDoneLoading { get; set; }
 
         public LoadingDialogViewModel()
@@ -34,11 +34,6 @@ namespace Automaton.ViewModel
             if (!string.IsNullOrEmpty(payload.DebugText))
             {
                 DebugText += $"{payload.DebugText} \n";
-            }
-
-            if (payload.IsOpen != null)
-            {
-                IsOpen = (bool)payload.IsOpen;
             }
 
             if (payload.IsDoneLoading != null)

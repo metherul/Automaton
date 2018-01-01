@@ -6,7 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using static Automaton.ViewModel.LoadingDialogHandle;
+using System.Windows;
+using static Automaton.Handles.LoadingDialogHandle;
 
 namespace Automaton.Model
 {
@@ -58,7 +59,9 @@ namespace Automaton.Model
 
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message);
+                    MessageBox.Show(e.Message, "PARSE ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    return null;
                 }
             }
 

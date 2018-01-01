@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Automaton"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:vm="clr-namespace:Automaton.ViewModel"
+        xmlns:handle="clr-namespace:Automaton.Handles"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -17,47 +18,14 @@
         mc:Ignorable="d"
         UseLayoutRounding="True"
         Title="Automaton" Height="700" Width="1100" AllowsTransparency="False">
+
     <Window.DataContext>
-        <vm:MainWindowViewModel />
+        <handle:TransitionHandler/>
     </Window.DataContext>
     
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <!-- Header -->
-        <materialDesign:ColorZone Mode="PrimaryMid" materialDesign:ShadowAssist.ShadowDepth="Depth3" Grid.Row="0" VerticalAlignment="Stretch">
-            <Grid Margin="10,0,5,0">
-                <TextBlock FontSize="18" FontWeight="Regular" VerticalAlignment="Center" Text="{Binding PackName, Mode=TwoWay}" Margin="15,0,0,0"/>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-
-                    <Button Style="{StaticResource MaterialDesignToolButton}" Foreground="{DynamicResource MaterialDesignPaper}"
-                            Command="{Binding InstallModPackCommand}" FontSize="15" FontWeight="Medium" Margin="0,0,10,0">INSTALL PACK</Button>
-
-                    <materialDesign:PopupBox>
-                    </materialDesign:PopupBox>
-                </StackPanel>
-            </Grid>
-        </materialDesign:ColorZone>
-
-        <!-- Mod viewer -->
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-            <materialDesign:Card Margin="4" VerticalAlignment="Stretch">
-                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ModsList}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
-                          IsHitTestVisible="False" Margin="5,0,5,0" CanUserAddRows="False" Background="White">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Load Order" Binding="{Binding LoadOrder}" Width="100" IsReadOnly="False"/>
-                        <DataGridTextColumn Header="Mod Name" Binding="{Binding ModName}" Width="350"/>
-                        <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="20000" IsReadOnly="False"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </materialDesign:Card>
-        </ScrollViewer>
-
         <!-- Pre-installation dialog container -->
-        <Grid Grid.RowSpan="2" DataContext="{StaticResource DialogHandler}" Visibility="{Binding IsCardOpen, Converter={StaticResource BoolToVisibility}}">
+        <Grid DataContext="{StaticResource DialogHandler}">
             <Image Source="/Automaton;component/Content/alduin.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-5">
                 <Image.Effect>
                     <BlurEffect Radius="5"/>
@@ -70,21 +38,40 @@
                     <local:InitialSetupDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </materialDesign:TransitionerSlide>
 
-                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect SlideInFromRight}" ClipToBounds="True">
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideWipe/>
+                    </materialDesign:TransitionerSlide.ForwardWipe>
                     <local:OptionalInstallerDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/>
                 </materialDesign:TransitionerSlide>
 
-                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect SlideInFromRight}" ClipToBounds="True">
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideWipe/>
+                    </materialDesign:TransitionerSlide.ForwardWipe>
                     <local:ModValidationDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/>
                 </materialDesign:TransitionerSlide>
 
-                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect SlideInFromRight}" ClipToBounds="True">
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideWipe/>
+                    </materialDesign:TransitionerSlide.ForwardWipe>
                     <local:CompletedDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </materialDesign:TransitionerSlide>
 
-            </materialDesign:Transitioner>
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect SlideInFromRight}" ClipToBounds="True">
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideOutWipe/>
+                    </materialDesign:TransitionerSlide.ForwardWipe>
+                    <local:ModListViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"/>
+                </materialDesign:TransitionerSlide>
 
-            <local:LoadingDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect SlideInFromRight}" ClipToBounds="True">
+                    <local:LoadingDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </materialDesign:TransitionerSlide>
+
+            </materialDesign:Transitioner>
         </Grid>
     </Grid>
+
 </Window>

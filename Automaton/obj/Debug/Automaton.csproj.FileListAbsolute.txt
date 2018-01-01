@@ -69,8 +69,10 @@ C:\Programming\C# Projects\Automaton\Automaton\obj\Debug\Automaton.Properties.Re
 C:\Programming\C# Projects\Automaton\Automaton\obj\Debug\Automaton.csproj.GenerateResource.Cache
 C:\Programming\C# Projects\Automaton\Automaton\obj\Debug\Automaton.exe
 C:\Programming\C# Projects\Automaton\Automaton\obj\Debug\Automaton.pdb
+C:\Programming\C#\Automaton\Automaton\bin\Debug\Automaton.exe.config
+C:\Programming\C#\Automaton\Automaton\bin\Debug\Automaton.exe
+C:\Programming\C#\Automaton\Automaton\bin\Debug\Automaton.pdb
 C:\Programming\C#\Automaton\Automaton\obj\Debug\CompletedDialog.g.cs
-C:\Programming\C#\Automaton\Automaton\obj\Debug\GenericErrorDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\InitialSetupDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\LoadingDialog.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\MainWindow.g.cs
@@ -81,12 +83,8 @@ C:\Programming\C#\Automaton\Automaton\obj\Debug\App.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton_MarkupCompile.cache
 C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton_MarkupCompile.lref
-C:\Programming\C#\Automaton\Automaton\bin\Debug\Automaton.exe.config
-C:\Programming\C#\Automaton\Automaton\bin\Debug\Automaton.exe
-C:\Programming\C#\Automaton\Automaton\bin\Debug\Automaton.pdb
 C:\Programming\C#\Automaton\Automaton\obj\Debug\App.baml
 C:\Programming\C#\Automaton\Automaton\obj\Debug\CompletedDialog.baml
-C:\Programming\C#\Automaton\Automaton\obj\Debug\GenericErrorDialog.baml
 C:\Programming\C#\Automaton\Automaton\obj\Debug\InitialSetupDialog.baml
 C:\Programming\C#\Automaton\Automaton\obj\Debug\LoadingDialog.baml
 C:\Programming\C#\Automaton\Automaton\obj\Debug\MainWindow.baml
@@ -99,3 +97,5 @@ C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.csproj.GenerateResourc
 C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.csproj.CoreCompileInputs.cache
 C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.exe
 C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.pdb
+C:\Programming\C#\Automaton\Automaton\obj\Debug\ModListViewer.g.cs
+C:\Programming\C#\Automaton\Automaton\obj\Debug\ModListViewer.baml
