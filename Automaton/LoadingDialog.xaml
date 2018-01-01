@@ -22,8 +22,11 @@
     </UserControl.DataContext>
 
     <materialDesign:DialogHost IsOpen="{Binding IsOpen}">
+        <materialDesign:DialogHost.Background>
+            <SolidColorBrush Color="Black" Opacity=".9"/>
+        </materialDesign:DialogHost.Background>
         <materialDesign:DialogHost.DialogContent>
-            <Grid Margin="5" Height="200" MaxHeight="200" Width="400">
+            <Grid Margin="5" Height="250" MaxHeight="250" Width="400">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

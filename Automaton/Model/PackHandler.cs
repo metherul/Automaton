@@ -42,6 +42,26 @@ namespace Automaton.Model
                 throw new Exception($"Modpack location not found: {ModPackLocation}");
             }
 
+            if (Path.GetExtension(modPackLocation) == ".json")
+            {
+                var modPackContents = File.ReadAllText(modPackLocation);
+
+                try
+                {
+                    ModPack = JsonConvert.DeserializeObject<ModPack>(modPackContents);
+                    ModsList = ModPack.Mods;
+
+                    Messenger.Default.Send(ModPack, MessengerToken.ModPack);
+
+                    return ModPack;
+                }
+
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
+            }
+
             // Unzip the file into the temporary directory
             using (var sevenZipHandler = new SevenZipHandler())
             {
@@ -175,7 +195,7 @@ namespace Automaton.Model
 
                     foreach (var installation in installations)
                     {
-                        UpdateDebugText($"Copying: /{installation.Source} → /{installation.Target}");
+                        UpdateDebugText($"Copying: \"/{installation.Source}\" → \"/{installation.Target}\"");
 
                         sevenZipExtractor.Copy(mod, installation.Source, installation.Target);
                     }

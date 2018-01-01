@@ -32,7 +32,6 @@ namespace Automaton.ViewModel
         private void InstallModPack()
         {
             PackHandler.ThreadedInstallModPack();
-            //PackHandler.InstallModPack();
         }
     }
 }
