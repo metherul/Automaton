@@ -166,7 +166,7 @@ namespace Automaton.Model
                     var workingModFile = sourceFiles.Where(x => x.Length.ToString() == mod.FileSize || x.Name == mod.FileName).First();
                     var installations = mod.Installations;
 
-                    UpdateDebugText($"Target: {mod.ModName} - ({mods.FindIndex(x => x == mod) + 1}/{mods.Count})");
+                    UpdateDebugText($"({mods.FindIndex(x => x == mod) + 1}/{mods.Count}) - {mod.ModName}");
                     UpdateDebugText($"Extracting: {mod.FileName}");
 
                     sevenZipExtractor.ExtractArchive(workingModFile.FullName);
@@ -190,7 +190,7 @@ namespace Automaton.Model
                 }
             }
 
-            UpdateDialog("Installation Complete", "Automaton can know be closed. Enjoy your modded experience!", "OPERATION COMPLETED");
+            UpdateDialog("Installation Complete", "Automaton can now be closed. Enjoy your modded experience!", "OPERATION COMPLETED");
             LoadingComplete();
         }
 
