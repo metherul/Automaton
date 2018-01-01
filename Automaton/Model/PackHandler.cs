@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using Automaton.ViewModel;
+using GalaSoft.MvvmLight.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Automaton.Model
         }
 
         /// <summary>
-        /// Reads the targeted file for valid JSON and converts it to a ModPack object. This is save within the PackHandler
+        /// Reads the targeted file for valid JSON and converts it to a ModPack object. This is saved within the PackHandler
         /// </summary>
         public static ModPack ReadPack(string modPackLocation)
         {
@@ -151,6 +152,9 @@ namespace Automaton.Model
             {
                 return;
             }
+
+            // Initialize the loading dialog.
+            LoadingDialogHandle.OpenDialog("Installing Modpack", "This may take a while...", sourceFiles.Count);
 
             using (var sevenZipExtractor = new SevenZipHandler())
             {
