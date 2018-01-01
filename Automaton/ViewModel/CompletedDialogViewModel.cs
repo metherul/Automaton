@@ -1,21 +1,20 @@
 ﻿using Automaton.Handles;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 
 namespace Automaton.ViewModel
 {
     class CompletedDialogViewModel
     {
-        public RelayCommand CloseCardCommand { get; set; }
+        public RelayCommand NextCardCommand { get; set; }
 
         public CompletedDialogViewModel()
         {
-            CloseCardCommand = new RelayCommand(CloseCard);
+            NextCardCommand = new RelayCommand(NextCard);
         }
 
-        public void CloseCard()
+        public void NextCard()
         {
-            Messenger.Default.Send(CardControl.CloseCard);
+            TransitionHandler.CalculateNextCard(CardIndex.CompletedSetup);
         }
     }
 }

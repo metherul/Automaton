@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Programming\C#\Automaton\Automaton\App.xaml
-81273965971
+81045827248
 
-33-1361945795
+31631029704
 82-1504288364
-CompletedDialog.xaml;GenericErrorDialog.xaml;InitialSetupDialog.xaml;LoadingDialog.xaml;MainWindow.xaml;ModValidationDialog.xaml;OptionalInstallerDialog.xaml;OptionalsInstaller.xaml;
+CompletedDialog.xaml;InitialSetupDialog.xaml;LoadingDialog.xaml;MainWindow.xaml;ModListViewer.xaml;ModValidationDialog.xaml;OptionalInstallerDialog.xaml;OptionalsInstaller.xaml;
 
-True
+False
 

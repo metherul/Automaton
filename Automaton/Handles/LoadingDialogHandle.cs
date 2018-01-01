@@ -11,9 +11,10 @@ namespace Automaton.Handles
                 Title = title,
                 Message = message,
                 DebugText = "",
-                IsOpen = true,
                 IsDoneLoading = false
             };
+
+
 
             SendPayload(payload);
         }
@@ -61,7 +62,6 @@ namespace Automaton.Handles
         public string Title;
         public string Message;
         public string DebugText;
-        public bool? IsOpen;
         public bool? IsDoneLoading;
     }
 }

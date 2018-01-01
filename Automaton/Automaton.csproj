@@ -103,9 +103,6 @@
     <Compile Include="CompletedDialog.xaml.cs">
       <DependentUpon>CompletedDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GenericErrorDialog.xaml.cs">
-      <DependentUpon>GenericErrorDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="InitialSetupDialog.xaml.cs">
       <DependentUpon>InitialSetupDialog.xaml</DependentUpon>
     </Compile>
@@ -117,6 +114,9 @@
     <Compile Include="Model\FlagHandler.cs" />
     <Compile Include="Model\MessengerToken.cs" />
     <Compile Include="Model\SevenZipHandler.cs" />
+    <Compile Include="ModListViewer.xaml.cs">
+      <DependentUpon>ModListViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ModValidationDialog.xaml.cs">
       <DependentUpon>ModValidationDialog.xaml</DependentUpon>
     </Compile>
@@ -127,22 +127,16 @@
       <DependentUpon>OptionalsInstaller.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CompletedDialogViewModel.cs" />
-    <Compile Include="Handles\GenericErrorDialogHandler.cs" />
-    <Compile Include="ViewModel\GenericErrorDialogViewModel.cs" />
     <Compile Include="Handles\LoadingDialogHandle.cs" />
     <Compile Include="ViewModel\LoadingDialogViewModel.cs" />
+    <Compile Include="ViewModel\ModListViewerViewModel.cs" />
     <Compile Include="ViewModel\ScrollViewerExtensions.cs" />
     <Compile Include="Handles\TransitionHandler.cs" />
     <Compile Include="ViewModel\InitialSetupViewModel.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ModValidationViewModel.cs" />
     <Compile Include="ViewModel\OptionalsInstallerViewModel.cs" />
     <Compile Include="Model\PackFile.cs" />
     <Page Include="CompletedDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GenericErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -166,6 +160,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ModListViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ModValidationDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

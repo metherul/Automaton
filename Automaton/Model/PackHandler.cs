@@ -1,5 +1,4 @@
-﻿using Automaton.Handles;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows;
 using static Automaton.Handles.LoadingDialogHandle;
 
 namespace Automaton.Model
@@ -59,7 +59,7 @@ namespace Automaton.Model
 
                 catch (Exception e)
                 {
-                    GenericErrorDialogHandler.OpenDialog("JSON PARSE ERROR", e.Message);
+                    MessageBox.Show(e.Message, "PARSE ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
 
                     return null;
                 }

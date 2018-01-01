@@ -29,7 +29,7 @@
 
             <materialDesign:PackIcon Kind="CheckCircleOutline" HorizontalAlignment="Center" VerticalAlignment="Center" Height="130" Width="Auto" Margin="0,20,0,0" Foreground="Green"/>
             <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{Binding CloseCardCommand}">DONE</Button>
+                    Command="{Binding NextCardCommand}">DONE</Button>
         </Grid>
     </materialDesign:Card>
 </UserControl>

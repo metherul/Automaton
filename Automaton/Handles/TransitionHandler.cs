@@ -65,6 +65,21 @@ namespace Automaton.Handles
             {
                 Messenger.Default.Send(CardIndex.CompletedSetup);
             }
+
+            else if (currentIndex == CardIndex.CompletedSetup)
+            {
+                Messenger.Default.Send(CardIndex.ModViewer);
+            }
+
+            else if (currentIndex == CardIndex.ModViewer)
+            {
+                Messenger.Default.Send(CardIndex.LoadingDialog);
+            }
+        }
+
+        public static void SetCurrentCard(CardIndex currentIndex)
+        {
+            Messenger.Default.Send(currentIndex);
         }
     }
 
@@ -73,7 +88,9 @@ namespace Automaton.Handles
         InitialSetup = 0,
         OptionalSetup = 1,
         ModValidation = 2,
-        CompletedSetup = 3
+        CompletedSetup = 3,
+        ModViewer = 4,
+        LoadingDialog = 5
     }
 
     public enum CardControl
