@@ -126,6 +126,7 @@
     <Compile Include="ViewModel\CompletedDialogViewModel.cs" />
     <Compile Include="ViewModel\LoadingDialogHandle.cs" />
     <Compile Include="ViewModel\LoadingDialogViewModel.cs" />
+    <Compile Include="ViewModel\ScrollViewerExtensions.cs" />
     <Compile Include="ViewModel\TransitionHandler.cs" />
     <Compile Include="ViewModel\InitialSetupViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />

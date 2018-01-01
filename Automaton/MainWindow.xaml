@@ -84,7 +84,7 @@
 
             </materialDesign:Transitioner>
 
-            <materialDesign:DialogHost Identifier="RootDialog" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <local:LoadingDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

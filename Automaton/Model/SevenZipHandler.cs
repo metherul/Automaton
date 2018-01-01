@@ -76,6 +76,20 @@ namespace Automaton.Model
         }
 
         /// <summary>
+        /// Deletes the extracted folder from the temp directory.
+        /// </summary>
+        /// <param name="path"></param>
+        public void DeleteExtractedFiles(string path)
+        {
+            var extractedPath = Path.Combine(TempDirectory, Path.GetFileNameWithoutExtension(path));
+
+            if (Directory.Exists(extractedPath))
+            {
+                Directory.Delete(extractedPath, true);
+            }
+        }
+
+        /// <summary>
         /// Copies a file/directory from a location within the extracted archive to a target.
         /// </summary>
         /// <param name="source">The source location -- denoted in a locational offset within the archive.</param>

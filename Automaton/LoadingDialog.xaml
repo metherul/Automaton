@@ -21,9 +21,9 @@
         <vm:LoadingDialogViewModel/>
     </UserControl.DataContext>
 
-    <materialDesign:DialogHost>
-        <materialDesign:Card Height="200" Width="400">
-            <Grid Margin="5">
+    <materialDesign:DialogHost IsOpen="{Binding IsOpen}">
+        <materialDesign:DialogHost.DialogContent>
+            <Grid Margin="5" Height="200" MaxHeight="200" Width="400">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -31,13 +31,18 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,5" Text="{Binding Title}">Installing</TextBlock>
-                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="13" Foreground="Gray" Text="{Binding Message}">This process may take some time.</TextBlock>
-                <ProgressBar Grid.Row="2" HorizontalAlignment="Stretch" Height="5" Value="{Binding CurrentValue}" Margin="0,0,0,10"/>
-                <TextBlock Grid.Row="3" HorizontalAlignment="Stretch" FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}">Debug</TextBlock>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,5" Text="{Binding Title}"/>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="13" Foreground="Gray" Text="{Binding Message}"/>
+                
+                <ProgressBar Grid.Row="2" IsIndeterminate="true" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
+                <ProgressBar Grid.Row="2" Value="100" Visibility="{Binding IsDoneLoading, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
+                
+                <ScrollViewer Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              vm:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+                    <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}" ScrollViewer.CanContentScroll="False"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                </ScrollViewer>
             </Grid>
-        </materialDesign:Card>
+        </materialDesign:DialogHost.DialogContent>
     </materialDesign:DialogHost>
-    
-    
 </UserControl>

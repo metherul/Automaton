@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using MaterialDesignThemes.Wpf;
 using System.ComponentModel;
 
 namespace Automaton.ViewModel
@@ -12,10 +11,8 @@ namespace Automaton.ViewModel
         public string Message { get; set; }
         public string DebugText { get; set; }
 
-        public int CurrentValue { get; set; }
-        public int MaxValue { get; set; }
-
         public bool IsOpen { get; set; }
+        public bool IsDoneLoading { get; set; }
 
         public LoadingDialogViewModel()
         {
@@ -36,39 +33,18 @@ namespace Automaton.ViewModel
 
             if (!string.IsNullOrEmpty(payload.DebugText))
             {
-                DebugText = payload.DebugText;
-            }
-
-            if (payload.CurrentValue != null)
-            {
-                CurrentValue = (int)payload.CurrentValue;
-            }
-
-            if (payload.MaxValue != null)
-            {
-                MaxValue = (int)payload.MaxValue;
+                DebugText += $"{payload.DebugText} \n";
             }
 
             if (payload.IsOpen != null)
             {
                 IsOpen = (bool)payload.IsOpen;
-
-                if (IsOpen)
-                {
-                    OpenDialogHost();
-                }
             }
-        }
 
-        private async void OpenDialogHost()
-        {
-            var view = new LoadingDialog();
-            await DialogHost.Show(view, "RootDialog", OnDialogClose);
-        }
-
-        private void OnDialogClose(object sender, DialogClosingEventArgs eventArgs)
-        {
-
+            if (payload.IsDoneLoading != null)
+            {
+                IsDoneLoading = (bool)payload.IsDoneLoading;
+            }
         }
     }
 }

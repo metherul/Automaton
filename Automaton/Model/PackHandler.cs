@@ -1,10 +1,12 @@
-﻿using Automaton.ViewModel;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using static Automaton.ViewModel.LoadingDialogHandle;
 
 namespace Automaton.Model
 {
@@ -154,23 +156,51 @@ namespace Automaton.Model
             }
 
             // Initialize the loading dialog.
-            LoadingDialogHandle.OpenDialog("Installing Modpack", "This may take a while...", sourceFiles.Count);
+            OpenDialog("Installing Modpack", "This may take a while...");
 
             using (var sevenZipExtractor = new SevenZipHandler())
             {
                 foreach (var mod in mods)
                 {
+                    var stopwatch = Stopwatch.StartNew();
                     var workingModFile = sourceFiles.Where(x => x.Length.ToString() == mod.FileSize || x.Name == mod.FileName).First();
                     var installations = mod.Installations;
 
+                    UpdateDebugText($"Target: {mod.ModName} - ({mods.FindIndex(x => x == mod) + 1}/{mods.Count})");
+                    UpdateDebugText($"Extracting: {mod.FileName}");
+
                     sevenZipExtractor.ExtractArchive(workingModFile.FullName);
+
+                    UpdateDebugText($"Extracted successfully");
 
                     foreach (var installation in installations)
                     {
+                        UpdateDebugText($"Copying: /{installation.Source} → /{installation.Target}");
+
                         sevenZipExtractor.Copy(mod, installation.Source, installation.Target);
                     }
+
+                    UpdateDebugText("Deleting extracted files...");
+                    sevenZipExtractor.DeleteExtractedFiles(workingModFile.FullName);
+
+                    stopwatch.Stop();
+
+                    UpdateDebugText($"Completed in {stopwatch.Elapsed} seconds");
+                    UpdateDebugText("####################");
                 }
             }
+
+            UpdateDialog("Installation Complete", "Automaton can know be closed. Enjoy your modded experience!", "OPERATION COMPLETED");
+            LoadingComplete();
+        }
+
+        /// <summary>
+        /// A threaded variation of InstallModPack.
+        /// </summary>
+        public static void ThreadedInstallModPack()
+        {
+            var thread = new Thread(new ThreadStart(InstallModPack));
+            thread.Start();
         }
     }
 }

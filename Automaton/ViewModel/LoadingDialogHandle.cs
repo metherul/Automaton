@@ -4,34 +4,50 @@ namespace Automaton.ViewModel
 {
     class LoadingDialogHandle
     {
-        public static void OpenDialog(string title, string message, int maxValue)
+        public static void OpenDialog(string title, string message)
         {
             var payload = new LoadingDialogPayload()
             {
                 Title = title,
                 Message = message,
                 DebugText = "",
-                MaxValue = maxValue,
-                CurrentValue = 0,
-                IsOpen = true
+                IsOpen = true,
+                IsDoneLoading = false
             };
 
             SendPayload(payload);
         }
 
-        public static void UpdateDialog(string title, string message, string debugText, int currentValue)
+        public static void UpdateDialog(string title, string message, string debugText)
         {
+            var payload = new LoadingDialogPayload()
+            {
+                Title = title,
+                Message = message,
+                DebugText = debugText,
+            };
 
+            SendPayload(payload);
         }
 
         public static void UpdateDebugText(string debugText)
         {
+            var payload = new LoadingDialogPayload()
+            {
+                DebugText = debugText
+            };
 
+            SendPayload(payload);
         }
 
-        public static void UpdateMessage(string message)
+        public static void LoadingComplete()
         {
+            var payload = new LoadingDialogPayload()
+            {
+                IsDoneLoading = true
+            };
 
+            SendPayload(payload);
         }
 
         private static void SendPayload(LoadingDialogPayload payload)
@@ -45,8 +61,7 @@ namespace Automaton.ViewModel
         public string Title;
         public string Message;
         public string DebugText;
-        public int? MaxValue;
-        public int? CurrentValue;
         public bool? IsOpen;
+        public bool? IsDoneLoading;
     }
 }
