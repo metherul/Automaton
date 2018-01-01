@@ -1,0 +1,51 @@
+﻿<UserControl 
+            x:Class="Automaton.LoadingDialog"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+            xmlns:vm="clr-namespace:Automaton.ViewModel"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal" 
+            TextOptions.TextRenderingMode="Auto"        
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}"
+            RenderOptions.ClearTypeHint="Enabled"
+            mc:Ignorable="d" 
+            d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <vm:LoadingDialogViewModel/>
+    </UserControl.DataContext>
+
+    <materialDesign:DialogHost IsOpen="{Binding IsOpen}">
+        <materialDesign:DialogHost.Background>
+            <SolidColorBrush Color="Black" Opacity=".9"/>
+        </materialDesign:DialogHost.Background>
+        <materialDesign:DialogHost.DialogContent>
+            <Grid Margin="5" Height="250" MaxHeight="250" Width="400">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,5" Text="{Binding Title}"/>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="13" Foreground="Gray" Text="{Binding Message}"/>
+                
+                <ProgressBar Grid.Row="2" IsIndeterminate="true" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
+                <ProgressBar Grid.Row="2" Value="100" Visibility="{Binding IsDoneLoading, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,10"/>
+                
+                <ScrollViewer Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              vm:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+                    <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}" ScrollViewer.CanContentScroll="False"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                </ScrollViewer>
+            </Grid>
+        </materialDesign:DialogHost.DialogContent>
+    </materialDesign:DialogHost>
+</UserControl>

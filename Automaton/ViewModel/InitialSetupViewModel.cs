@@ -41,7 +41,7 @@ namespace Automaton.ViewModel
             var dialog = new OpenFileDialog()
             {
                 Title = "Select a packfile",
-                Filter = "PACK FILES (*.7z, *.rar, *.zip)|*.7z; *.rar; *.zip;"
+                Filter = "PACK FILES (*.7z, *.rar, *.zip, *.json)|*.7z; *.rar; *.zip; *.json;"
             };
 
             var result = dialog.ShowDialog();

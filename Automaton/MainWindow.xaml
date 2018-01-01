@@ -65,13 +65,13 @@
             </Image>
 
             <materialDesign:Transitioner DataContext="{StaticResource DialogHandler}" SelectedIndex="{Binding CurrentCardIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                
+
                 <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
                     <local:InitialSetupDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </materialDesign:TransitionerSlide>
 
                 <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
-                    <local:OptionalInstallerDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/> 
+                    <local:OptionalInstallerDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/>
                 </materialDesign:TransitionerSlide>
 
                 <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
@@ -83,6 +83,8 @@
                 </materialDesign:TransitionerSlide>
 
             </materialDesign:Transitioner>
+
+            <local:LoadingDialog HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

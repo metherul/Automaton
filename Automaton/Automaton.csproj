@@ -106,6 +106,9 @@
     <Compile Include="InitialSetupDialog.xaml.cs">
       <DependentUpon>InitialSetupDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoadingDialog.xaml.cs">
+      <DependentUpon>LoadingDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\PackHandlerHelper.cs" />
     <Compile Include="Model\PackHandler.cs" />
     <Compile Include="Model\FlagHandler.cs" />
@@ -121,6 +124,9 @@
       <DependentUpon>OptionalsInstaller.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CompletedDialogViewModel.cs" />
+    <Compile Include="ViewModel\LoadingDialogHandle.cs" />
+    <Compile Include="ViewModel\LoadingDialogViewModel.cs" />
+    <Compile Include="ViewModel\ScrollViewerExtensions.cs" />
     <Compile Include="ViewModel\TransitionHandler.cs" />
     <Compile Include="ViewModel\InitialSetupViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -132,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InitialSetupDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoadingDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
