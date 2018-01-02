@@ -97,7 +97,7 @@ namespace Automaton.Model
 
             if (Directory.Exists(extractedPath))
             {
-                Directory.Delete(extractedPath, true);
+                DeleteDirectory(extractedPath);
             }
         }
 
@@ -215,6 +215,35 @@ namespace Automaton.Model
             }
 
             return path;
+        }
+
+        /// <summary>
+        /// Will delete a directory, even if it is ReadOnly
+        /// </summary>
+        /// <param name="path"></param>
+        private void DeleteDirectory(string directoryPath)
+        {
+            var rootInfo = new DirectoryInfo(directoryPath) { Attributes = FileAttributes.Normal };
+
+            foreach (var fileInfo in rootInfo.GetFileSystemInfos())
+            {
+                fileInfo.Attributes = FileAttributes.Normal;
+            }
+
+            foreach (var subDirectory in Directory.GetDirectories(directoryPath, "*", SearchOption.AllDirectories))
+            {
+                var subInfo = new DirectoryInfo(subDirectory)
+                {
+                    Attributes = FileAttributes.Normal
+                };
+
+                foreach (var fileInfo in subInfo.GetFileSystemInfos())
+                {
+                    fileInfo.Attributes = FileAttributes.Normal;
+                }
+            }
+
+            Directory.Delete(directoryPath, true);
         }
 
         public void Dispose()
