@@ -222,8 +222,13 @@ namespace Automaton.Model
         /// </summary>
         public static void ThreadedInstallModPack()
         {
-            var thread = new Thread(new ThreadStart(InstallModPack));
+            var thread = new Thread(new ThreadStart(InstallModPack))
+            {
+                IsBackground = true
+            };
+
             thread.Start();
+
         }
     }
 }

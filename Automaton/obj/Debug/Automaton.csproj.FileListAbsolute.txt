@@ -99,3 +99,4 @@ C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.exe
 C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.pdb
 C:\Programming\C#\Automaton\Automaton\obj\Debug\ModListViewer.g.cs
 C:\Programming\C#\Automaton\Automaton\obj\Debug\ModListViewer.baml
+C:\Programming\C#\Automaton\Automaton\obj\Debug\Automaton.csprojResolveAssemblyReference.cache

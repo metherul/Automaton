@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Automaton"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:vm="clr-namespace:Automaton.ViewModel"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         xmlns:handle="clr-namespace:Automaton.Handles"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -20,10 +21,16 @@
         Title="Automaton" Height="700" Width="1100" AllowsTransparency="False">
 
     <Window.DataContext>
-        <handle:TransitionHandler/>
+        <vm:MainWindowViewModel/>
     </Window.DataContext>
     
-    <Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <cmd:EventToCommand Command="{Binding OnWindowCloseCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid DataContext="{StaticResource TransitionHandler}">
         <!-- Pre-installation dialog container -->
         <Grid DataContext="{StaticResource DialogHandler}">
             <Image Source="/Automaton;component/Content/alduin.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-5">
