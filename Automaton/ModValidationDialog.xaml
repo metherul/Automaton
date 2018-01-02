@@ -53,13 +53,6 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Load Order" Binding="{Binding LoadOrder}" Width="100" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Mod Name" Binding="{Binding ModName}" Width="*" IsReadOnly="True"/>
-
-                        <DataGridCheckBoxColumn>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </DataGridCheckBoxColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 

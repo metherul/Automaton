@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Automaton.ViewModel
@@ -44,7 +45,8 @@ namespace Automaton.ViewModel
 
             IsValidationComplete = false;
 
-            Messenger.Default.Register<List<Mod>>(this, MessengerToken.MissingMods, x => MissingMods = x);
+            Messenger.Default.Register<List<Mod>>(this, MessengerToken.MissingMods,
+                x => MissingMods = x.OrderBy(y => y.LoadOrder).ToList());
         }
 
         private void Validate()

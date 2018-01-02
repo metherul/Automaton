@@ -178,6 +178,8 @@ namespace Automaton.Model
                 return;
             }
 
+            var totalTime = Stopwatch.StartNew();
+
             // Initialize the loading dialog.
             OpenDialog("Installing Modpack", "This may take a while...");
 
@@ -213,7 +215,8 @@ namespace Automaton.Model
                 }
             }
 
-            UpdateDialog("Installation Complete", "Automaton can now be closed. Enjoy your modded experience!", "OPERATION COMPLETED");
+            totalTime.Stop();
+            UpdateDialog("Installation Complete", "Automaton can now be closed. Enjoy your modded experience!", $"OPERATION COMPLETED IN {totalTime.Elapsed}");
             LoadingComplete();
         }
 

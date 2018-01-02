@@ -96,6 +96,8 @@ namespace Automaton.Model
         /// <param name="target">The target location -- denoted in a location offset within the installation location.</param>
         public void Copy(Mod mod, string source, string target)
         {
+            source = CleanupPath(source);
+            target = CleanupPath(target);
             string realSourceLocation = Path.Combine(ExtractedFilePath, source);
             string realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
 
@@ -106,27 +108,31 @@ namespace Automaton.Model
 
             if (IsPathDirectory(realSourceLocation))
             {
-                var childDirectories = Directory.GetDirectories(realSourceLocation).ToList();
-                var childFiles = Directory.GetFiles(realSourceLocation).ToList();
+                // Files with the realSourceLocation removed.
+                var sourceFiles = Directory.GetFileSystemEntries(realSourceLocation, "*.*", SearchOption.AllDirectories).ToList()
+                    .Where(x => Path.HasExtension(x)).ToList();
 
-                childDirectories.ForEach(x => new Microsoft.VisualBasic.Devices.Computer().FileSystem
-                    .CopyDirectory(x, Path.Combine(realTargetLocation, new DirectoryInfo(x).Name)));
+                var targetFiles = sourceFiles
+                    .Select(x => new Uri(realSourceLocation).MakeRelativeUri(new Uri(x)).ToString())
+                    .Select(x => x = Uri.UnescapeDataString(x).ToString())
+                    .Select(x => Path.Combine(realTargetLocation, x)).ToList();
 
-                childFiles.ForEach(x => File.Copy(x, Path.Combine(realTargetLocation, new FileInfo(x).Name)));
+                foreach (var file in targetFiles)
+                {
+                    var directory = new FileInfo(file).DirectoryName;
+
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    File.Copy(sourceFiles[targetFiles.IndexOf(file)], file, true);
+                }
             }
 
             else
             {
-                var parentDirectory = new FileInfo(realTargetLocation).DirectoryName;
-
-                if (Directory.Exists(parentDirectory))
-                {
-                    Directory.Delete(parentDirectory, true);
-                }
-
-                Directory.CreateDirectory(parentDirectory);
-
-                File.Copy(realSourceLocation, realTargetLocation);
+                File.Copy(realSourceLocation, realTargetLocation, true);
             }
         }
 
@@ -166,6 +172,21 @@ namespace Automaton.Model
 
             return false;
 
+        }
+
+        private string CleanupPath(string path)
+        {
+            if (path.StartsWith("/"))
+            {
+                path = path.TrimStart('/');
+            }
+
+            if (!path.EndsWith("/") && !string.IsNullOrEmpty(path))
+            {
+                path += "/";
+            }
+
+            return path;
         }
 
         public void Dispose()
