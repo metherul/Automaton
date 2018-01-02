@@ -20,7 +20,7 @@
         <vm:LoadingDialogViewModel/>
     </UserControl.DataContext>
 
-    <Grid Margin="5" Height="250" MaxHeight="250" Width="400">
+    <Grid Margin="5" Height="400" MaxHeight="400" Width="600">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -37,7 +37,8 @@
         <ScrollViewer Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                               vm:ScrollViewerExtensions.AlwaysScrollToEnd="True">
             <TextBlock FontFamily="Consolas" Background="#e0e0e0" Text="{Binding DebugText}" ScrollViewer.CanContentScroll="False"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             TextWrapping="Wrap"/>
         </ScrollViewer>
     </Grid>
 </UserControl>

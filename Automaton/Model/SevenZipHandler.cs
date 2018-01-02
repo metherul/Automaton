@@ -9,7 +9,8 @@ namespace Automaton.Model
     {
         private static string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         private static string TempDirectory = Path.Combine(BaseDirectory, "temp");
-        private static string ExePath = Path.Combine(BaseDirectory, "7za.exe");
+        private static string ExePath = Path.Combine(BaseDirectory, "7z.exe");
+        private static string DLLPath = Path.Combine(BaseDirectory, "7z.dll");
 
         private static string ExtractedFilePath;
         private static string InstallationLocation;
@@ -17,16 +18,27 @@ namespace Automaton.Model
         public SevenZipHandler()
         {
             // Load the embedded resource into memory, and write to temporary file.
-            var embeddedBytes = Properties.Resources._7za;
+            var embeddedApplication = Properties.Resources._7z;
+            var embeddedDLL = Properties.Resources._7zDLL;
 
             if (File.Exists(ExePath))
             {
                 File.Delete(ExePath);
             }
 
+            if (File.Exists(DLLPath))
+            {
+                File.Delete(DLLPath);
+            }
+
             using (var fileStream = new FileStream(ExePath, FileMode.CreateNew))
             {
-                fileStream.Write(embeddedBytes, 0, embeddedBytes.Length);
+                fileStream.Write(embeddedApplication, 0, embeddedApplication.Length);
+            }
+
+            using (var fileStream = new FileStream(DLLPath, FileMode.CreateNew))
+            {
+                fileStream.Write(embeddedDLL, 0, embeddedDLL.Length);
             }
 
             InstallationLocation = PackHandler.InstallationLocation;
@@ -98,6 +110,7 @@ namespace Automaton.Model
         {
             source = CleanupPath(source);
             target = CleanupPath(target);
+
             string realSourceLocation = Path.Combine(ExtractedFilePath, source);
             string realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
 
@@ -110,7 +123,7 @@ namespace Automaton.Model
             {
                 // Files with the realSourceLocation removed.
                 var sourceFiles = Directory.GetFileSystemEntries(realSourceLocation, "*.*", SearchOption.AllDirectories).ToList()
-                    .Where(x => Path.HasExtension(x)).ToList();
+                    .Where(x => !IsPathDirectory(x)).ToList();
 
                 var targetFiles = sourceFiles
                     .Select(x => new Uri(realSourceLocation).MakeRelativeUri(new Uri(x)).ToString())
@@ -120,13 +133,14 @@ namespace Automaton.Model
                 foreach (var file in targetFiles)
                 {
                     var directory = new FileInfo(file).DirectoryName;
+                    var matchingSourceFile = sourceFiles[targetFiles.IndexOf(file)];
 
                     if (!Directory.Exists(directory))
                     {
                         Directory.CreateDirectory(directory);
                     }
 
-                    File.Copy(sourceFiles[targetFiles.IndexOf(file)], file, true);
+                    File.Copy(matchingSourceFile, file, true);
                 }
             }
 
@@ -176,12 +190,14 @@ namespace Automaton.Model
 
         private string CleanupPath(string path)
         {
+            var isFile = Path.HasExtension(path);
+
             if (path.StartsWith("/"))
             {
                 path = path.TrimStart('/');
             }
 
-            if (!path.EndsWith("/") && !string.IsNullOrEmpty(path))
+            if (!path.EndsWith("/") && !string.IsNullOrEmpty(path) && !isFile)
             {
                 path += "/";
             }
