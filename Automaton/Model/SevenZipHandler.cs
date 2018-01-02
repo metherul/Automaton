@@ -111,8 +111,8 @@ namespace Automaton.Model
             source = CleanupPath(source);
             target = CleanupPath(target);
 
-            string realSourceLocation = Path.Combine(ExtractedFilePath, source);
-            string realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
+            var realSourceLocation = Path.Combine(ExtractedFilePath, source);
+            var realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
 
             if (!DoesPathExist(realSourceLocation))
             {
@@ -188,6 +188,11 @@ namespace Automaton.Model
 
         }
 
+        /// <summary>
+        /// Clean up the string paths so they don't break as much
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         private string CleanupPath(string path)
         {
             var isFile = Path.HasExtension(path);
