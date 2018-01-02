@@ -86,7 +86,7 @@ namespace Automaton.Model
                 try
                 {
                     ModPack = JsonConvert.DeserializeObject<ModPack>(modPackContents);
-                    ModsList = ModPack.Mods;
+                    ModsList = ModPack.Mods.OrderBy(x => x.LoadOrder).ToList();
 
                     Messenger.Default.Send(ModPack, MessengerToken.ModPack);
 

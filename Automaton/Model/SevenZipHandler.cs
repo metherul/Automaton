@@ -146,6 +146,13 @@ namespace Automaton.Model
 
             else
             {
+                var directory = new FileInfo(realTargetLocation).DirectoryName;
+
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
                 File.Copy(realSourceLocation, realTargetLocation, true);
             }
         }
