@@ -138,7 +138,16 @@ namespace Automaton.Model
                 var targetFiles = sourceFiles
                     .Select(x => new Uri(realSourceLocation).MakeRelativeUri(new Uri(x)).ToString())
                     .Select(x => x = Uri.UnescapeDataString(x).ToString())
-                    .Select(x => Path.Combine(realTargetLocation, x)).ToList();
+                    .Select(x => Path.Combine(realTargetLocation, x))
+                    .Select(x => x.Replace('/', Path.DirectorySeparatorChar))
+                    .ToList();
+
+                if (string.IsNullOrEmpty(source))
+                {
+                    targetFiles = targetFiles.Select(x => x
+                        .Replace($"{Path.DirectorySeparatorChar}{new DirectoryInfo(ExtractedFilePath).Name}", ""))
+                        .ToList();
+                }
 
                 foreach (var ignore in ignoresTarget)
                 {
