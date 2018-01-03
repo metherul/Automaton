@@ -47,6 +47,8 @@ namespace Automaton.Model
         public string Type { get; set; }
         [JsonProperty("text")]
         public string Text { get; set; }
+        [JsonProperty("is_checked")]
+        public bool? IsChecked { get; set; }
         [JsonProperty("image")]
         public string Image { get; set; }
         [JsonProperty("description")]

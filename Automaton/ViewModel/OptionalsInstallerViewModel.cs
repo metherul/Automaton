@@ -73,12 +73,25 @@ namespace Automaton.ViewModel
                             Content = element.Text
                         };
 
+                        if (element.IsChecked != null)
+                        {
+                            checkbox.IsChecked = (bool)element.IsChecked;
+
+                            foreach (var flag in element.Flags.Where(x => x.Action == "checked"))
+                            {
+                                FlagHandler.FlagList.Add(new Model.StorageFlag()
+                                {
+                                    FlagName = flag.Name,
+                                    FlagValue = flag.Value
+                                });
+                            }
+                        }
+
                         // Checkbox event handler binding. 
                         checkbox.MouseEnter += Element_Hover;
                         checkbox.Checked += Element_Checked;
                         checkbox.Unchecked += Element_UnChecked;
 
-                        // Fuck it, lets just stick the entire element on the command parameter. Can't see how that would go wrong.
                         checkbox.CommandParameter = element;
 
                         stackPanel.Children.Add(checkbox);
@@ -90,6 +103,22 @@ namespace Automaton.ViewModel
                         {
                             Content = element.Text,
                         };
+
+                        if (element.IsChecked != null)
+                        {
+                            radioButton.IsChecked = (bool)element.IsChecked;
+
+                            foreach (var flag in element.Flags.Where(x => x.Event == "checked"))
+                            {
+                                FlagHandler.FlagList.Add(new Model.StorageFlag()
+                                {
+                                    FlagName = flag.Name,
+                                    FlagValue = flag.Value
+                                });
+                            }
+
+                            var test = FlagHandler.FlagList;
+                        }
 
                         // Radiobutton event handler binding
                         radioButton.MouseEnter += Element_Hover;
