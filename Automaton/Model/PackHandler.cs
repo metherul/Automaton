@@ -200,9 +200,9 @@ namespace Automaton.Model
 
                     foreach (var installation in installations)
                     {
-                        UpdateDebugText($"Copying: \"/{installation.Source}\" → \"/{installation.Target}\"");
+                        UpdateDebugText($"Copying: \"{installation.Source}\" → \"{installation.Target}\"");
 
-                        sevenZipExtractor.Copy(mod, installation.Source, installation.Target);
+                        sevenZipExtractor.Copy(mod, installation, installation.Source, installation.Target);
                     }
 
                     UpdateDebugText("Deleting extracted files...");

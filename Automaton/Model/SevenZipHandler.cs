@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Automaton.Handles;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -52,14 +53,14 @@ namespace Automaton.Model
         {
             if (Directory.Exists(ExtractedFilePath))
             {
-                Directory.Delete(ExtractedFilePath, true);
+                DeleteDirectory(ExtractedFilePath);
             }
 
             var extractedPath = Path.Combine(TempDirectory, Path.GetFileNameWithoutExtension(path));
 
             if (Directory.Exists(extractedPath))
             {
-                Directory.Delete(extractedPath, true);
+                DeleteDirectory(extractedPath);
             }
 
             Directory.CreateDirectory(extractedPath);
@@ -106,13 +107,16 @@ namespace Automaton.Model
         /// </summary>
         /// <param name="source">The source location -- denoted in a locational offset within the archive.</param>
         /// <param name="target">The target location -- denoted in a location offset within the installation location.</param>
-        public void Copy(Mod mod, string source, string target)
+        public void Copy(Mod mod, Installation installation, string source, string target)
         {
             source = CleanupPath(source);
             target = CleanupPath(target);
 
             var realSourceLocation = Path.Combine(ExtractedFilePath, source);
             var realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
+
+            var ignoresTarget = installation.Ignores.ToList()
+                .Select(x => Path.Combine(realTargetLocation, CleanupPath(x))).ToList();
 
             if (!DoesPathExist(realSourceLocation))
             {
@@ -129,6 +133,15 @@ namespace Automaton.Model
                     .Select(x => new Uri(realSourceLocation).MakeRelativeUri(new Uri(x)).ToString())
                     .Select(x => x = Uri.UnescapeDataString(x).ToString())
                     .Select(x => Path.Combine(realTargetLocation, x)).ToList();
+
+                foreach (var ignore in ignoresTarget)
+                {
+                    LoadingDialogHandle.UpdateDebugText($"Ignoring: \"{installation.Ignores[ignoresTarget.IndexOf(ignore)]}\"");
+
+                    var index = targetFiles.IndexOf(ignore);
+                    sourceFiles.RemoveAt(index);
+                    targetFiles.Remove(ignore);
+                }
 
                 foreach (var file in targetFiles)
                 {
