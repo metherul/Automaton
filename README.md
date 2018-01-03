@@ -1,3 +1,3 @@
-# WIKI
+![Automaton Logo](automaton_logo.png)
 
-Expect something here soon...
+
