@@ -1,5 +1,6 @@
 ﻿using Automaton.Handles;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -115,8 +116,13 @@ namespace Automaton.Model
             var realSourceLocation = Path.Combine(ExtractedFilePath, source);
             var realTargetLocation = Path.Combine(InstallationLocation, mod.ModName, target);
 
-            var ignoresTarget = installation.Ignores.ToList()
-                .Select(x => Path.Combine(realTargetLocation, CleanupPath(x))).ToList();
+            var ignoresTarget = new List<string>();
+
+            if (installation.Ignores != null && installation.Ignores.Any())
+            {
+                ignoresTarget = installation.Ignores.ToList()
+                    .Select(x => Path.Combine(realTargetLocation, CleanupPath(x))).ToList();
+            }
 
             if (!DoesPathExist(realSourceLocation))
             {

@@ -36,7 +36,7 @@ namespace Automaton.Model
         /// </summary>
         /// <param name="conditional"></param>
         /// <returns></returns>
-        public static bool ShouldRemoveMod(Conditional conditional)
+        public static bool ShouldRemoveInstallation(Conditional conditional)
         {
             var matchingValues = FlagHandler.FlagList.Where(x => x.FlagName == conditional.Name
                 && x.FlagValue == conditional.Value);

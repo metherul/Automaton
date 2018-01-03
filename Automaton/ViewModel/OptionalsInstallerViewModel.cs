@@ -1,4 +1,7 @@
-﻿using Automaton.Model;
+﻿using Automaton.Handles;
+using Automaton.Model;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +17,8 @@ namespace Automaton.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public RelayCommand NextCardCommand { get; set; }
+
         public ObservableCollection<OptionalInstall> OptionalInstalls { get; set; }
 
         public string InstallerTitle { get; set; }
@@ -22,7 +27,17 @@ namespace Automaton.ViewModel
 
         public OptionalsInstallerViewModel()
         {
-            GeneratePackOptionals(PackHandler.ModPack);
+            NextCardCommand = new RelayCommand(NextCard);
+
+            Messenger.Default.Register<CardIndex>(this, RecieveCardIndex);
+        }
+
+        private void RecieveCardIndex(CardIndex currentIndex)
+        {
+            if (currentIndex == CardIndex.OptionalSetup)
+            {
+                GeneratePackOptionals(PackHandler.ModPack);
+            }
         }
 
         private void GeneratePackOptionals(ModPack modPack)
@@ -184,6 +199,11 @@ namespace Automaton.ViewModel
                 Debug.WriteLine($"({flag.FlagName}, {flag.FlagValue})");
             }
             Debug.WriteLine("");
+        }
+
+        private void NextCard()
+        {
+            TransitionHandler.CalculateNextCard(CardIndex.OptionalSetup);
         }
     }
 
