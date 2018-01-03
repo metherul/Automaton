@@ -47,7 +47,7 @@
 
                 <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect SlideInFromRight}" ClipToBounds="True">
                     <materialDesign:TransitionerSlide.ForwardWipe>
-                        <materialDesign:SlideWipe/>
+                        <materialDesign:SlideOutWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
                     <local:OptionalInstallerDialog HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30"/>
                 </materialDesign:TransitionerSlide>

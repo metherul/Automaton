@@ -14,7 +14,6 @@ namespace Automaton.Model
     class PackHandler
     {
         public static ModPack ModPack { get; set; }
-        public static List<Mod> ModsList { get; set; }
 
         public static string ModPackLocation { get; set; }
         public static string SourceLocation { get; set; }
@@ -50,7 +49,6 @@ namespace Automaton.Model
                 try
                 {
                     ModPack = JsonConvert.DeserializeObject<ModPack>(modPackContents);
-                    ModsList = ModPack.Mods;
 
                     Messenger.Default.Send(ModPack, MessengerToken.ModPack);
 
@@ -86,7 +84,7 @@ namespace Automaton.Model
                 try
                 {
                     ModPack = JsonConvert.DeserializeObject<ModPack>(modPackContents);
-                    ModsList = ModPack.Mods.OrderBy(x => x.LoadOrder).ToList();
+                    ModPack.Mods = ModPack.Mods.OrderBy(x => x.LoadOrder).ToList();
 
                     Messenger.Default.Send(ModPack, MessengerToken.ModPack);
 
@@ -107,33 +105,39 @@ namespace Automaton.Model
         public static ModPack FilterModPack()
         {
             var workingModPack = ModPack;
-            var mods = ModsList;
-            var modsToRemove = new List<Mod>();
+            var mods = workingModPack.Mods;
+            var installationsToRemove = new List<Installation>();
 
-            foreach (var mod in mods)
+            var modInstallations = mods.SelectMany(x => x.Installations)
+                .Where(x => x.Conditionals != null);
+
+            var placeholderInstallations = modInstallations;
+
+            foreach (var installation in placeholderInstallations)
             {
-                var conditionals = new List<Conditional>();
-                var doesCollectionHaveElements = mod.Installations.Where(x => x.Conditionals != null).Any();
+                var installationConditionals = installation.Conditionals;
 
-                if (doesCollectionHaveElements)
+                foreach (var conditional in installationConditionals)
                 {
-                    conditionals = mod.Installations.SelectMany(x => x.Conditionals).ToList();
-
-                    foreach (var conditional in conditionals)
+                    if (PackHandlerHelper.ShouldRemoveInstallation(conditional))
                     {
-                        if (PackHandlerHelper.ShouldRemoveMod(conditional))
-                        {
-                            modsToRemove.Add(mod);
-                        }
+                        installationsToRemove.Add(installation);
                     }
                 }
             }
 
-            workingModPack.Mods = workingModPack.Mods.Where(x => !modsToRemove.Contains(x)).ToList();
+            // Filter out all of the installations that need to be removed
+            foreach (var installation in installationsToRemove.Distinct())
+            {
+                workingModPack.Mods.ForEach(x => x.Installations.Remove(installation));
+            }
+
+            // Filter out all mods with no installations
+            workingModPack.Mods = workingModPack.Mods.Where(x => x.Installations.Count > 0).ToList();
+
             ModPack = workingModPack;
 
-            // Broadcast the modpack to the application
-            Messenger.Default.Send(ModPack, MessengerToken.ModPack);
+            Messenger.Default.Send(workingModPack, MessengerToken.ModPack);
 
             return workingModPack;
         }
@@ -169,8 +173,8 @@ namespace Automaton.Model
         /// </summary>
         public static void InstallModPack()
         {
-            var sourceFiles = PackHandlerHelper.GetSourceFiles(ModsList, SourceLocation);
-            var mods = ModsList;
+            var mods = ModPack.Mods;
+            var sourceFiles = PackHandlerHelper.GetSourceFiles(mods, SourceLocation);
 
             // No mods were found in the source -- should not occur with proper mod validation.
             if (sourceFiles.Count() == 0)

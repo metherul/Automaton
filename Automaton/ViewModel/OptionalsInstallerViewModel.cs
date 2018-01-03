@@ -1,4 +1,7 @@
-﻿using Automaton.Model;
+﻿using Automaton.Handles;
+using Automaton.Model;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +17,8 @@ namespace Automaton.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public RelayCommand NextCardCommand { get; set; }
+
         public ObservableCollection<OptionalInstall> OptionalInstalls { get; set; }
 
         public string InstallerTitle { get; set; }
@@ -22,7 +27,17 @@ namespace Automaton.ViewModel
 
         public OptionalsInstallerViewModel()
         {
-            GeneratePackOptionals(PackHandler.ModPack);
+            NextCardCommand = new RelayCommand(NextCard);
+
+            Messenger.Default.Register<CardIndex>(this, RecieveCardIndex);
+        }
+
+        private void RecieveCardIndex(CardIndex currentIndex)
+        {
+            if (currentIndex == CardIndex.OptionalSetup)
+            {
+                GeneratePackOptionals(PackHandler.ModPack);
+            }
         }
 
         private void GeneratePackOptionals(ModPack modPack)
@@ -58,12 +73,25 @@ namespace Automaton.ViewModel
                             Content = element.Text
                         };
 
+                        if (element.IsChecked != null)
+                        {
+                            checkbox.IsChecked = (bool)element.IsChecked;
+
+                            foreach (var flag in element.Flags.Where(x => x.Action == "checked"))
+                            {
+                                FlagHandler.FlagList.Add(new Model.StorageFlag()
+                                {
+                                    FlagName = flag.Name,
+                                    FlagValue = flag.Value
+                                });
+                            }
+                        }
+
                         // Checkbox event handler binding. 
                         checkbox.MouseEnter += Element_Hover;
                         checkbox.Checked += Element_Checked;
                         checkbox.Unchecked += Element_UnChecked;
 
-                        // Fuck it, lets just stick the entire element on the command parameter. Can't see how that would go wrong.
                         checkbox.CommandParameter = element;
 
                         stackPanel.Children.Add(checkbox);
@@ -75,6 +103,22 @@ namespace Automaton.ViewModel
                         {
                             Content = element.Text,
                         };
+
+                        if (element.IsChecked != null)
+                        {
+                            radioButton.IsChecked = (bool)element.IsChecked;
+
+                            foreach (var flag in element.Flags.Where(x => x.Event == "checked"))
+                            {
+                                FlagHandler.FlagList.Add(new Model.StorageFlag()
+                                {
+                                    FlagName = flag.Name,
+                                    FlagValue = flag.Value
+                                });
+                            }
+
+                            var test = FlagHandler.FlagList;
+                        }
 
                         // Radiobutton event handler binding
                         radioButton.MouseEnter += Element_Hover;
@@ -184,6 +228,11 @@ namespace Automaton.ViewModel
                 Debug.WriteLine($"({flag.FlagName}, {flag.FlagValue})");
             }
             Debug.WriteLine("");
+        }
+
+        private void NextCard()
+        {
+            TransitionHandler.CalculateNextCard(CardIndex.OptionalSetup);
         }
     }
 
