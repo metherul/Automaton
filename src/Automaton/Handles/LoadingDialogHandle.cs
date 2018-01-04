@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using System;
+using System.IO;
 
 namespace Automaton.Handles
 {
@@ -33,6 +35,10 @@ namespace Automaton.Handles
 
         public static void UpdateDebugText(string debugText)
         {
+            // Note that this path is also in App:
+            var loggingPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+            File.AppendAllText(loggingPath, $"{Environment.NewLine}{DateTime.Now} - {debugText}");
+
             var payload = new LoadingDialogPayload()
             {
                 DebugText = debugText
