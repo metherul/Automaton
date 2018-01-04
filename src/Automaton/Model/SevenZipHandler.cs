@@ -1,8 +1,8 @@
-﻿using Automaton.Handles;
+﻿using Alphaleonis.Win32.Filesystem;
+using Automaton.Handles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Automaton.Model
@@ -33,12 +33,12 @@ namespace Automaton.Model
                 File.Delete(DLLPath);
             }
 
-            using (var fileStream = new FileStream(ExePath, FileMode.CreateNew))
+            using (var fileStream = new System.IO.FileStream(ExePath, System.IO.FileMode.CreateNew))
             {
                 fileStream.Write(embeddedApplication, 0, embeddedApplication.Length);
             }
 
-            using (var fileStream = new FileStream(DLLPath, FileMode.CreateNew))
+            using (var fileStream = new System.IO.FileStream(DLLPath, System.IO.FileMode.CreateNew))
             {
                 fileStream.Write(embeddedDLL, 0, embeddedDLL.Length);
             }
@@ -132,7 +132,7 @@ namespace Automaton.Model
             if (IsPathDirectory(realSourceLocation))
             {
                 // Files with the realSourceLocation removed.
-                var sourceFiles = Directory.GetFileSystemEntries(realSourceLocation, "*.*", SearchOption.AllDirectories).ToList()
+                var sourceFiles = Directory.GetFileSystemEntries(realSourceLocation, "*.*", System.IO.SearchOption.AllDirectories).ToList()
                     .Where(x => !IsPathDirectory(x)).ToList();
 
                 var targetFiles = sourceFiles
@@ -194,7 +194,7 @@ namespace Automaton.Model
         {
             var fileAttributes = File.GetAttributes(path);
 
-            if (fileAttributes.HasFlag(FileAttributes.Directory))
+            if (fileAttributes.HasFlag(System.IO.FileAttributes.Directory))
             {
                 return true;
             }
@@ -251,23 +251,23 @@ namespace Automaton.Model
         /// <param name="path"></param>
         private void DeleteDirectory(string directoryPath)
         {
-            var rootInfo = new DirectoryInfo(directoryPath) { Attributes = FileAttributes.Normal };
+            var rootInfo = new DirectoryInfo(directoryPath) { Attributes = System.IO.FileAttributes.Normal };
 
             foreach (var fileInfo in rootInfo.GetFileSystemInfos())
             {
-                fileInfo.Attributes = FileAttributes.Normal;
+                fileInfo.Attributes = System.IO.FileAttributes.Normal;
             }
 
-            foreach (var subDirectory in Directory.GetDirectories(directoryPath, "*", SearchOption.AllDirectories))
+            foreach (var subDirectory in Directory.GetDirectories(directoryPath, "*", System.IO.SearchOption.AllDirectories))
             {
                 var subInfo = new DirectoryInfo(subDirectory)
                 {
-                    Attributes = FileAttributes.Normal
+                    Attributes = System.IO.FileAttributes.Normal
                 };
 
                 foreach (var fileInfo in subInfo.GetFileSystemInfos())
                 {
-                    fileInfo.Attributes = FileAttributes.Normal;
+                    fileInfo.Attributes = System.IO.FileAttributes.Normal;
                 }
             }
 

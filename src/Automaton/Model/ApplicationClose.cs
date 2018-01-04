@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Alphaleonis.Win32.Filesystem;
+using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Automaton.Model

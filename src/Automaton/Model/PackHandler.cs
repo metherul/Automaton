@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using Alphaleonis.Win32.Filesystem;
+using GalaSoft.MvvmLight.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
