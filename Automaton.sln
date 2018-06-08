@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton", "Automaton\Automaton.csproj", "{2D15C75F-1244-4A71-A1C3-14C99941BB88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.Model", "Automaton.Model\Automaton.Model.csproj", "{CAEB0F4E-5CB6-4DAF-98F5-DA0DD3C54D53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D15C75F-1244-4A71-A1C3-14C99941BB88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D15C75F-1244-4A71-A1C3-14C99941BB88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D15C75F-1244-4A71-A1C3-14C99941BB88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D15C75F-1244-4A71-A1C3-14C99941BB88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAEB0F4E-5CB6-4DAF-98F5-DA0DD3C54D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAEB0F4E-5CB6-4DAF-98F5-DA0DD3C54D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAEB0F4E-5CB6-4DAF-98F5-DA0DD3C54D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAEB0F4E-5CB6-4DAF-98F5-DA0DD3C54D53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4165B1C1-D288-46A3-A80D-FE215EEE0815}
+	EndGlobalSection
+EndGlobal

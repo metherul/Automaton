@@ -1,0 +1,32 @@
+<Application
+    x:Class="Automaton.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Automaton"
+    d1p1:Ignorable="d"
+    StartupUri="View/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!--  Material Design in XAML definitions  -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <!--  Fonts  -->
+            <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
+            <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
+
+            <!--  Colors  -->
+            <Brush x:Key="BackgroundColor">#282C35</Brush>
+            <Brush x:Key="PrimaryForegroundColor">#FFFFFF</Brush>
+            <Brush x:Key="SecondaryForegroundColor">#42464F</Brush>
+
+            <!--  Content  -->
+            <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
