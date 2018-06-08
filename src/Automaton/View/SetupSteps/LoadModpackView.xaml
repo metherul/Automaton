@@ -46,7 +46,7 @@
             Margin="10,30,10,0"
             FontFamily="{StaticResource RobotoMono}"
             Foreground="White"
-            Text="Phin is mega noob"
+            Text="Welcome to Automaton. Load a modpack to get started!"
             TextAlignment="Center"
             TextWrapping="WrapWithOverflow" />
 
