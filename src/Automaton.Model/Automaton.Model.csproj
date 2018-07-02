@@ -63,8 +63,11 @@
     <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Handles\ArchiveHandler.cs" />
     <Compile Include="Handles\JSONHandler.cs" />
+    <Compile Include="Handles\Md5Handle.cs" />
     <Compile Include="Handles\NamedPipesHandler.cs" />
     <Compile Include="Handles\NexusHandler.cs" />
+    <Compile Include="Install\Generation.cs" />
+    <Compile Include="Install\InstallInstance.cs" />
     <Compile Include="Instances\FlagInstance.cs" />
     <Compile Include="Instances\ModpackInstance.cs" />
     <Compile Include="Modpack\Mod.cs" />
@@ -76,6 +79,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.0.3\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

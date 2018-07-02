@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Automaton.Controllers;
 using Automaton.Model.Instances;
+using Automaton.Model.Modpack;
 using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.View
@@ -27,16 +28,18 @@ namespace Automaton.View
             MoveWindowCommand = new RelayCommand<Window>(MoveWindow);
 
             // Initialize event handlers
-            ModpackInstance.ModpackHeaderChangedEvent += ModpackHeaderInstanceUpdate;
+            ModpackUtilities.ModpackLoadedEvent += ModpackLoaded;
             ViewIndexController.ViewIndexChangedEvent += ViewIndexUpdate;
         }
 
-        public void ModpackHeaderInstanceUpdate()
+        public void ModpackLoaded()
         {
             // Modpack has been loaded, so increment the current view index
             ViewIndexController.IncrementCurrentViewIndex();
 
-            ApplyAutomatonTheme();
+            ViewIndexController.CurrentViewIndex = 3;
+
+            ApplyAutomatonModpack();
         }
 
         private void ViewIndexUpdate(int index)
@@ -44,7 +47,7 @@ namespace Automaton.View
             CurrentTransitionerIndex = index;
         }
 
-        private void ApplyAutomatonTheme()
+        private void ApplyAutomatonModpack()
         {
             var modpackHeader = ModpackInstance.ModpackHeader;
 
@@ -54,14 +57,19 @@ namespace Automaton.View
                     (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.BackgroundColor);
             }
 
-            if (!string.IsNullOrEmpty(modpackHeader.PrimaryForegroundColor))
+            if (!string.IsNullOrEmpty(modpackHeader.FontColor))
             {
-                Application.Current.Resources["PrimaryForegroundColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.PrimaryForegroundColor);
+                Application.Current.Resources["FontColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.FontColor);
             }
 
-            if (!string.IsNullOrEmpty(modpackHeader.SecondaryForegroundColor))
+            if (!string.IsNullOrEmpty(modpackHeader.ButtonColor))
             {
-                Application.Current.Resources["SecondaryForegroundColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.SecondaryForegroundColor);
+                Application.Current.Resources["ButtonColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.ButtonColor);
+            }
+
+            if (!string.IsNullOrEmpty(modpackHeader.AssistantControlColor))
+            {
+                Application.Current.Resources["AssistantControlColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.AssistantControlColor);
             }
 
             if (!string.IsNullOrEmpty(modpackHeader.HeaderImage))
@@ -76,7 +84,8 @@ namespace Automaton.View
                 Application.Current.Resources["HeaderImage"] = bitmapImage;
             }
 
-
+            Application.Current.Resources["ModpackName"] = modpackHeader.ModpackName;
+            Application.Current.Resources["ModpackDescription"] = modpackHeader.Description;
         }
 
         #region Window Manipulation Code

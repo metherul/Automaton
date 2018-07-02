@@ -3,7 +3,7 @@ using System;
 
 namespace Automaton.Model.Handles
 {
-    public class JSONHandler
+    public class JsonHandler
     {
         /// <summary>
         /// Deserialize json data into object of type T

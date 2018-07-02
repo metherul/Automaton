@@ -2,6 +2,7 @@
 using System.IO;
 using Automaton.Controllers;
 using Automaton.Model.Instances;
+using Automaton.Model.Modpack;
 using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
 
@@ -43,6 +44,8 @@ namespace Automaton.View.SetupSteps
         public string ModpackName { get; set; }
         public string Description { get; set; }
 
+        public bool InstallModOrganizer { get; set; }
+
         public bool CanContinue { get; set; }
 
         public InitialSetupViewModel()
@@ -52,13 +55,15 @@ namespace Automaton.View.SetupSteps
 
             IncrementCurrentViewIndexCommand = new RelayCommand(IncrementCurrentViewIndex);
 
-            ModpackInstance.ModpackHeaderChangedEvent += ModpackHeaderInstanceUpdate;
+            ModpackUtilities.ModpackLoadedEvent += ModpackLoaded;
         }
 
-        private void ModpackHeaderInstanceUpdate()
+        private void ModpackLoaded()
         {
             ModpackName = ModpackInstance.ModpackHeader.ModpackName;
             Description = ModpackInstance.ModpackHeader.Description;
+
+            InstallModOrganizer = ModpackInstance.ModpackHeader.InstallModOrganizer;
         }
 
         private void OpenInstallFolder()

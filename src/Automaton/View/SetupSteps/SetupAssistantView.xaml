@@ -9,6 +9,15 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <local:SetupAssistantViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <local:GroupToControlConverter x:Key="GroupToControlConverter" />
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -26,19 +35,42 @@
             RenderOptions.EdgeMode="Aliased"
             Source="{DynamicResource HeaderImage}" />
 
-        <!--  Description  -->
-        <TextBlock
-            Grid.Row="1"
-            MaxHeight="170"
-            Margin="10,30,10,0"
-            FontFamily="{StaticResource RobotoMono}"
-            Foreground="{DynamicResource PrimaryForegroundColor}"
-            Text="{Binding Description}"
-            TextAlignment="Center"
-            TextWrapping="WrapWithOverflow" />
-
         <!--  Content  -->
-        <Grid Grid.Row="2" />
+        <ScrollViewer
+            Grid.Row="2"
+            Margin="40,20,0,20"
+            HorizontalAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding SetupAssistant}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,0,0,10">
+                            <Label
+                                Content="{Binding GroupHeaderText}"
+                                FontFamily="{StaticResource ProductSans}"
+                                FontSize="15"
+                                Foreground="{DynamicResource FontColor}" />
+
+                            <ListBox
+                                FontFamily="{StaticResource RobotoMono}"
+                                FontSize="12"
+                                ItemsSource="{Binding GroupControls, Converter={StaticResource GroupToControlConverter}}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                    <ContentPresenter />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                            </ListBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
         <!--  Next Button  -->
         <Button
@@ -47,8 +79,8 @@
             Margin="0,0,0,30"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource SecondaryForegroundColor}"
-            BorderBrush="{DynamicResource SecondaryForegroundColor}"
+            Background="{DynamicResource ButtonColor}"
+            BorderBrush="{DynamicResource ButtonColor}"
             Command="{Binding IncrementCurrentViewIndexCommand}"
             FontFamily="{StaticResource ProductSans}"
             IsEnabled="{Binding CanContinue}"
@@ -57,7 +89,7 @@
                 Margin="10,0,10,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-                <TextBlock FontFamily="{StaticResource ProductSans}" Foreground="{DynamicResource PrimaryForegroundColor}">
+                <TextBlock FontFamily="{StaticResource ProductSans}" Foreground="{DynamicResource FontColor}">
                     Next
                 </TextBlock>
             </Grid>

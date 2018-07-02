@@ -25,7 +25,7 @@ namespace Automaton.View.SetupSteps
 
             if (fileBrowser.ShowDialog() == DialogResult.OK)
             {
-                Task.Factory.StartNew(() => { ModpackUtilities.LoadModPack(fileBrowser.FileName); });
+                Task.Factory.StartNew(() => { ModpackUtilities.LoadModpack(fileBrowser.FileName); });
             }
         }
     }

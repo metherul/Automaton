@@ -11,11 +11,14 @@ namespace Automaton.Model.Modpack
 {
     public class ModpackUtilities
     {
+        public delegate void ModpackLoaded();
+        public static event ModpackLoaded ModpackLoadedEvent;
+
         /// <summary>
         /// Extracts and loads an archived modpack into the model
         /// </summary>
         /// <param name="modpackPath"></param>
-        public static void LoadModPack(string modpackPath)
+        public static void LoadModpack(string modpackPath)
         {
             var modpackExtractionPath = string.Empty;
             var modpackHeader = new ModpackHeader();
@@ -40,7 +43,7 @@ namespace Automaton.Model.Modpack
             }
 
             // Load modpack header into Instance
-            modpackHeader = JSONHandler.TryDeserializeJson<ModpackHeader>(File.ReadAllText(modpackHeaderPath), out string parseError);
+            modpackHeader = JsonHandler.TryDeserializeJson<ModpackHeader>(File.ReadAllText(modpackHeaderPath), out string parseError);
 
             // The json string was not parsed correctly, throw error
             if (parseError != string.Empty)
@@ -52,6 +55,8 @@ namespace Automaton.Model.Modpack
             // Set global instances, these will update viewmodels automatically via the message service
             ModpackInstance.ModpackHeader = modpackHeader;
             ModpackInstance.ModpackMods = LoadModInstallParameters(modpackHeader, modpackExtractionPath);
+
+            ModpackLoadedEvent.Invoke();
         }
 
         /// <summary>
@@ -91,7 +96,7 @@ namespace Automaton.Model.Modpack
 
                 foreach (var modFile in modFiles)
                 {
-                    var modObject = JSONHandler.TryDeserializeJson<Mod>(File.ReadAllText(modFile), out string parseError);
+                    var modObject = JsonHandler.TryDeserializeJson<Mod>(File.ReadAllText(modFile), out string parseError);
 
                     modObject.ModInstallParameterPath = modFile;
 
@@ -106,72 +111,6 @@ namespace Automaton.Model.Modpack
             }
 
             return modpackMods;
-        }
-
-        /// <summary>
-        /// Updates <see cref="ModpackHeader"/> mod list value with correct built paths
-        /// </summary>
-        public static void UpdateModInstallParameters()
-        {
-            var modpackHeader = ModpackInstance.ModpackHeader;
-            var modpackExtractionPath = ModpackInstance.ModpackExtractionLocation;
-
-            ModpackInstance.ModpackMods = LoadModInstallParameters(modpackHeader, modpackExtractionPath);
-        }
-
-        /// <summary>
-        /// Returns a list of type <see cref="Mod"/> which contains mods that were not able to be found in the standard source directory
-        /// </summary>
-        /// <param name="sourceDirectory"></param>
-        /// <returns></returns>
-        public static List<Mod> GetModsWithMissingArchives(string sourceDirectory)
-        {
-            var modInstallParameters = ModpackInstance.ModpackMods;
-
-            foreach (var mod in modInstallParameters)
-            {
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Returns true/false on whether paths outlined by <see cref="Mod.ModArchivePath"/> exist
-        /// Checks filesize and MD5Sum (on edge cases) to confirm that the archive is correct
-        /// </summary>
-        /// <param name="sourceDirectory"></param>
-        /// <returns></returns>
-        public static bool ValidModArchiveLocations(string sourceDirectory)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Determines is parameterized mod archive path exists and contains correct data
-        /// </summary>
-        /// <param name="mod"></param>
-        /// <returns></returns>
-        public static bool DoesModArchivePathExist(Mod mod)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Builds initial modpack mod source archive paths <see cref="Mod.ModArchivePath"/>
-        /// </summary>
-        /// <returns></returns>
-        public static void BuildModArchivePaths()
-        {
-        }
-
-        /// <summary>
-        /// Patches updated source path into modpack at specified <see cref="Mod"/> value with path
-        /// </summary>
-        /// <param name="mod"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static void PatchModArchivePath(Mod mod, string path)
-        {
         }
     }
 }

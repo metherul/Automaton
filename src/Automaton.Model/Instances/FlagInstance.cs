@@ -7,16 +7,16 @@ namespace Automaton.Model.Instances
 {
     public class FlagInstance
     {
-        private static List<FlagKeyValue> _FlagKeyValueList = new List<FlagKeyValue>();
+        private static List<FlagKeyValue> _flagKeyValueList = new List<FlagKeyValue>();
 
         public static List<FlagKeyValue> FlagKeyValueList
         {
-            get => _FlagKeyValueList;
+            get => _flagKeyValueList;
             set
             {
-                if (_FlagKeyValueList != value)
+                if (_flagKeyValueList != value)
                 {
-                    _FlagKeyValueList = value;
+                    _flagKeyValueList = value;
                 }
             }
         }

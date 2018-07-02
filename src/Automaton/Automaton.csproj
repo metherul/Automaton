@@ -102,6 +102,14 @@
     <Compile Include="View\SetupSteps\SetupAssistantView.xaml.cs">
       <DependentUpon>SetupAssistantView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SetupSteps\ValidationView.xaml.cs">
+      <DependentUpon>ValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SetupSteps\ValidationViewModel.cs" />
+    <Page Include="Resources\CustomScrollbar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -123,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SetupSteps\SetupAssistantView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SetupSteps\ValidationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

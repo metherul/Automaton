@@ -36,7 +36,7 @@
                 Content="Automaton"
                 FontFamily="{StaticResource ProductSans}"
                 FontSize="25"
-                Foreground="{DynamicResource PrimaryForegroundColor}" />
+                Foreground="{DynamicResource FontColor}" />
         </StackPanel>
 
         <!--  Description  -->
@@ -46,7 +46,7 @@
             Margin="10,30,10,0"
             FontFamily="{StaticResource RobotoMono}"
             Foreground="White"
-            Text="Welcome to Automaton. Load a modpack to get started!"
+            Text="{DynamicResource ModpackDescription}"
             TextAlignment="Center"
             TextWrapping="WrapWithOverflow" />
 
@@ -57,8 +57,8 @@
             Margin="0,0,0,30"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource SecondaryForegroundColor}"
-            BorderBrush="{DynamicResource SecondaryForegroundColor}"
+            Background="{DynamicResource ButtonColor}"
+            BorderBrush="{DynamicResource ButtonColor}"
             Command="{Binding LoadModpackCommand}"
             FontFamily="{StaticResource ProductSans}"
             Opacity="10">
@@ -66,7 +66,7 @@
                 Margin="10,0,10,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-                <TextBlock FontFamily="{StaticResource ProductSans}" Foreground="{DynamicResource PrimaryForegroundColor}">
+                <TextBlock FontFamily="{StaticResource ProductSans}" Foreground="{DynamicResource FontColor}">
                     Load Modpack
                 </TextBlock>
             </Grid>

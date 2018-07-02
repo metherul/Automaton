@@ -5,37 +5,9 @@ namespace Automaton.Model.Instances
 {
     public class ModpackInstance
     {
-        public delegate void ModpackHeaderChanged();
-        public static event ModpackHeaderChanged ModpackHeaderChangedEvent;
+        public static ModpackHeader ModpackHeader { get; set; } = new ModpackHeader();
 
-        private static ModpackHeader _modpackHeader;
-        public static ModpackHeader ModpackHeader
-        {
-            get => _modpackHeader;
-
-            set
-            {
-                if (_modpackHeader != value && value != null)
-                {
-                    _modpackHeader = value;
-
-                    ModpackHeaderChangedEvent();
-                }
-            }
-        }
-
-        private static List<Mod> _modpackMods;
-        public static List<Mod> ModpackMods
-        {
-            get => _modpackMods;
-            set
-            {
-                if (_modpackMods != null && _modpackMods != value)
-                {
-                    _modpackMods = value;
-                }
-            }
-        }
+        public static List<Mod> ModpackMods { get; set; } = new List<Mod>();
 
         private static string _moInstallLocation = "";
         public static string MoInstallLocation

@@ -25,6 +25,9 @@ namespace Automaton.Model.Modpack
         [JsonProperty("source_url")]
         public string ModpackSourceUrl { get; set; }
 
+        [JsonProperty("install_mod_organizer")]
+        public bool InstallModOrganizer { get; set; } = false;
+
         private string _headerImage;
 
         [JsonProperty("header_image")]
@@ -40,11 +43,14 @@ namespace Automaton.Model.Modpack
         [JsonProperty("background_color_hex")]
         public string BackgroundColor { get; set; }
 
-        [JsonProperty("p_foreground_color_hex")]
-        public string PrimaryForegroundColor { get; set; }
+        [JsonProperty("font_color_hex")]
+        public string FontColor { get; set; }
 
-        [JsonProperty("s_foreground_color_hex")]
-        public string SecondaryForegroundColor { get; set; }
+        [JsonProperty("button_color_hex")]
+        public string ButtonColor { get; set; }
+
+        [JsonProperty("assistant_control_color_hex")]
+        public string AssistantControlColor { get; set; }
 
         #endregion Meta Modpack information
 
@@ -61,7 +67,7 @@ namespace Automaton.Model.Modpack
         public SetupAssistant SetupAssistant { get; set; }
     }
 
-    #region Optional Installation Objects
+    #region Setup Assistant Objects
 
     public class SetupAssistant
     {
