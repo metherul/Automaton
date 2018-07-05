@@ -125,7 +125,7 @@
                         TextWrapping="WrapWithOverflow" />-->
                 </StackPanel>
 
-                <ListBox Grid.Row="3" ItemsSource="{Binding MissingMods}">
+                <!--<ListBox Grid.Row="3" ItemsSource="{Binding MissingMods}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -133,7 +133,9 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-                </ListBox>
+                </ListBox>-->
+
+                <Label Grid.Row="3" Content="{Binding TestString}" />
 
             </Grid>
         </Grid>

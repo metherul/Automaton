@@ -74,6 +74,7 @@
     <Compile Include="Modpack\ModpackHeader.cs" />
     <Compile Include="Modpack\ModpackUtilities.cs" />
     <Compile Include="Modpack\ModValidation.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
