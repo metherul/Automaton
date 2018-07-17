@@ -1,0 +1,99 @@
+﻿<UserControl
+    x:Class="Automaton.View.SetupAssistant"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:Automaton.ViewModel;assembly=Automaton.ViewModel"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <viewModel:SetupAssistant />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <viewModel:GroupToControlConverter x:Key="GroupToControlConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Header  -->
+        <Image
+            Grid.Row="0"
+            Width="100"
+            Margin="0,10,0,0"
+            RenderOptions.BitmapScalingMode="Fant"
+            RenderOptions.EdgeMode="Aliased"
+            Source="{DynamicResource HeaderImage}" />
+
+        <!--  Content  -->
+        <ScrollViewer
+            Grid.Row="2"
+            Margin="40,20,0,20"
+            HorizontalAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding SetupAssistant}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,0,0,10">
+                            <Label
+                                Content="{Binding GroupHeaderText}"
+                                FontFamily="{StaticResource ProductSans}"
+                                FontSize="15"
+                                Foreground="{DynamicResource FontColor}" />
+
+                            <ListBox
+                                FontFamily="{StaticResource RobotoMono}"
+                                FontSize="12"
+                                ItemsSource="{Binding GroupControls, Converter={StaticResource GroupToControlConverter}}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                    <ContentPresenter />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                            </ListBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!--  Next Button  -->
+        <Button
+            Grid.Row="3"
+            Height="40"
+            Margin="0,0,0,30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="{DynamicResource ButtonColor}"
+            BorderBrush="{DynamicResource ButtonColor}"
+            Command="{Binding IncrementCurrentViewIndexCommand}"
+            FontFamily="{StaticResource ProductSans}"
+            IsEnabled="{Binding CanContinue}"
+            Opacity="10">
+            <Grid
+                Margin="10,0,10,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <TextBlock FontFamily="{StaticResource ProductSans}" Foreground="{DynamicResource FontColor}">
+                    Next
+                </TextBlock>
+            </Grid>
+        </Button>
+
+    </Grid>
+</UserControl>
