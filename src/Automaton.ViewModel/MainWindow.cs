@@ -10,7 +10,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel
 {
-    public class MainWindow : INotifyPropertyChanged
+    public class MainWindow : ViewController, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -29,15 +29,13 @@ namespace Automaton.ViewModel
 
             // Initialize event handlers
             Modpack.ModpackLoadedEvent += ModpackLoaded;
-            ViewController.ViewIndexChangedEvent += ViewIndexUpdate;
+            ViewIndexChangedEvent += ViewIndexUpdate;
         }
 
         public void ModpackLoaded()
         {
             // Modpack has been loaded, so increment the current view index
-            ViewController.IncrementCurrentViewIndex();
-
-            ViewController.CurrentViewIndex = 3;
+            IncrementCurrentViewIndex();
 
             ApplyAutomatonModpack();
         }

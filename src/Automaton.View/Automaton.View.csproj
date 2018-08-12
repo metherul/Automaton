@@ -82,6 +82,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ValidateMods.xaml.cs">
+      <DependentUpon>ValidateMods.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
     </Compile>
@@ -94,6 +97,10 @@
     <Compile Include="InitialValidation.xaml.cs">
       <DependentUpon>InitialValidation.xaml</DependentUpon>
     </Compile>
+    <Page Include="ValidateMods.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\CustomScrollbar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

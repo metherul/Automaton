@@ -9,14 +9,14 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Automaton.Model.Extensions;
-using Automaton.Model.Instance;
+using Automaton.Model.ModpackBase;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel
 {
-    public class SetupAssistant : INotifyPropertyChanged
+    public class SetupAssistant : ViewController, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,11 +44,6 @@ namespace Automaton.ViewModel
 
             ImagePath = setupAssistant.DefaultImage;
             Description = setupAssistant.DefaultDescription;
-        }
-
-        private void IncrementCurrentViewIndex()
-        {
-            ViewController.IncrementCurrentViewIndex();
         }
 
         private static void RouteControlActionEvent(dynamic sender, FlagEventType flagEventType)

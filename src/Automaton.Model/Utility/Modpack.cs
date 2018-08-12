@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Automaton.Model.Errors;
 using Automaton.Model.Extensions;
+using Automaton.Model.ModpackBase;
 
 namespace Automaton.Model.Utility
 {
@@ -54,7 +55,7 @@ namespace Automaton.Model.Utility
             Instance.Automaton.ModpackHeader = modpackHeader;
             Instance.Automaton.ModpackMods = LoadModInstallParameters(modpackHeader, modpackExtractionPath);
 
-            ModpackLoadedEvent.Invoke();
+            ModpackLoadedEvent();
         }
 
         /// <summary>

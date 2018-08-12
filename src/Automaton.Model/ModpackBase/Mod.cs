@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Automaton.Model.Extensions;
+using Newtonsoft.Json;
 
-namespace Automaton.Model.Utility
+namespace Automaton.Model.ModpackBase
 {
     /// <summary>
     /// The base mod object

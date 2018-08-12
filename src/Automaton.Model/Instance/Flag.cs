@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Automaton.Model.Extensions;
+using Automaton.Model.ModpackBase;
 using Automaton.Model.Utility;
 
 namespace Automaton.Model.Instance
@@ -8,7 +9,6 @@ namespace Automaton.Model.Instance
     public class Flag
     {
         private static List<FlagKeyValue> _flagKeyValueList = new List<FlagKeyValue>();
-
         public static List<FlagKeyValue> FlagKeyValueList
         {
             get => _flagKeyValueList;

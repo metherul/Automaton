@@ -2,14 +2,14 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
-using System.Threading.Tasks;
 using System.Windows.Data;
+using Automaton.Model.ModpackBase;
 using Automaton.ViewModel.Controllers;
 using Automaton.Model.Utility;
 
 namespace Automaton.ViewModel
 {
-    public class InitialValidation : INotifyPropertyChanged
+    public class InitialValidation : ViewController, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -21,14 +21,14 @@ namespace Automaton.ViewModel
         public int TotalSourceFileCount { get; set; }
         private int ThisViewIndex { get; } = 3;
 
-        public bool InitialValidationComplete { get; set; } = false;
-        public bool AllModsValidated { get; set; } = false;
+        public bool InitialValidationComplete { get; set; }
+        public bool AllModsValidated { get; set; }
+        public bool IsComputeMd5 { get; set; }
 
         public InitialValidation()
         {
             Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
-
-            ViewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
+            ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
         private void IncrementViewIndexUpdate(int currentIndex)
@@ -39,26 +39,27 @@ namespace Automaton.ViewModel
             }
         }
 
-        private void InitializeInitValidation()
+        private async void InitializeInitValidation()
         {
-            Task.Factory.StartNew(() =>
-            {
-                var sourceFiles = Validation.GetSourceFiles();
+            InitialValidationComplete = false;
 
-                TotalSourceFileCount = sourceFiles.Count;
+            var sourceFiles = Validation.GetSourceFiles();
+            TotalSourceFileCount = sourceFiles.Count;
 
-                MissingMods = new ObservableCollection<Mod>(Validation.ValidateSources(sourceFiles));
-            });
+            MissingMods = new ObservableCollection<Mod>(await Validation.ValidateSourcesAsync(sourceFiles));
 
             AllModsValidated = MissingMods.Count == 0;
+            InitialValidationComplete = true;
+
+            IncrementCurrentViewIndex();
         }
 
-        private void ModValidationUpdate()
+        private void ModValidationUpdate(Mod currentMod, bool isComputeMd5)
         {
-            CurrentModName = Validation.CurrentMod.ModName;
-            CurrentArchiveMd5 = Validation.CurrentMod.ArchiveMd5Sum;
+            CurrentModName = currentMod.ModName;
+            CurrentArchiveMd5 = currentMod.ArchiveMd5Sum;
+            IsComputeMd5 = isComputeMd5;
 
-            InitialValidationComplete = Validation.IsComplete;
         }
     }
 

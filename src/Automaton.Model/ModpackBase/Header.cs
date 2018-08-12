@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace Automaton.Model.Utility
+namespace Automaton.Model.ModpackBase
 {
     public class Header
     {

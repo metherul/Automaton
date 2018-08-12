@@ -9,7 +9,7 @@ using Automaton.Model;
 
 namespace Automaton.ViewModel
 {
-    public class InitialSetup : INotifyPropertyChanged
+    public class InitialSetup : ViewController, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -87,11 +87,6 @@ namespace Automaton.ViewModel
             }
 
             return null;
-        }
-
-        private void IncrementCurrentViewIndex()
-        {
-            ViewController.IncrementCurrentViewIndex();
         }
     }
 }

@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Automaton.Model.Extensions;
+using Automaton.Model.ModpackBase;
 
 namespace Automaton.Model.Utility
 {
     public class Validation
     {
-        public delegate void ValidateSourcesUpdate();
+        public delegate void ValidateSourcesUpdate(Mod currentMod, bool isComputeMd5);
         public static event ValidateSourcesUpdate ValidateSourcesUpdateEvent;
 
         // Static variables to store information required for the UI to update
         private static Mod _currentMod;
-        public static Mod CurrentMod
+        private static Mod CurrentMod
         {
             get => _currentMod;
             set
@@ -21,13 +23,13 @@ namespace Automaton.Model.Utility
                 {
                     _currentMod = value;
 
-                    ValidateSourcesUpdateEvent();
+                    ValidateSourcesUpdateEvent(_currentMod, _isComputeMd5);
                 }
             }
         }
 
         private static bool _isComputeMd5;
-        public static bool IsComputeMd5
+        private static bool IsComputeMd5
         {
             get => _isComputeMd5;
             set
@@ -36,25 +38,12 @@ namespace Automaton.Model.Utility
                 {
                     _isComputeMd5 = value;
 
-                    ValidateSourcesUpdateEvent();
+                    ValidateSourcesUpdateEvent(_currentMod, _isComputeMd5);
                 }
             }
         }
 
-        private static bool _isComplete;
-        public static bool IsComplete
-        {
-            get => _isComputeMd5;
-            set
-            {
-                if (value != _isComputeMd5)
-                {
-                    _isComputeMd5 = value;
-
-                    ValidateSourcesUpdateEvent();
-                }
-            }
-        }
+        public static List<Mod> MissingMods { get; set; } = new List<Mod>();
 
         /// <summary>
         /// Will return a list of <see cref="Mod"/> which do not have a matching archive.
@@ -95,7 +84,7 @@ namespace Automaton.Model.Utility
                     {
                         IsComputeMd5 = true;
 
-                        var md5Sum = MD5.CalculateMd5(match.FullName);
+                        var md5Sum = Md5.CalculateMd5(match.FullName);
 
                         if (md5Sum == mod.ArchiveMd5Sum)
                         {
@@ -115,9 +104,12 @@ namespace Automaton.Model.Utility
                 }
             }
 
-            IsComplete = true;
-
             return missingModArchives;
+        }
+
+        public static async Task<List<Mod>> ValidateSourcesAsync(List<string> sourceFiles)
+        {
+            return await Task.Run(() => ValidateSources(sourceFiles));
         }
 
         public static List<string> GetSourceFiles()

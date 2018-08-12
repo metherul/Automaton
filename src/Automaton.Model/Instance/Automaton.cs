@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automaton.Model.ModpackBase;
 using Automaton.Model.Utility;
 
 namespace Automaton.Model.Instance

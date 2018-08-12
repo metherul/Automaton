@@ -74,6 +74,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ValidateMods.cs" />
     <Compile Include="InitialSetup.cs" />
     <Compile Include="LoadModpack.cs" />
     <Compile Include="MainWindow.cs" />
