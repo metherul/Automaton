@@ -95,7 +95,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="SetupAssistant.cs" />
-    <Compile Include="InitialValidation.cs" />
     <Compile Include="Controllers\ViewController.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

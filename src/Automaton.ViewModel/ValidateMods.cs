@@ -43,12 +43,12 @@ namespace Automaton.ViewModel
             var sourceFiles = Validation.GetSourceFiles();
             TotalSourceFileCount = sourceFiles.Count;
 
-            MissingMods = new ObservableCollection<Mod>(await Validation.ValidateSourcesAsync(sourceFiles));
+            var result = await Validation.ValidateSourcesAsync(sourceFiles);
+
+            MissingMods = new ObservableCollection<Mod>(result);
 
             AllModsValidated = MissingMods.Count == 0;
             InitialValidationComplete = true;
-
-            IncrementCurrentViewIndex();
         }
 
         private void ModValidationUpdate(Mod currentMod, bool isComputeMd5)
