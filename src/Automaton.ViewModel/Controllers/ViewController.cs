@@ -20,7 +20,7 @@
             }
         }
 
-        public static void IncrementCurrentViewIndex()
+        public static void IncrementCurrentViewIndex() 
         {
             CurrentViewIndex++;
         }

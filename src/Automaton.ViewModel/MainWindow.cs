@@ -1,9 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Automaton.Model.Instance;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
@@ -37,53 +34,12 @@ namespace Automaton.ViewModel
             // Modpack has been loaded, so increment the current view index
             IncrementCurrentViewIndex();
 
-            ApplyAutomatonModpack();
+            ThemeController.ApplyTheme();
         }
 
         private void ViewIndexUpdate(int index)
         {
             CurrentTransitionerIndex = index;
-        }
-
-        private void ApplyAutomatonModpack()
-        {
-            var modpackHeader = Model.Instance.Automaton.ModpackHeader;
-
-            if (!string.IsNullOrEmpty(modpackHeader.BackgroundColor))
-            {
-                Application.Current.Resources["BackgroundColor"] =
-                    (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.BackgroundColor);
-            }
-
-            if (!string.IsNullOrEmpty(modpackHeader.FontColor))
-            {
-                Application.Current.Resources["FontColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.FontColor);
-            }
-
-            if (!string.IsNullOrEmpty(modpackHeader.ButtonColor))
-            {
-                Application.Current.Resources["ButtonColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.ButtonColor);
-            }
-
-            if (!string.IsNullOrEmpty(modpackHeader.AssistantControlColor))
-            {
-                Application.Current.Resources["AssistantControlColor"] = (SolidColorBrush)new BrushConverter().ConvertFromString(modpackHeader.AssistantControlColor);
-            }
-
-            if (!string.IsNullOrEmpty(modpackHeader.HeaderImage))
-            {
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-
-                bitmapImage.UriSource = new Uri(modpackHeader.HeaderImage);
-
-                bitmapImage.EndInit();
-
-                Application.Current.Resources["HeaderImage"] = bitmapImage;
-            }
-
-            Application.Current.Resources["ModpackName"] = modpackHeader.ModpackName;
-            Application.Current.Resources["ModpackDescription"] = modpackHeader.Description;
         }
 
         #region Window Manipulation Code

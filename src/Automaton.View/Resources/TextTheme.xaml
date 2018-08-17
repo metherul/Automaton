@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <!--  Text Themes  -->
+    <Style TargetType="Label">
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
+    </Style>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
+    </Style>
+
+    <!--  pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml  -->
+    <Style BasedOn="{StaticResource ResourceKey=MaterialDesignTextBox}" TargetType="TextBox">
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource FontColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FontColor}" />
+    </Style>
+
+    <Style TargetType="materialDesign:PackIcon">
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
+    </Style>
+
+</ResourceDictionary>

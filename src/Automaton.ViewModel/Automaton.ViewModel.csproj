@@ -74,6 +74,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ThemeController.cs" />
+    <Compile Include="Converters\BoolToIntConverter.cs" />
+    <Compile Include="Converters\BoolToInverseConverter.cs" />
     <Compile Include="ValidateMods.cs" />
     <Compile Include="InitialSetup.cs" />
     <Compile Include="LoadModpack.cs" />

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:clr="clr-namespace:System;assembly=mscorlib"
+    xmlns:converters="clr-namespace:Automaton.ViewModel.Converters;assembly=Automaton.ViewModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Automaton.View"
@@ -12,11 +13,18 @@
         <ResourceDictionary>
             <!--  Material Design in XAML definitions  -->
             <ResourceDictionary.MergedDictionaries>
+
+                <!--  Material Design Themes  -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
 
                 <ResourceDictionary Source="Resources/CustomScrollbar.xaml" />
+
+                <!--  App Themes  -->
+                <ResourceDictionary Source="Resources/TextTheme.xaml" />
+                <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
 
             <!--  Fonts  -->
@@ -35,6 +43,9 @@
             <!--  Modpack strings  -->
             <clr:String x:Key="ModpackName">Automaton</clr:String>
             <clr:String x:Key="ModpackDescription">It's dangerous to mod alone. Load a modpack to get started!</clr:String>
+
+            <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
+            <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using Automaton.ViewModel.Controllers;
-using Automaton.Model.Instance;
 using Automaton.Model.Utility;
 using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
-using Automaton.Model;
 
 namespace Automaton.ViewModel
 {
@@ -45,8 +43,6 @@ namespace Automaton.ViewModel
         public string ModpackName { get; set; }
         public string Description { get; set; }
 
-        public bool InstallModOrganizer { get; set; }
-
         public bool CanContinue { get; set; }
 
         public InitialSetup()
@@ -63,8 +59,6 @@ namespace Automaton.ViewModel
         {
             ModpackName = Model.Instance.Automaton.ModpackHeader.ModpackName;
             Description = Model.Instance.Automaton.ModpackHeader.Description;
-
-            InstallModOrganizer = Model.Instance.Automaton.ModpackHeader.InstallModOrganizer;
         }
 
         private void OpenInstallFolder()

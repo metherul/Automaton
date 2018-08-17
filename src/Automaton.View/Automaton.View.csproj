@@ -94,9 +94,14 @@
     <Compile Include="SetupAssistant.xaml.cs">
       <DependentUpon>SetupAssistant.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InitialValidation.xaml.cs">
-      <DependentUpon>InitialValidation.xaml</DependentUpon>
-    </Compile>
+    <Page Include="Resources\ButtonTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\TextTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ValidateMods.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -126,10 +131,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SetupAssistant.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="InitialValidation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

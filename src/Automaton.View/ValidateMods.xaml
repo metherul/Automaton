@@ -11,8 +11,133 @@
     mc:Ignorable="d">
 
     <UserControl.DataContext>
-        <viewModel:InitialSetup />
+        <viewModel:ValidateMods />
     </UserControl.DataContext>
 
-    <Grid />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Main Content  -->
+
+
+        <!--  Initial Validation Pane  -->
+        <Expander
+            Grid.RowSpan="1"
+            Margin="0,0,0,-50"
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            ExpandDirection="Up"
+            IsExpanded="{Binding InitialValidationComplete, Converter={StaticResource BoolToInverseConverter}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width=".2*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    FontSize="25"
+                    TextAlignment="Center"
+                    TextWrapping="WrapWithOverflow">
+                    Validating Mod Archives
+                </TextBlock>
+
+                <!--  Progress UI  -->
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <materialDesign:ColorZone
+                        Grid.Row="0"
+                        Height="1"
+                        Margin="0,15,0,15"
+                        HorizontalAlignment="Stretch" />
+
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                        <Label HorizontalAlignment="Center">
+                            <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Width="21"
+                                    Height="Auto"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Check" />
+                                <Label Content="Building database" FontSize="14" />
+                            </StackPanel>
+                        </Label>
+
+                        <Label HorizontalAlignment="Center">
+                            <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
+                                <!--<ProgressBar
+                                Foreground="{DynamicResource FontColor}"
+                                IsIndeterminate="True"
+                                Style="{DynamicResource MaterialDesignCircularProgressBar}" />-->
+                                <materialDesign:PackIcon
+                                    Width="21"
+                                    Height="Auto"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Check" />
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="14">
+
+                                    <Run Text="Found" />
+                                    <Run Text="{Binding TotalSourceFileCount}" />
+                                    <Run Text="potential matches" />
+
+                                </TextBlock>
+                            </StackPanel>
+                        </Label>
+                    </StackPanel>
+
+                    <materialDesign:ColorZone
+                        Grid.Row="2"
+                        Height="1"
+                        Margin="0,15,0,15"
+                        HorizontalAlignment="Stretch" />
+
+                    <StackPanel Grid.Row="3" HorizontalAlignment="Center">
+                        <TextBlock
+                            FontSize="14"
+                            Text="{Binding CurrentModName}"
+                            TextAlignment="Center"
+                            TextWrapping="WrapWithOverflow" />
+
+                        <TextBlock
+                            Margin="0,5,0,0"
+                            FontSize="12"
+                            Text="{Binding CurrentArchiveMd5}"
+                            TextAlignment="Center"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+
+                    <ProgressBar
+                        Grid.Row="4"
+                        Background="Transparent"
+                        IsIndeterminate="True"
+                        Style="{DynamicResource MaterialDesignCircularProgressBar}" />
+
+                </Grid>
+            </Grid>
+        </Expander>
+
+    </Grid>
 </UserControl>

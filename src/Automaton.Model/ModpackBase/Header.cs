@@ -47,7 +47,7 @@ namespace Automaton.Model.ModpackBase
         public string ButtonColor { get; set; }
 
         [JsonProperty("assistant_control_color_hex")]
-        public string AssistantControlColor { get; set; }
+        public string ControlColor { get; set; }
 
         #endregion Meta Modpack information
 

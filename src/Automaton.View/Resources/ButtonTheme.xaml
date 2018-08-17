@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="ButtonThemes">
+
+    <!--  Button Themes  -->
+    <Style BasedOn="{StaticResource ResourceKey=MaterialDesignRaisedButton}" TargetType="Button">
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+</ResourceDictionary>
