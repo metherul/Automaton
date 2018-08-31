@@ -15,50 +15,79 @@
     </UserControl.DataContext>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
         <ItemsControl ItemsSource="{Binding MissingMods}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundColor}">
-                        <Grid>
+                        <Grid Margin="3,7,3,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Row="0" Margin="0,0,0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                Content="{Binding ModName}"
-                                FontFamily="{DynamicResource RobotoMono}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Margin="0,0,0,2"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Style="{DynamicResource BodyText}"
+                                    Text="{Binding ModName}"
+                                    TextWrapping="NoWrap" />
 
-                            <StackPanel
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                VerticalAlignment="Center"
-                                FlowDirection="LeftToRight"
-                                Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Link" />
-                                <materialDesign:PackIcon Kind="Magnify" />
-                            </StackPanel>
+                                <StackPanel
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    FlowDirection="LeftToRight"
+                                    Orientation="Horizontal"
+                                    Tag="{Binding}">
+                                    <Button
+                                        Margin="3,0,2,0"
+                                        Command="{Binding OpenModSourceUrlCommand}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource MaterialDesignToolButton}">
+                                        <Button.DataContext>
+                                            <viewModel:ValidateMods />
+                                        </Button.DataContext>
+                                        <materialDesign:PackIcon
+                                            Width="17"
+                                            Height="Auto"
+                                            Kind="Download" />
+                                    </Button>
+                                    <Button
+                                        Margin="0,0,3,0"
+                                        Command="{Binding OpenModSourceUrlCommand}"
+                                        CommandParameter="{Binding ModSourceUrl}"
+                                        Style="{StaticResource MaterialDesignToolButton}">
+                                        <materialDesign:PackIcon
+                                            Width="17"
+                                            Height="Auto"
+                                            Kind="FolderPlus" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
 
                             <ProgressBar
                                 Grid.Row="1"
                                 Grid.ColumnSpan="3"
                                 Height="3"
-                                Background="White"
-                                Foreground="{DynamicResource BackgroundColor}"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Foreground="{DynamicResource FontColor}"
                                 IsIndeterminate="True" />
+
+                            <materialDesign:ColorZone
+                                Grid.Row="2"
+                                Grid.ColumnSpan="3"
+                                Height="1"
+                                Background="{DynamicResource FontColor}" />
                         </Grid>
                     </Grid>
                 </DataTemplate>
@@ -70,10 +99,10 @@
 
         <!--  Initial Validation Pane  -->
         <Expander
-            Grid.Row="0"
             Margin="0,0,0,-50"
             HorizontalAlignment="Stretch"
-            Background="Transparent"
+            VerticalAlignment="Bottom"
+            Background="{DynamicResource BackgroundColor}"
             ExpandDirection="Up"
             IsExpanded="{Binding InitialValidationComplete, Converter={StaticResource BoolToInverseConverter}}">
             <Grid>
@@ -92,20 +121,23 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
-                    FontSize="25"
+                    Style="{DynamicResource HeaderText}"
                     TextAlignment="Center"
                     TextWrapping="WrapWithOverflow">
                     Validating Mod Archives
                 </TextBlock>
 
                 <!--  Progress UI  -->
-                <Grid Grid.Row="1" Grid.Column="1">
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <materialDesign:ColorZone
@@ -123,7 +155,10 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Kind="Check" />
-                                <Label Content="Building database" FontSize="14" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Style="{DynamicResource BodyText}"
+                                    Text="Building database" />
                             </StackPanel>
                         </Label>
 
@@ -142,7 +177,7 @@
                                 <TextBlock
                                     Margin="5,0,0,0"
                                     VerticalAlignment="Center"
-                                    FontSize="14">
+                                    Style="{DynamicResource BodyText}">
 
                                     <Run Text="Found" />
                                     <Run Text="{Binding TotalSourceFileCount}" />
@@ -161,14 +196,16 @@
 
                     <StackPanel Grid.Row="3" HorizontalAlignment="Center">
                         <TextBlock
-                            FontSize="14"
+                            VerticalAlignment="Center"
+                            Style="{DynamicResource BodyText}"
                             Text="{Binding CurrentModName}"
                             TextAlignment="Center"
                             TextWrapping="WrapWithOverflow" />
 
                         <TextBlock
                             Margin="0,5,0,0"
-                            FontSize="12"
+                            VerticalAlignment="Center"
+                            Style="{DynamicResource BodyText}"
                             Text="{Binding CurrentArchiveMd5}"
                             TextAlignment="Center"
                             TextWrapping="WrapWithOverflow" />
@@ -176,7 +213,9 @@
 
                     <ProgressBar
                         Grid.Row="4"
+                        VerticalAlignment="Bottom"
                         Background="Transparent"
+                        Foreground="{DynamicResource FontColor}"
                         IsIndeterminate="True"
                         Style="{DynamicResource MaterialDesignCircularProgressBar}" />
 

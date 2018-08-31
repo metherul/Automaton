@@ -31,12 +31,10 @@
                 RenderOptions.EdgeMode="Aliased"
                 Source="{DynamicResource HeaderImage}" />
 
-            <Label
+            <TextBlock
                 HorizontalAlignment="Center"
-                Content="Automaton"
-                FontFamily="{StaticResource ProductSans}"
-                FontSize="25"
-                Foreground="{DynamicResource FontColor}" />
+                Style="{DynamicResource HeaderText}"
+                Text="Automaton" />
         </StackPanel>
 
         <!--  Description  -->
@@ -44,11 +42,8 @@
             Grid.Row="1"
             MaxHeight="170"
             Margin="10,30,10,0"
-            FontFamily="{StaticResource RobotoMono}"
-            Foreground="White"
-            Text="{DynamicResource ModpackDescription}"
-            TextAlignment="Center"
-            TextWrapping="WrapWithOverflow" />
+            Style="{DynamicResource BodyText}"
+            Text="{DynamicResource ModpackDescription}" />
 
         <!--  Load Modpack button  -->
         <Button
@@ -57,16 +52,13 @@
             Margin="0,0,0,30"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource ButtonColor}"
-            BorderBrush="{DynamicResource ButtonColor}"
             Command="{Binding LoadModpackCommand}"
-            FontFamily="{StaticResource ProductSans}"
             Opacity="10">
             <Grid
                 Margin="10,0,10,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-                <TextBlock FontFamily="{StaticResource ProductSans}" Foreground="{DynamicResource FontColor}">
+                <TextBlock Style="{DynamicResource ButtonText}">
                     Load Modpack
                 </TextBlock>
             </Grid>

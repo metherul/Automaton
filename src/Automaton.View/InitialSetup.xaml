@@ -30,11 +30,10 @@
                 RenderOptions.EdgeMode="Aliased"
                 Source="{DynamicResource HeaderImage}" />
 
-            <Label
+            <TextBlock
                 HorizontalAlignment="Center"
-                Content="{DynamicResource ModpackName}"
-                FontFamily="{DynamicResource ProductSans}"
-                FontSize="25" />
+                Style="{DynamicResource HeaderText}"
+                Text="{DynamicResource ModpackName}" />
         </StackPanel>
 
         <!--  Description  -->
@@ -42,9 +41,8 @@
             Grid.Row="1"
             MaxHeight="170"
             Margin="10,30,10,0"
-            Text="{DynamicResource ModpackDescription}"
-            TextAlignment="Center"
-            TextWrapping="WrapWithOverflow" />
+            Style="{DynamicResource BodyText}"
+            Text="{DynamicResource ModpackDescription}" />
 
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>
@@ -68,25 +66,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!--<CheckBox
-                    Grid.Row="0"
-                    Grid.ColumnSpan="2"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    Background="{DynamicResource AssistantControlColor}"
-                    BorderBrush="{DynamicResource AssistantControlColor}"
-                    Content="Install Mod Organizer"
-                    FontFamily="{StaticResource RobotoMono}"
-                    FontSize="13"
-                    Foreground="{DynamicResource FontColor}"
-                    IsChecked="{Binding InstallModOrganizer}" />-->
-
                 <TextBox
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="10"
                     materialDesign:HintAssist.Hint="Install Folder"
-                    FontSize="13"
                     Text="{Binding InstallDirectory}"
                     ToolTip="Where Automaton will install the modpack." />
 
@@ -130,7 +114,7 @@
                     Margin="10,0,10,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">
-                    <TextBlock>
+                    <TextBlock Style="{DynamicResource ButtonText}">
                         Next
                     </TextBlock>
                 </Grid>

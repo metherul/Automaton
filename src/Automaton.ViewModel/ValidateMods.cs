@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Automaton.Model.ModpackBase;
 using Automaton.ViewModel.Controllers;
 using Automaton.Model.Utility;
+using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel
 {
@@ -10,7 +11,9 @@ namespace Automaton.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Mod> MissingMods { get; set; } = new ObservableCollection<Mod>();
+        public ObservableCollection<Mod> MissingMods { get; set; } 
+
+        public RelayCommand<dynamic> OpenModSourceUrlCommand { get; set; }
 
         public string CurrentModName { get; set; }
         public string CurrentArchiveMd5 { get; set; }
@@ -24,30 +27,36 @@ namespace Automaton.ViewModel
 
         public ValidateMods()
         {
+            OpenModSourceUrlCommand = new RelayCommand<dynamic>(OpenModSourceUrl);
+
             Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
             ViewIndexChangedEvent += IncrementViewIndexUpdate;
+        }
+
+        private void OpenModSourceUrl(dynamic currentMod)
+        {
+
         }
 
         private void IncrementViewIndexUpdate(int currentIndex)
         {
             if (currentIndex == ThisViewIndex)
             {
-                InitializeInitValidation();
+                InitialValidation();
             }
         }
 
-        private async void InitializeInitValidation()
+        private async void InitialValidation()
         {
             InitialValidationComplete = false;
 
             var sourceFiles = Validation.GetSourceFiles();
             TotalSourceFileCount = sourceFiles.Count;
 
-            var result = await Validation.ValidateSourcesAsync(sourceFiles);
-
-            MissingMods = new ObservableCollection<Mod>(result);
+            MissingMods = new ObservableCollection<Mod>(await Validation.ValidateSourcesAsync(sourceFiles));
 
             AllModsValidated = MissingMods.Count == 0;
+
             InitialValidationComplete = true;
         }
 

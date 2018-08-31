@@ -47,7 +47,6 @@
                 HorizontalAlignment="Right"
                 Command="{Binding CloseWindowCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type view:MainWindow}}}"
-                Foreground="{DynamicResource FontColor}"
                 Style="{DynamicResource MaterialDesignToolButton}">
                 <materialDesign:PackIcon
                     Width="20"
@@ -60,7 +59,6 @@
                 HorizontalAlignment="Right"
                 Command="{Binding MinimizeWindowCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type view:MainWindow}}}"
-                Foreground="{DynamicResource FontColor}"
                 Style="{DynamicResource MaterialDesignToolButton}">
                 <materialDesign:PackIcon
                     Width="18"
