@@ -45,6 +45,13 @@ namespace Automaton.Model.Utility
 
         public static List<Mod> MissingMods { get; set; } = new List<Mod>();
 
+        public static List<string> GetSourceFiles()
+        {
+            var sourceDirectory = @"C:\Programming\C#\Automaton\src\Automaton.View\bin\Debug\Test";
+
+            return Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly).ToList();
+        }
+
         /// <summary>
         /// Will return a list of <see cref="Mod"/> which do not have a matching archive.
         /// Patches any existing <see cref="Mod"/> objects with updated archive paths.
@@ -112,11 +119,17 @@ namespace Automaton.Model.Utility
             return await Task.Run(() => ValidateSources(sourceFiles));
         }
 
-        public static List<string> GetSourceFiles()
+        public static bool ValidateModArchive(Mod mod, string archivePath)
         {
-            var sourceDirectory = @"C:\Programming\C#\Automaton\src\Automaton.View\bin\Debug\Test";
+            var targetMd5 = mod.ArchiveMd5Sum.ToUpperInvariant();
+            var md5Sum = Md5.CalculateMd5(archivePath);
 
-            return Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            return (md5Sum == targetMd5);
+        }
+
+        public static async Task<bool> ValidateModArchiveAsync(Mod mod, string archivePath)
+        {
+            return await Task.Run(() => ValidateModArchive(mod, archivePath));
         }
     }
 }

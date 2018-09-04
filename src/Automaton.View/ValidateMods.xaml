@@ -50,8 +50,8 @@
                                     Tag="{Binding}">
                                     <Button
                                         Margin="3,0,2,0"
-                                        Command="{Binding OpenModSourceUrlCommand}"
-                                        CommandParameter="{Binding}"
+                                        Command="{Binding FindAndValidateModFileCommand}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
                                         Style="{StaticResource MaterialDesignToolButton}">
                                         <Button.DataContext>
                                             <viewModel:ValidateMods />
@@ -59,17 +59,20 @@
                                         <materialDesign:PackIcon
                                             Width="17"
                                             Height="Auto"
-                                            Kind="Download" />
+                                            Kind="FileFind" />
                                     </Button>
                                     <Button
                                         Margin="0,0,3,0"
                                         Command="{Binding OpenModSourceUrlCommand}"
-                                        CommandParameter="{Binding ModSourceUrl}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=ItemsSource}"
                                         Style="{StaticResource MaterialDesignToolButton}">
+                                        <Button.DataContext>
+                                            <viewModel:ValidateMods />
+                                        </Button.DataContext>
                                         <materialDesign:PackIcon
                                             Width="17"
                                             Height="Auto"
-                                            Kind="FolderPlus" />
+                                            Kind="Link" />
                                     </Button>
                                 </StackPanel>
                             </Grid>

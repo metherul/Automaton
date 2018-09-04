@@ -4,6 +4,8 @@ using Automaton.Model.ModpackBase;
 using Automaton.ViewModel.Controllers;
 using Automaton.Model.Utility;
 using GalaSoft.MvvmLight.Command;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Automaton.ViewModel
 {
@@ -11,9 +13,10 @@ namespace Automaton.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Mod> MissingMods { get; set; } 
+        public ObservableCollection<Mod> MissingMods { get; set; }
 
         public RelayCommand<dynamic> OpenModSourceUrlCommand { get; set; }
+        public RelayCommand<Mod> FindAndValidateModFileCommand { get; set; }
 
         public string CurrentModName { get; set; }
         public string CurrentArchiveMd5 { get; set; }
@@ -28,14 +31,39 @@ namespace Automaton.ViewModel
         public ValidateMods()
         {
             OpenModSourceUrlCommand = new RelayCommand<dynamic>(OpenModSourceUrl);
+            FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
 
             Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
             ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
-        private void OpenModSourceUrl(dynamic currentMod)
+        private void OpenModSourceUrl(ObservableCollection<Mod> missingMods, Mod currentMod)
         {
+            MissingMods = currentMod;
 
+            Process.Start(currentMod.ModSourceUrl);
+        }
+
+        private async void FindAndValidateModFile(Mod currentMod)
+        {
+            var fileBrowser = new OpenFileDialog()
+            {
+                Title = $"Find {currentMod.ModName} | {currentMod.ModArchiveName}",
+                InitialDirectory = "Downloads",
+                Filter = "Mod Archive (*.zip;*.7zip;*.7z;*.rar;*.gzip)|*.zip;*.7zip;*.7z;*.rar;*.gzip",
+            };
+
+            if (fileBrowser.ShowDialog() == DialogResult.OK)
+            {
+                var archivePath = fileBrowser.FileName;
+                var validationResponse = await Validation.ValidateModArchiveAsync(currentMod, archivePath);
+
+                var test = MissingMods;
+
+                MissingMods.Remove(currentMod);
+            }
+
+            // Show in UI
         }
 
         private void IncrementViewIndexUpdate(int currentIndex)

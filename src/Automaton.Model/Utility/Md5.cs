@@ -15,7 +15,7 @@ namespace Automaton.Model.Utility
             {
                 var byteHash = MD5.Create().ComputeHash(stream);
 
-                md5Hash = BitConverter.ToString(byteHash).Replace("-", "").ToLowerInvariant();
+                md5Hash = BitConverter.ToString(byteHash).Replace("-", "").ToUpperInvariant();
             }
 
             return md5Hash;
