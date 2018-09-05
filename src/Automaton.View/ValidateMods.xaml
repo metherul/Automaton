@@ -5,14 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Automaton.ViewModel;assembly=Automaton.ViewModel"
     d:DesignHeight="300"
     d:DesignWidth="300"
+    DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-
-    <UserControl.DataContext>
-        <viewModel:ValidateMods />
-    </UserControl.DataContext>
 
     <Grid>
         <ItemsControl ItemsSource="{Binding MissingMods, Mode=TwoWay}">
@@ -52,10 +48,8 @@
                                         Margin="3,0,2,0"
                                         Command="{Binding FindAndValidateModFileCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=ItemsSource}"
+                                        DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
                                         Style="{StaticResource MaterialDesignToolButton}">
-                                        <Button.DataContext>
-                                            <viewModel:ValidateMods />
-                                        </Button.DataContext>
                                         <materialDesign:PackIcon
                                             Width="17"
                                             Height="Auto"
@@ -65,10 +59,8 @@
                                         Margin="0,0,3,0"
                                         Command="{Binding OpenModSourceUrlCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
+                                        DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
                                         Style="{StaticResource MaterialDesignToolButton}">
-                                        <Button.DataContext>
-                                            <viewModel:ValidateMods />
-                                        </Button.DataContext>
                                         <materialDesign:PackIcon
                                             Width="17"
                                             Height="Auto"

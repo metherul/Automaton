@@ -40,8 +40,6 @@ namespace Automaton.ViewModel
 
         private void OpenModSourceUrl(Mod currentMod)
         {
-            var test = MissingMods;
-
             Process.Start(currentMod.ModSourceUrl);
         }
 

@@ -8,11 +8,8 @@
     xmlns:viewModel="clr-namespace:Automaton.ViewModel;assembly=Automaton.ViewModel"
     d:DesignHeight="300"
     d:DesignWidth="300"
+    DataContext="{Binding InitialSetup, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-
-    <UserControl.DataContext>
-        <viewModel:InitialSetup />
-    </UserControl.DataContext>
 
     <Grid>
         <Grid.RowDefinitions>

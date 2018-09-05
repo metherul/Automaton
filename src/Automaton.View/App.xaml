@@ -13,40 +13,38 @@
         <ResourceDictionary>
             <!--  Material Design in XAML definitions  -->
             <ResourceDictionary.MergedDictionaries>
-
                 <!--  Material Design Themes  -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-
                 <ResourceDictionary Source="Resources/CustomScrollbar.xaml" />
-
                 <!--  App Themes  -->
                 <ResourceDictionary Source="Resources/TextTheme.xaml" />
                 <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
 
-            </ResourceDictionary.MergedDictionaries>
 
+            </ResourceDictionary.MergedDictionaries>
             <!--  Fonts  -->
             <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
-
             <!--  Colors  -->
             <Brush x:Key="BackgroundColor">#282C35</Brush>
             <Brush x:Key="FontColor">#FFFFFF</Brush>
             <Brush x:Key="ButtonColor">#42464F</Brush>
             <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
-
             <!--  Content  -->
             <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
-
             <!--  Modpack strings  -->
             <clr:String x:Key="ModpackName">Automaton</clr:String>
             <clr:String x:Key="ModpackDescription">It's dangerous to mod alone. Load a modpack to get started!</clr:String>
-
             <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
             <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
 
+
+            <vm:ViewModelLocator
+                xmlns:vm="clr-namespace:Automaton.View"
+                x:Key="ViewModelLocator"
+                d:IsDataSource="True" />
         </ResourceDictionary>
     </Application.Resources>
-</Application> 
+</Application>

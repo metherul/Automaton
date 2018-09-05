@@ -8,11 +8,8 @@
     xmlns:viewModel="clr-namespace:Automaton.ViewModel;assembly=Automaton.ViewModel"
     d:DesignHeight="300"
     d:DesignWidth="300"
+    DataContext="{Binding SetupAssistant, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-
-    <UserControl.DataContext>
-        <viewModel:SetupAssistant />
-    </UserControl.DataContext>
 
     <UserControl.Resources>
         <viewModel:GroupToControlConverter x:Key="GroupToControlConverter" />

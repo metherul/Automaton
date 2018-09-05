@@ -11,13 +11,10 @@
     Title="Automaton"
     Width="405"
     Height="579"
+    DataContext="{Binding MainWindow, Source={StaticResource ViewModelLocator}}"
     ResizeMode="NoResize"
     WindowStyle="None"
     mc:Ignorable="d">
-
-    <Window.DataContext>
-        <viewModel:MainWindow />
-    </Window.DataContext>
 
     <i:Interaction.Triggers>
         <!--  Mouse drag functionality  -->
