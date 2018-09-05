@@ -15,7 +15,7 @@
     </UserControl.DataContext>
 
     <Grid>
-        <ItemsControl ItemsSource="{Binding MissingMods}">
+        <ItemsControl ItemsSource="{Binding MissingMods, Mode=TwoWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundColor}">
@@ -51,7 +51,7 @@
                                     <Button
                                         Margin="3,0,2,0"
                                         Command="{Binding FindAndValidateModFileCommand}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=ItemsSource}"
                                         Style="{StaticResource MaterialDesignToolButton}">
                                         <Button.DataContext>
                                             <viewModel:ValidateMods />
@@ -64,7 +64,7 @@
                                     <Button
                                         Margin="0,0,3,0"
                                         Command="{Binding OpenModSourceUrlCommand}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=ItemsSource}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
                                         Style="{StaticResource MaterialDesignToolButton}">
                                         <Button.DataContext>
                                             <viewModel:ValidateMods />

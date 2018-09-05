@@ -6,6 +6,7 @@ using Automaton.Model.Utility;
 using GalaSoft.MvvmLight.Command;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace Automaton.ViewModel
 {
@@ -15,7 +16,7 @@ namespace Automaton.ViewModel
 
         public ObservableCollection<Mod> MissingMods { get; set; }
 
-        public RelayCommand<dynamic> OpenModSourceUrlCommand { get; set; }
+        public RelayCommand<Mod> OpenModSourceUrlCommand { get; set; }
         public RelayCommand<Mod> FindAndValidateModFileCommand { get; set; }
 
         public string CurrentModName { get; set; }
@@ -30,16 +31,16 @@ namespace Automaton.ViewModel
 
         public ValidateMods()
         {
-            OpenModSourceUrlCommand = new RelayCommand<dynamic>(OpenModSourceUrl);
+            OpenModSourceUrlCommand = new RelayCommand<Mod>(OpenModSourceUrl);
             FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
 
             Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
             ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
-        private void OpenModSourceUrl(ObservableCollection<Mod> missingMods, Mod currentMod)
+        private void OpenModSourceUrl(Mod currentMod)
         {
-            MissingMods = currentMod;
+            var test = MissingMods;
 
             Process.Start(currentMod.ModSourceUrl);
         }

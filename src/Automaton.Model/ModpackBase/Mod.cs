@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Automaton.Model.Extensions;
 using Newtonsoft.Json;
 
@@ -7,8 +8,10 @@ namespace Automaton.Model.ModpackBase
     /// <summary>
     /// The base mod object
     /// </summary>
-    public class Mod
+    public class Mod : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("mod_name")]
         public string ModName { get; set; }
 
@@ -40,8 +43,10 @@ namespace Automaton.Model.ModpackBase
     /// <summary>
     /// Mod installation parameters
     /// </summary>
-    public class Installation
+    public class Installation : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private string _sourceLocation;
         [JsonProperty("source_location")]
         public string SourceLocation
@@ -65,8 +70,10 @@ namespace Automaton.Model.ModpackBase
     /// <summary>
     /// Flag conditional parameters
     /// </summary>
-    public class Conditional
+    public class Conditional : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("conditional_flag_name")]
         public string ConditionalFlagName { get; set; }
 
@@ -77,8 +84,10 @@ namespace Automaton.Model.ModpackBase
     /// <summary>
     /// Allows for fast archive identification data to be stored
     /// </summary>
-    public class ArchiveId
+    public class ArchiveId : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("file_markers")]
         public List<FileMarker> FileMarkers { get; set; }
 
@@ -89,8 +98,10 @@ namespace Automaton.Model.ModpackBase
         public string ArchiveIdentifier { get; set; }
     }
 
-    public class FileMarker
+    public class FileMarker : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("byte_index")]
         public string ByteIndex { get; set; }
 
