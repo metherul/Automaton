@@ -22,21 +22,26 @@
                 <ResourceDictionary Source="Resources/TextTheme.xaml" />
                 <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
 
-
             </ResourceDictionary.MergedDictionaries>
+
             <!--  Fonts  -->
             <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
+
             <!--  Colors  -->
             <Brush x:Key="BackgroundColor">#282C35</Brush>
             <Brush x:Key="FontColor">#FFFFFF</Brush>
             <Brush x:Key="ButtonColor">#42464F</Brush>
             <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
+
             <!--  Content  -->
             <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
+            <BitmapImage x:Key="NexusLogo">/Automaton;component/Content/Images/NexusMods.png</BitmapImage>
+
             <!--  Modpack strings  -->
             <clr:String x:Key="ModpackName">Automaton</clr:String>
             <clr:String x:Key="ModpackDescription">It's dangerous to mod alone. Load a modpack to get started!</clr:String>
+
             <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
             <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
 

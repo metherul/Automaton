@@ -30,6 +30,8 @@ namespace Automaton.ViewModel
         public SetupAssistant()
         {
             Modpack.ModpackLoadedEvent += ModpackLoaded;
+
+            IncrementCurrentViewIndexCommand = new RelayCommand(IncrementCurrentViewIndex);
         }
 
         private void ModpackLoaded()

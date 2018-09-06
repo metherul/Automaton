@@ -38,6 +38,9 @@ namespace Automaton.View
             SimpleIoc.Default.Register<ViewModel.SetupAssistant>();
             SimpleIoc.Default.Register<ViewModel.ValidateMods>();
 
+            SimpleIoc.Default.Register<ViewModel.Controllers.SnackbarController>();
+
+
         }
 
         public ViewModel.MainWindow MainWindow
@@ -80,6 +83,13 @@ namespace Automaton.View
             }
         }
 
+        public ViewModel.Controllers.SnackbarController SnackbarController
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ViewModel.Controllers.SnackbarController>();
+            }
+        }
 
 
         public static void Cleanup()

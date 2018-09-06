@@ -11,86 +11,125 @@
     mc:Ignorable="d">
 
     <Grid>
-        <ItemsControl ItemsSource="{Binding MissingMods, Mode=TwoWay}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundColor}">
-                        <Grid Margin="3,7,3,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid Grid.Row="0" Margin="0,0,0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Margin="0,0,0,2"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Style="{DynamicResource BodyText}"
-                                    Text="{Binding ModName}"
-                                    TextWrapping="NoWrap" />
-
-                                <StackPanel
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    FlowDirection="LeftToRight"
-                                    Orientation="Horizontal"
-                                    Tag="{Binding}">
-                                    <Button
-                                        Margin="3,0,2,0"
-                                        Command="{Binding FindAndValidateModFileCommand}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=ItemsSource}"
-                                        DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
-                                        Style="{StaticResource MaterialDesignToolButton}">
-                                        <materialDesign:PackIcon
-                                            Width="17"
-                                            Height="Auto"
-                                            Kind="FileFind" />
-                                    </Button>
-                                    <Button
-                                        Margin="0,0,3,0"
-                                        Command="{Binding OpenModSourceUrlCommand}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
-                                        DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
-                                        Style="{StaticResource MaterialDesignToolButton}">
-                                        <materialDesign:PackIcon
-                                            Width="17"
-                                            Height="Auto"
-                                            Kind="Link" />
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-
-                            <ProgressBar
-                                Grid.Row="1"
-                                Grid.ColumnSpan="3"
-                                Height="3"
-                                Background="Transparent"
-                                BorderBrush="Transparent"
-                                Foreground="{DynamicResource FontColor}"
-                                IsIndeterminate="True" />
-
-                            <materialDesign:ColorZone
-                                Grid.Row="2"
-                                Grid.ColumnSpan="3"
-                                Height="1"
-                                Background="{DynamicResource FontColor}" />
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
         <!--  Main Content  -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
+            <Grid Grid.Row="0" Margin="20,0,20,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource HeaderText}"
+                    Text="Mod Validation" />
+
+                <Button
+                    Grid.Column="2"
+                    ClipToBounds="True"
+                    Style="{DynamicResource MaterialDesignToolButton}">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock
+                            Grid.Column="0"
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="15"
+                            Style="{DynamicResource HeaderText}"
+                            Text="Log-in" />
+                        <Image
+                            VerticalAlignment="Center"
+                            RenderOptions.BitmapScalingMode="Fant"
+                            Source="{DynamicResource NexusLogo}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding MissingMods}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundColor}">
+                            <Grid Margin="3,7,3,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0" Margin="0,0,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,0,2"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource BodyText}"
+                                        Text="{Binding ModName}"
+                                        TextWrapping="NoWrap" />
+
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        FlowDirection="LeftToRight"
+                                        Orientation="Horizontal"
+                                        Tag="{Binding}">
+                                        <Button
+                                            Margin="3,0,2,0"
+                                            Command="{Binding FindAndValidateModFileCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
+                                            DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
+                                            Style="{StaticResource MaterialDesignToolButton}">
+                                            <materialDesign:PackIcon
+                                                Width="17"
+                                                Height="Auto"
+                                                Kind="FileFind" />
+                                        </Button>
+                                        <Button
+                                            Margin="0,0,3,0"
+                                            Command="{Binding OpenModSourceUrlCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=DataContext}"
+                                            DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
+                                            Style="{StaticResource MaterialDesignToolButton}">
+                                            <materialDesign:PackIcon
+                                                Width="17"
+                                                Height="Auto"
+                                                Kind="Link" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+
+                                <ProgressBar
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="3"
+                                    Height="3"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Foreground="{DynamicResource FontColor}"
+                                    IsIndeterminate="True" />
+
+                                <materialDesign:ColorZone
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3"
+                                    Height="1"
+                                    Background="{DynamicResource FontColor}" />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
 
         <!--  Initial Validation Pane  -->
         <Expander

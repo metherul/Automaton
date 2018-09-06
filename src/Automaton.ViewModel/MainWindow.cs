@@ -35,6 +35,8 @@ namespace Automaton.ViewModel
             IncrementCurrentViewIndex();
 
             ThemeController.ApplyTheme();
+
+            SnackbarController.EnqueueMessage("Test Message");
         }
 
         private void ViewIndexUpdate(int index)

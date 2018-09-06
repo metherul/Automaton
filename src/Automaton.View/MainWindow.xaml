@@ -65,7 +65,10 @@
             </Button>
         </StackPanel>
 
-        <materialDesign:Transitioner Grid.Row="1" SelectedIndex="{Binding CurrentTransitionerIndex}">
+        <materialDesign:Transitioner
+            Grid.Row="1"
+            VerticalAlignment="Stretch"
+            SelectedIndex="{Binding CurrentTransitionerIndex}">
 
             <materialDesign:TransitionerSlide>
                 <view:LoadModpack />
@@ -85,7 +88,7 @@
 
         </materialDesign:Transitioner>
 
-        <!--<Grid Grid.Row="2">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -110,7 +113,17 @@
                 Foreground="{DynamicResource FontColor}">
                 Automaton v.1.0
             </Label>
-        </Grid>-->
 
+        </Grid>
+
+        <!--<materialDesign:Snackbar
+            Grid.RowSpan="3"
+            VerticalAlignment="Bottom"
+            Background="White"
+            DataContext="{Binding SnackbarController, Source={StaticResource ViewModelLocator}}"
+            FontFamily="{DynamicResource ProductSans}"
+            Foreground="Black"
+            IsActive="true"
+            Message="{Binding Source={StaticResource Message}}" />-->
     </Grid>
 </Window>
