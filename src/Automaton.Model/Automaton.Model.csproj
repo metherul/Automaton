@@ -56,16 +56,23 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Enumerable.cs" />
     <Compile Include="Errors\GenericErrorHandler.cs" />
     <Compile Include="Extensions\Path.cs" />
+    <Compile Include="NexusApi\NexusBase.cs" />
+    <Compile Include="NexusApi\NexusConnection.cs" />
+    <Compile Include="NexusApi\NexusMod.cs" />
+    <Compile Include="NexusApi\NexusProtocol.cs" />
     <Compile Include="Utility\Archive.cs" />
     <Compile Include="Utility\Json.cs" />
     <Compile Include="Utility\Md5.cs" />
     <Compile Include="Utility\NamedPipes.cs" />
-    <Compile Include="Utility\NexusMods.cs" />
+    <Compile Include="Utility\NexusApi.cs" />
     <Compile Include="Instance\Flag.cs" />
     <Compile Include="Instance\Automaton.cs" />
     <Compile Include="ModpackBase\Mod.cs" />

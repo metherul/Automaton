@@ -57,7 +57,7 @@ namespace Automaton.Model.Utility
         /// Patches any existing <see cref="Mod"/> objects with updated archive paths.
         /// </summary>
         /// <returns></returns>
-        public static List<Mod> ValidateSources(List<string> sourceFiles)
+        public static List<Mod> GetMissingMods(List<string> sourceFiles)
         {
             var sourceFileInfos = sourceFiles.Select(x => new FileInfo(x)).ToList();
             var missingModArchives = new List<Mod>();
@@ -114,22 +114,29 @@ namespace Automaton.Model.Utility
             return missingModArchives;
         }
 
-        public static async Task<List<Mod>> ValidateSourcesAsync(List<string> sourceFiles)
+        public static async Task<List<Mod>> GetMissingModsAsync(List<string> sourceFiles)
         {
-            return await Task.Run(() => ValidateSources(sourceFiles));
+            return await Task.Run(() => GetMissingMods(sourceFiles));
         }
 
-        public static bool ValidateModArchive(Mod mod, string archivePath)
+        public static bool IsMatchingModArchive(Mod mod, string archivePath)
         {
             var targetMd5 = mod.ArchiveMd5Sum.ToUpperInvariant();
             var md5Sum = Md5.CalculateMd5(archivePath);
 
-            return (md5Sum == targetMd5);
+            var matchResult = md5Sum == targetMd5;
+
+            if (matchResult)
+            {
+                mod.ModArchivePath = archivePath;
+            }
+
+            return (matchResult);
         }
 
-        public static async Task<bool> ValidateModArchiveAsync(Mod mod, string archivePath)
+        public static async Task<bool> IsMatchingModArchiveAsync(Mod mod, string archivePath)
         {
-            return await Task.Run(() => ValidateModArchive(mod, archivePath));
+            return await Task.Run(() => IsMatchingModArchive(mod, archivePath));
         }
     }
 }

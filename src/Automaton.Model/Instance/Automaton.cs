@@ -7,48 +7,14 @@ namespace Automaton.Model.Instance
     public class Automaton
     {
         public static Header ModpackHeader { get; set; } = new Header();
-
         public static List<Mod> ModpackMods { get; set; } = new List<Mod>();
 
-        private static string _moInstallLocation = "";
-        public static string MoInstallLocation
-        {
-            get => _moInstallLocation;
-            set
-            {
-                if (_moInstallLocation != value)
-                {
-                    _moInstallLocation = value;
+        public static string MoInstallLocation { get; set; }
+        public static string SourceLocation { get; set; }
+        public static string ModpackExtractionLocation { get; set; }
 
-                }
-            }
-        }
-
-        private static string _sourceLocation = "";
-        public static string SourceLocation
-        {
-            get => _sourceLocation;
-            set
-            {
-                if (_sourceLocation != value)
-                {
-                    _sourceLocation = value;
-                }
-            }
-        }
-
-        private static string _modpackExtractionLocation = "";
-        public static string ModpackExtractionLocation
-        {
-            get => _modpackExtractionLocation;
-            set
-            {
-                if (_modpackExtractionLocation != value)
-                {
-                    _modpackExtractionLocation = value;
-                }
-            }
-        }
+        public string NexusHandlerRegistryValue { get; set; }
+        public static string PreviousRegistryValue { get; set; }
 
         #region Modification Methods
 

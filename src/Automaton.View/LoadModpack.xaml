@@ -55,12 +55,9 @@
                 Margin="10,0,10,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{DynamicResource ButtonText}">
-                        Load Modpack
-                    </TextBlock>
-                    <Image Source="https://www.nexusmods.com/Contents/images/noimage.svg" />
-                </StackPanel>
+                <TextBlock Style="{DynamicResource ButtonText}">
+                    Load Modpack
+                </TextBlock>
             </Grid>
         </Button>
     </Grid>
