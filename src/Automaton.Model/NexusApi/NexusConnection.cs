@@ -7,10 +7,28 @@ namespace Automaton.Model.NexusApi
 {
     public class NexusConnection : NexusBase
     {
+        /// <summary>
+        /// Creates a new websocket connection to Nexusmods.
+        /// </summary>
+        /// <param name="progressCallback"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
         public static async Task StartNewConnectionAsync(IProgress<NewConnectionProgress> progressCallback, string apiKey = "")
         {
-            var guid = Guid.NewGuid();
             var progress = new NewConnectionProgress();
+            var guid = Guid.NewGuid();
+
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                ApiKey = apiKey;
+
+                progress.CurrentMessage = "API key already detected, skipping websocket authentication.";
+                progress.IsComplete = true;
+
+                progressCallback.Report(progress);
+
+                return;
+            }
 
             // Initialize websocket connection
             WebSocket = new WebSocket("wss://sso.nexusmods.com");

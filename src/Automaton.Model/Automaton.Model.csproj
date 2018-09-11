@@ -72,7 +72,6 @@
     <Compile Include="Utility\Json.cs" />
     <Compile Include="Utility\Md5.cs" />
     <Compile Include="Utility\NamedPipes.cs" />
-    <Compile Include="Utility\NexusApi.cs" />
     <Compile Include="Instance\Flag.cs" />
     <Compile Include="Instance\Automaton.cs" />
     <Compile Include="ModpackBase\Mod.cs" />

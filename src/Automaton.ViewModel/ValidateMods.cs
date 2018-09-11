@@ -112,6 +112,32 @@ namespace Automaton.ViewModel
 
         }
 
+        /// <summary>
+        /// Initializes the NXMWorker pipe listener.
+        /// </summary>
+        private void InitializeNexusHandle()
+        {
+            var nexusProtocol = new NexusProtocol();
+
+            // Start capturing piped messages from the NXMWorker, handle any progress reports.
+            nexusProtocol.StartRecievingProtocolValues(new Progress<CaptureProtocolValuesProgress>(async x =>
+            {
+                // Start downloading the mod file.
+                await NexusMod.DownloadModFile(x.FileId, x.ModId, new Progress<DownloadModFileProgress>(downloadProgress =>
+                {
+                    if (downloadProgress.CurrentDownloadPercentage == 10)
+                    {
+
+                    }
+
+                    if (downloadProgress.IsDownloadComplete)
+                    {
+
+                    }
+                }));
+            }));
+        }
+
         private async void NexusLogIn()
         {
             await NexusConnection.StartNewConnectionAsync(new Progress<NewConnectionProgress>(x =>
@@ -132,6 +158,8 @@ namespace Automaton.ViewModel
                     {
                         IsLoggedIn = true;
                         IsLoginVisible = false;
+
+                        InitializeNexusHandle();
                     }
 
                     else
@@ -141,7 +169,7 @@ namespace Automaton.ViewModel
                     }
                 }
 
-            }));
+            }), "VnVaektQaExmSHF6VlR3WG1kRUVaSzNOZ215TTg3NlRxK0RCQWhnZGtPKzRQR3o5UFJvamY5QjhxM3craTdRSEp2U01QWDZwYTNIQXdYNDFYQTh5c1E9PS0tbnpkT3o2T21ucUJIenN3VnY2bHkwZz09--430ccf1ef83ed723d634589b7e163aa3ca15694b");
         }
     }
 }

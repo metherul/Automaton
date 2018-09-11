@@ -64,11 +64,13 @@ namespace Automaton.ViewModel
         private void OpenInstallFolder()
         {
             InstallDirectory = OpenDirectoryBrowser();
+            Model.Instance.Automaton.InstallLocation = InstallDirectory;
         }
 
         private void OpenDownloadsFolder()
         {
             DownloadsDirectory = OpenDirectoryBrowser();
+            Model.Instance.Automaton.SourceLocation = DownloadsDirectory;
         }
 
         private string OpenDirectoryBrowser()

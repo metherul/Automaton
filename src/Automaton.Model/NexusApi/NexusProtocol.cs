@@ -1,30 +1,64 @@
-﻿using Microsoft.Win32;
+﻿using Automaton.Model.Utility;
+using Microsoft.Win32;
 using System;
-using System.Threading.Tasks;
 
 namespace Automaton.Model.NexusApi
 {
     public class NexusProtocol : Instance.Automaton
     {
-        private static string TargetRegistryValue = "";
+        private const string TargetRegistryPath = @"Software\Classes\nxm\shell\open\command";
 
-        public static void SetRegistryValues()
+        public NexusProtocol()
         {
-            var targetRegistryPath = @"Computer\HKEY_CURRENT_USER\Software\Classes\nxm\shell\open\command";
-            PreviousRegistryValue = Registry.CurrentUser.OpenSubKey(targetRegistryPath).GetValue("").ToString();
-
-
-
+            SetRegistryValues();
         }
 
-        public static void ResetRegistryValues()
+        /// <summary>
+        /// Sets the registry key to the NXMWorker and saves the original value.
+        /// </summary>
+        private void SetRegistryValues()
         {
+            // Get the previous registry value, save in the instance
+            PreviousRegistryValue = Registry.CurrentUser.OpenSubKey(TargetRegistryPath).GetValue("").ToString();
 
+            // Write the new registry value
+            Registry.CurrentUser.OpenSubKey(TargetRegistryPath, RegistryKeyPermissionCheck.ReadWriteSubTree).SetValue("", NexusHandlerRegistryValue);
         }
 
-        public static async Task CaptureProtocolValues(IProgress<CaptureProtocolValuesProgress> progress)
+        /// <summary>
+        /// Resets the modified registry key with the original value.
+        /// </summary>
+        public void ResetRegistryValues()
         {
+            // Reset the registry value to what was set previously
+            Registry.CurrentUser.OpenSubKey(TargetRegistryPath).SetValue("", PreviousRegistryValue);
+        }
 
+        /// <summary>
+        /// Recieves messages from the NXMWorker and routes them back to the calling method by IProgress.
+        /// </summary>
+        /// <param name="progress"></param>
+        public void StartRecievingProtocolValues(IProgress<CaptureProtocolValuesProgress> progress)
+        {
+            var namedPipes = new NamedPipes(new Progress<string>(protocolResponse =>
+            {
+                var splitProtocolResponse = protocolResponse.Replace("nxm://", "")
+                                                            .Split('/');
+
+                if (true || splitProtocolResponse[0].ToLower() == ModpackHeader.TargetGame)
+                {
+                    var progressObject = new CaptureProtocolValuesProgress()
+                    {
+                        ModId = splitProtocolResponse[2],
+                        FileId = splitProtocolResponse[4]
+                    };
+
+                    // Report back to the calling method
+                    progress.Report(progressObject);
+                }
+            }));
+
+            namedPipes.StartServer();
         }
     }
 

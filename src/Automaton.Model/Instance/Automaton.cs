@@ -9,11 +9,12 @@ namespace Automaton.Model.Instance
         public static Header ModpackHeader { get; set; } = new Header();
         public static List<Mod> ModpackMods { get; set; } = new List<Mod>();
 
+        public static string InstallLocation { get; set; }
         public static string MoInstallLocation { get; set; }
         public static string SourceLocation { get; set; }
         public static string ModpackExtractionLocation { get; set; }
 
-        public string NexusHandlerRegistryValue { get; set; }
+        public static string NexusHandlerRegistryValue { get; set; } = "\"C:\\Programming\\C#\\NXMWorker\\src\\NXMWorker\\bin\\Debug\\NXMWorker.exe\" \"%1\"";
         public static string PreviousRegistryValue { get; set; }
 
         #region Modification Methods
