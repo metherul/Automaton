@@ -33,8 +33,11 @@ namespace Automaton.Model.ModpackBase
         [JsonProperty("mod_source_url")]
         public string ModSourceUrl { get; set; }
 
-        [JsonProperty("archive_id")]
-        public ArchiveId ArchiveId { get; set; }
+        [JsonProperty("nexus_mod_id")]
+        public string NexusModId { get; set; }
+        
+        [JsonIgnore]
+        public int CurrentDownloadPercentage { get; set; } // Temporary fix, will work out later
 
         [JsonProperty("installation_parameters")]
         public List<Installation> InstallationParameters { get; set; }
@@ -79,36 +82,5 @@ namespace Automaton.Model.ModpackBase
 
         [JsonProperty("conditional_flag_value")]
         public string ConditionalFlagValue { get; set; }
-    }
-
-    /// <summary>
-    /// Allows for fast archive identification data to be stored
-    /// </summary>
-    public class ArchiveId : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [JsonProperty("file_markers")]
-        public List<FileMarker> FileMarkers { get; set; }
-
-        [JsonProperty("middle_bytes")]
-        public List<string> MiddleBytes { get; set; }
-
-        [JsonProperty("archive_identifier")]
-        public string ArchiveIdentifier { get; set; }
-    }
-
-    public class FileMarker : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [JsonProperty("byte_index")]
-        public string ByteIndex { get; set; }
-
-        [JsonProperty("byte_size")]
-        public int ByteSize { get; set; }
-
-        [JsonProperty("byte")]
-        public string Byte { get; set; }
     }
 }

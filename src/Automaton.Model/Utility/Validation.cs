@@ -47,9 +47,7 @@ namespace Automaton.Model.Utility
 
         public static List<string> GetSourceFiles()
         {
-            var sourceDirectory = @"C:\Programming\C#\Automaton\src\Automaton.View\bin\Debug\Test";
-
-            return Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            return Directory.GetFiles(Instance.Automaton.SourceLocation, "*.*", SearchOption.TopDirectoryOnly).ToList();
         }
 
         /// <summary>

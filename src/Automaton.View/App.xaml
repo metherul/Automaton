@@ -27,6 +27,7 @@
             <!--  Fonts  -->
             <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
+            <FontFamily x:Key="Roboto">pack://application:,,,/Content/Fonts/Roboto/#Roboto</FontFamily>
 
             <!--  Colors  -->
             <Brush x:Key="BackgroundColor">#282C35</Brush>

@@ -38,8 +38,10 @@
 
     <!--  Body Text Theme  -->
     <Style x:Key="BodyText" TargetType="TextBlock">
+        <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
-        <Setter Property="FontFamily" Value="{DynamicResource RobotoMono}" />
+        <Setter Property="FontFamily" Value="{DynamicResource ProductSans}" />
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
     </Style>

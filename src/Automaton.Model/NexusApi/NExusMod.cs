@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Automaton.Model.ModpackBase;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Net;
@@ -14,10 +15,10 @@ namespace Automaton.Model.NexusApi
         /// Downloads mod file with matching fileId and modId parameters.
         /// </summary>
         /// <param name="fileId"></param>
-        /// <param name="modId"></param>
+        /// <param name="fileId"></param>
         /// <param name="progress"></param>
         /// <returns></returns>
-        public static async Task DownloadModFile(string fileId, string modId, IProgress<DownloadModFileProgress> progress)
+        public static async Task DownloadModFile(Mod mod, string fileId, IProgress<DownloadModFileProgress> progress)
         {
             using (var httpClient = new HttpClient())
             {
@@ -25,13 +26,14 @@ namespace Automaton.Model.NexusApi
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 httpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
 
-                var response = await httpClient.GetStringAsync($"/v1/games/{Instance.Automaton.ModpackHeader.TargetGame.ToLower()}/mods/{modId}/files/{fileId}/download_link");
+                var response = await httpClient
+                    .GetStringAsync($"/v1/games/{Instance.Automaton.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{fileId}/download_link");
+
                 dynamic jsonObject = JObject.Parse(response.Replace("[", "").Replace("]", ""));
 
                 var progressObject = new DownloadModFileProgress()
                 {
-                    FileId = fileId,
-                    ModId = modId
+                    Mod = mod
                 };
 
                 using (var webClient = new WebClient())
@@ -45,29 +47,22 @@ namespace Automaton.Model.NexusApi
 
                     webClient.DownloadFileCompleted += (sender, e) =>
                     {
+                        progressObject.CurrentDownloadPercentage = 100;
                         progressObject.IsDownloadComplete = true;
 
                         progress.Report(progressObject);
                     };
 
-                    var test = Instance.Automaton.SourceLocation;
-
                     webClient.DownloadFileAsync(new Uri(jsonObject.URI.Value), Path.Combine(Instance.Automaton.SourceLocation, "Test.7z"));
                 }
-            }
-                    
+            }       
         }
     }
 
     public class DownloadModFileProgress
     {
-        public string FileId;
-        public string ModId;
-
+        public Mod Mod;
         public int CurrentDownloadPercentage;
-
         public bool IsDownloadComplete;
     }
-
-
 }

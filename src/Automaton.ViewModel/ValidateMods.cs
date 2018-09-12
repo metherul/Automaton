@@ -1,13 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using Automaton.Model.ModpackBase;
-using Automaton.ViewModel.Controllers;
-using Automaton.Model.Utility;
-using GalaSoft.MvvmLight.Command;
-using System.Diagnostics;
-using System.Windows.Forms;
-using System;
+﻿using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
+using Automaton.Model.Utility;
+using Automaton.ViewModel.Controllers;
+using GalaSoft.MvvmLight.Command;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Automaton.ViewModel
 {
@@ -40,6 +41,7 @@ namespace Automaton.ViewModel
         {
             OpenModSourceUrlCommand = new RelayCommand<Mod>(OpenModSourceUrl);
             FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
+
             NexusLogInCommand = new RelayCommand(NexusLogIn);
             ContinueOfflineCommand = new RelayCommand(ContinueOffline);
 
@@ -109,7 +111,6 @@ namespace Automaton.ViewModel
             CurrentModName = currentMod.ModName;
             CurrentArchiveMd5 = currentMod.ArchiveMd5Sum;
             IsComputeMd5 = isComputeMd5;
-
         }
 
         /// <summary>
@@ -122,19 +123,21 @@ namespace Automaton.ViewModel
             // Start capturing piped messages from the NXMWorker, handle any progress reports.
             nexusProtocol.StartRecievingProtocolValues(new Progress<CaptureProtocolValuesProgress>(async x =>
             {
-                // Start downloading the mod file.
-                await NexusMod.DownloadModFile(x.FileId, x.ModId, new Progress<DownloadModFileProgress>(downloadProgress =>
+                var matchingMod = MissingMods.Where(y => y.NexusModId == x.ModId).First();
+
+                if (matchingMod != null)
                 {
-                    if (downloadProgress.CurrentDownloadPercentage == 10)
+                    // Start downloading the mod file.
+                    await NexusMod.DownloadModFile(matchingMod, x.FileId, new Progress<DownloadModFileProgress>(downloadProgress =>
                     {
+                        MissingMods[MissingMods.IndexOf(matchingMod)].CurrentDownloadPercentage = downloadProgress.CurrentDownloadPercentage;   
 
-                    }
-
-                    if (downloadProgress.IsDownloadComplete)
-                    {
-
-                    }
-                }));
+                        if (downloadProgress.IsDownloadComplete)
+                        {
+                            MissingMods.Remove(matchingMod);
+                        }
+                    }));
+                }
             }));
         }
 
@@ -161,16 +164,13 @@ namespace Automaton.ViewModel
 
                         InitializeNexusHandle();
                     }
-
                     else
                     {
                         IsLoggedIn = false;
                         IsLoginVisible = true;
                     }
                 }
-
             }), "VnVaektQaExmSHF6VlR3WG1kRUVaSzNOZ215TTg3NlRxK0RCQWhnZGtPKzRQR3o5UFJvamY5QjhxM3craTdRSEp2U01QWDZwYTNIQXdYNDFYQTh5c1E9PS0tbnpkT3o2T21ucUJIenN3VnY2bHkwZz09--430ccf1ef83ed723d634589b7e163aa3ca15694b");
         }
     }
 }
-

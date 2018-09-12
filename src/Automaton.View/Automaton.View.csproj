@@ -168,6 +168,18 @@
     <Resource Include="Content\Fonts\RobotoMono\RobotoMono-Regular.ttf" />
     <Resource Include="Content\Fonts\RobotoMono\RobotoMono-Thin.ttf" />
     <Resource Include="Content\Fonts\RobotoMono\RobotoMono-ThinItalic.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Black.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-BlackItalic.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Bold.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-BoldItalic.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Italic.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Light.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-LightItalic.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Medium.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-MediumItalic.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Regular.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-Thin.ttf" />
+    <Resource Include="Content\Fonts\Roboto\Roboto-ThinItalic.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
