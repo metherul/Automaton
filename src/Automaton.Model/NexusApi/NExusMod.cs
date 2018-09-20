@@ -11,6 +11,8 @@ namespace Automaton.Model.NexusApi
 {
     public class NexusMod : NexusBase
     {
+        // Comment to hopefully force Github to update the name of this file.
+
         /// <summary>
         /// Downloads mod file with matching fileId and modId parameters.
         /// </summary>

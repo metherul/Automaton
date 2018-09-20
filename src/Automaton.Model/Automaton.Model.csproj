@@ -73,7 +73,7 @@
     <Compile Include="NexusApi\NexusMod.cs" />
     <Compile Include="NexusApi\NexusProtocol.cs" />
     <Compile Include="Utility\ArchiveExtractor.cs" />
-    <Compile Include="Utility\Json.cs" />
+    <Compile Include="Utility\JSON.cs" />
     <Compile Include="Utility\Md5.cs" />
     <Compile Include="Utility\NamedPipes.cs" />
     <Compile Include="Instance\FlagInstance.cs" />
