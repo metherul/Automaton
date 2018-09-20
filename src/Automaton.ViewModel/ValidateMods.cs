@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Automaton.ViewModel
@@ -22,6 +23,8 @@ namespace Automaton.ViewModel
         public RelayCommand<Mod> FindAndValidateModFileCommand { get; set; }
         public RelayCommand NexusLogInCommand { get; set; }
         public RelayCommand ContinueOfflineCommand { get; set; }
+
+        public RelayCommand InstallModpackCommand { get; set; }
 
         public string CurrentModName { get; set; }
         public string CurrentArchiveMd5 { get; set; }
@@ -45,6 +48,8 @@ namespace Automaton.ViewModel
             NexusLogInCommand = new RelayCommand(NexusLogIn);
             ContinueOfflineCommand = new RelayCommand(ContinueOffline);
 
+            InstallModpackCommand = new RelayCommand(InstallModpack);
+
             Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
             ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
@@ -60,11 +65,11 @@ namespace Automaton.ViewModel
             Process.Start(currentMod.ModSourceUrl);
         }
 
-        private void FindAndValidateModFile(Mod currentMod)
+        private async void FindAndValidateModFile(Mod currentMod)
         {
             var fileBrowser = new OpenFileDialog()
             {
-                Title = $"Find {currentMod.ModName} | {currentMod.ModArchiveName}",
+                Title = $"Find {currentMod.ModName} | {currentMod.FileName}",
                 InitialDirectory = "Downloads",
                 Filter = "Mod Archive (*.zip;*.7zip;*.7z;*.rar;*.gzip)|*.zip;*.7zip;*.7z;*.rar;*.gzip",
             };
@@ -75,11 +80,25 @@ namespace Automaton.ViewModel
             }
 
             var archivePath = fileBrowser.FileName;
-            var validationResponse = Validation.IsMatchingModArchive(currentMod, archivePath);
+            var validationResult = false;
 
-            if (validationResponse)
+            MissingMods.Where(x => x == currentMod).First().IsIndeterminateProcess = true;
+
+            await Task.Factory.StartNew(() =>
             {
+                validationResult = Validation.IsMatchingModArchive(currentMod, archivePath).Result;
+            });
+
+            if (validationResult)
+            {
+                MissingMods.Where(x => x == currentMod).First().IsIndeterminateProcess = false;
                 MissingMods.Remove(currentMod);
+
+                NoMissingMods = MissingMods.Count == 0;
+            }
+            else
+            {
+                MissingMods.Where(x => x == currentMod).First().IsIndeterminateProcess = false;
             }
             // Show in UI
         }
@@ -109,32 +128,49 @@ namespace Automaton.ViewModel
         private void ModValidationUpdate(Mod currentMod, bool isComputeMd5)
         {
             CurrentModName = currentMod.ModName;
-            CurrentArchiveMd5 = currentMod.ArchiveMd5Sum;
+            CurrentArchiveMd5 = currentMod.Md5;
             IsComputeMd5 = isComputeMd5;
         }
 
         /// <summary>
         /// Initializes the NXMWorker pipe listener.
         /// </summary>
-        private void InitializeNexusHandle()
+        private void InitializeDownloadHandle()
         {
+            if (NoMissingMods)
+            {
+                return;
+            }
+
             var nexusProtocol = new NexusProtocol();
 
             // Start capturing piped messages from the NXMWorker, handle any progress reports.
             nexusProtocol.StartRecievingProtocolValues(new Progress<CaptureProtocolValuesProgress>(async x =>
             {
-                var matchingMod = MissingMods.Where(y => y.NexusModId == x.ModId).First();
+                WindowNotificationControls.MoveToFront();
+
+                var matchingMods = MissingMods.Where(y => y.NexusModId == x.ModId);
+                
+                if (!matchingMods.Any())
+                {
+                    return;
+                }
+
+                var matchingMod = matchingMods.First();
 
                 if (matchingMod != null)
                 {
                     // Start downloading the mod file.
                     await NexusMod.DownloadModFile(matchingMod, x.FileId, new Progress<DownloadModFileProgress>(downloadProgress =>
                     {
-                        MissingMods[MissingMods.IndexOf(matchingMod)].CurrentDownloadPercentage = downloadProgress.CurrentDownloadPercentage;   
+                        MissingMods[MissingMods.IndexOf(matchingMod)].CurrentDownloadPercentage = downloadProgress.CurrentDownloadPercentage;
 
                         if (downloadProgress.IsDownloadComplete)
                         {
+                            Modpack.UpdateModArchivePaths(matchingMod, downloadProgress.DownloadLocation);
                             MissingMods.Remove(matchingMod);
+
+                            NoMissingMods = MissingMods.Count == 0;
                         }
                     }));
                 }
@@ -162,7 +198,9 @@ namespace Automaton.ViewModel
                         IsLoggedIn = true;
                         IsLoginVisible = false;
 
-                        InitializeNexusHandle();
+                        WindowNotificationControls.MoveToFront();
+
+                        InitializeDownloadHandle();
                     }
                     else
                     {
@@ -171,6 +209,11 @@ namespace Automaton.ViewModel
                     }
                 }
             }), "VnVaektQaExmSHF6VlR3WG1kRUVaSzNOZ215TTg3NlRxK0RCQWhnZGtPKzRQR3o5UFJvamY5QjhxM3craTdRSEp2U01QWDZwYTNIQXdYNDFYQTh5c1E9PS0tbnpkT3o2T21ucUJIenN3VnY2bHkwZz09--430ccf1ef83ed723d634589b7e163aa3ca15694b");
+        }
+
+        private void InstallModpack()
+        {
+            IncrementCurrentViewIndex();
         }
     }
 }

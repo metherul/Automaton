@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Automaton.Model.Extensions;
+using Automaton.Model.ModpackBase;
+using Automaton.Model.Utility;
+using Automaton.ViewModel.Controllers;
+using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,11 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using Automaton.Model.Extensions;
-using Automaton.Model.ModpackBase;
-using Automaton.Model.Utility;
-using Automaton.ViewModel.Controllers;
-using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel
 {
@@ -38,9 +38,9 @@ namespace Automaton.ViewModel
         {
             IncrementCurrentViewIndexCommand = new RelayCommand(IncrementCurrentViewIndex);
 
-            if (!Model.Instance.Automaton.ModpackHeader.ContainsSetupAssistant) return;
+            if (!Model.Instance.AutomatonInstance.ModpackHeader.ContainsSetupAssistant) return;
 
-            var setupAssistant = Model.Instance.Automaton.ModpackHeader.SetupAssistant;
+            var setupAssistant = Model.Instance.AutomatonInstance.ModpackHeader.SetupAssistant;
 
             SetupAssistantGroup = new ObservableCollection<Group>(setupAssistant.ControlGroups);
 
@@ -58,7 +58,7 @@ namespace Automaton.ViewModel
             {
                 foreach (var action in matchingControlActions)
                 {
-                    Model.Instance.Flag.AddOrModifyFlag(action.FlagName, action.FlagValue, action.FlagAction);
+                    Model.Instance.FlagInstance.AddOrModifyFlag(action.FlagName, action.FlagValue, action.FlagAction);
                 }
             }
         }
@@ -80,12 +80,10 @@ namespace Automaton.ViewModel
             // Terrible code
             if (!string.IsNullOrEmpty(controlObject.ControlHoverImage))
             {
-
             }
 
             if (!string.IsNullOrEmpty(controlObject.ControlHoverImage))
             {
-
             }
         }
     }

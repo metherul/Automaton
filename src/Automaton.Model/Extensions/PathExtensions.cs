@@ -1,8 +1,6 @@
-﻿using System.IO;
-
-namespace Automaton.Model.Extensions
+﻿namespace Automaton.Model.Extensions
 {
-    public static class Path
+    public static class PathExtensions
     {
         public static string StandardizePathSeparators(this string inputString)
         {

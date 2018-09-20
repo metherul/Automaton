@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
-using System.IO;
+﻿using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
-using Automaton.Model.Utility;
 using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
+using System.ComponentModel;
+using System.IO;
 
 namespace Automaton.ViewModel
 {
@@ -17,6 +17,7 @@ namespace Automaton.ViewModel
         public RelayCommand IncrementCurrentViewIndexCommand { get; set; }
 
         private string _installDirectory;
+
         public string InstallDirectory
         {
             get => _installDirectory;
@@ -29,6 +30,7 @@ namespace Automaton.ViewModel
         }
 
         private string _downloadsDirectory;
+
         public string DownloadsDirectory
         {
             get => _downloadsDirectory;
@@ -57,20 +59,20 @@ namespace Automaton.ViewModel
 
         private void ModpackLoaded()
         {
-            ModpackName = Model.Instance.Automaton.ModpackHeader.ModpackName;
-            Description = Model.Instance.Automaton.ModpackHeader.Description;
+            ModpackName = Model.Instance.AutomatonInstance.ModpackHeader.ModpackName;
+            Description = Model.Instance.AutomatonInstance.ModpackHeader.Description;
         }
 
         private void OpenInstallFolder()
         {
             InstallDirectory = OpenDirectoryBrowser();
-            Model.Instance.Automaton.InstallLocation = InstallDirectory;
+            Model.Instance.AutomatonInstance.InstallLocation = InstallDirectory;
         }
 
         private void OpenDownloadsFolder()
         {
             DownloadsDirectory = OpenDirectoryBrowser();
-            Model.Instance.Automaton.SourceLocation = DownloadsDirectory;
+            Model.Instance.AutomatonInstance.SourceLocation = DownloadsDirectory;
         }
 
         private string OpenDirectoryBrowser()
@@ -86,4 +88,3 @@ namespace Automaton.ViewModel
         }
     }
 }
-

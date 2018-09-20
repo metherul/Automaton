@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Automaton.Model.Instance;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
 namespace Automaton.Model.Utility
 {
-    public class Archive : IDisposable
+    public class ArchiveExtractor : IDisposable
     {
         private readonly string TempDirectory = Path.Combine(Path.GetTempPath(), "Automaton");
         private readonly string MetaDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -14,28 +15,26 @@ namespace Automaton.Model.Utility
         private readonly string SevenZipDLLPath;
 
         public string ExtractionPath;
-        public string ModpackExtractionPath;
         public string ArchivePath;
 
-        public Archive(string archivePath)
+        public ArchiveExtractor(string archivePath)
         {
             SevenZipPath = Path.Combine(TempDirectory, "7z.exe");
             SevenZipDLLPath = Path.Combine(TempDirectory, "7z.dll");
             ExtractionPath = Path.Combine(TempDirectory, "extract");
-            ModpackExtractionPath = Path.Combine(TempDirectory, "modpack_temp");
             ArchivePath = archivePath;
 
             ExtractSevenzipBinaries();
         }
 
-        public bool ExtractArchive()
+        public bool ExtractArchive(string extractionPath)
         {
-            return false;
+            return Extract(extractionPath);
         }
 
         public bool ExtractModpack()
         {
-            return Extract(ModpackExtractionPath);
+            return Extract(AutomatonInstance.ModpackExtractionLocation);
         }
 
         public void Dispose()
@@ -58,7 +57,7 @@ namespace Automaton.Model.Utility
                 WindowStyle = ProcessWindowStyle.Hidden,
                 FileName = SevenZipPath,
                 Arguments = $"x \"{ArchivePath}\" -o\"{extractionPath}\" -y",
-                UseShellExecute = false
+                UseShellExecute = true
             };
 
             var process = new Process
@@ -72,10 +71,11 @@ namespace Automaton.Model.Utility
             return true;
         }
 
+        /// <summary>
+        /// Extracts the sevenzip binaries from the application's resources into the temp directory.
+        /// </summary>
         private void ExtractSevenzipBinaries()
         {
-            var test = Assembly.GetEntryAssembly().GetManifestResourceNames();
-
             if (!File.Exists(SevenZipPath))
             {
                 WriteResourceToFile("Automaton.Content.Resources.7z.exe", SevenZipPath);

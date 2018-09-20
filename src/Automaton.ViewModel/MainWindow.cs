@@ -1,9 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using Automaton.Model.Instance;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
+using System;
+using System.ComponentModel;
+using System.Windows;
 
 namespace Automaton.ViewModel
 {
@@ -27,6 +28,9 @@ namespace Automaton.ViewModel
             // Initialize event handlers
             Modpack.ModpackLoadedEvent += ModpackLoaded;
             ViewIndexChangedEvent += ViewIndexUpdate;
+
+            // Initialize the instance
+            AutomatonInstance.InitializeInstance();
         }
 
         public void ModpackLoaded()
@@ -45,6 +49,7 @@ namespace Automaton.ViewModel
         }
 
         #region Window Manipulation Code
+
         private static void CloseWindow(Window window)
         {
             window.Close();
@@ -61,12 +66,12 @@ namespace Automaton.ViewModel
             {
                 window.DragMove();
             }
-
             catch (Exception e)
             {
                 // ignored
             }
         }
-        #endregion
+
+        #endregion Window Manipulation Code
     }
 }

@@ -4,7 +4,7 @@ using System;
 
 namespace Automaton.Model.NexusApi
 {
-    public class NexusProtocol : Instance.Automaton
+    public class NexusProtocol : Instance.AutomatonInstance
     {
         private const string TargetRegistryPath = @"Software\Classes\nxm\shell\open\command";
 

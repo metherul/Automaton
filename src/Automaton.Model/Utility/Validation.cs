@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using Automaton.Model.Extensions;
+using Automaton.Model.ModpackBase;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Automaton.Model.Extensions;
-using Automaton.Model.ModpackBase;
 
 namespace Automaton.Model.Utility
 {
     public class Validation
     {
         public delegate void ValidateSourcesUpdate(Mod currentMod, bool isComputeMd5);
+
         public static event ValidateSourcesUpdate ValidateSourcesUpdateEvent;
 
         // Static variables to store information required for the UI to update
         private static Mod _currentMod;
+
         private static Mod CurrentMod
         {
             get => _currentMod;
@@ -29,6 +31,7 @@ namespace Automaton.Model.Utility
         }
 
         private static bool _isComputeMd5;
+
         private static bool IsComputeMd5
         {
             get => _isComputeMd5;
@@ -47,7 +50,7 @@ namespace Automaton.Model.Utility
 
         public static List<string> GetSourceFiles()
         {
-            return Directory.GetFiles(Instance.Automaton.SourceLocation, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            return Directory.GetFiles(Instance.AutomatonInstance.SourceLocation, "*.*", SearchOption.TopDirectoryOnly).ToList();
         }
 
         /// <summary>
@@ -65,11 +68,11 @@ namespace Automaton.Model.Utility
                 return null;
             }
 
-            foreach (var mod in Instance.Automaton.ModpackMods)
+            foreach (var mod in Instance.AutomatonInstance.ModpackMods)
             {
                 CurrentMod = mod;
 
-                var potentialLengthMatches = sourceFileInfos.Where(x => mod.ModArchiveSize == x.Length.ToString()).ToList();
+                var potentialLengthMatches = sourceFileInfos.Where(x => mod.FileSize == x.Length.ToString()).ToList();
 
                 if (!potentialLengthMatches.ContainsAny())
                 {
@@ -79,7 +82,7 @@ namespace Automaton.Model.Utility
                 // Just one potential match in the directory, chances are this should be the right file
                 else if (potentialLengthMatches.Count() == 1)
                 {
-                    mod.ModArchivePath = potentialLengthMatches.First().FullName;
+                    mod.FilePath = potentialLengthMatches.First().FullName;
                 }
 
                 // For than one matching file length was found, we need to checksum the contents to verify
@@ -91,9 +94,9 @@ namespace Automaton.Model.Utility
 
                         var md5Sum = Md5.CalculateMd5(match.FullName);
 
-                        if (md5Sum == mod.ArchiveMd5Sum)
+                        if (md5Sum == mod.Md5)
                         {
-                            mod.ModArchivePath = match.FullName;
+                            mod.FilePath = match.FullName;
 
                             break;
                         }
@@ -117,16 +120,16 @@ namespace Automaton.Model.Utility
             return await Task.Run(() => GetMissingMods(sourceFiles));
         }
 
-        public static bool IsMatchingModArchive(Mod mod, string archivePath)
+        public static async Task<bool> IsMatchingModArchive(Mod mod, string archivePath)
         {
-            var targetMd5 = mod.ArchiveMd5Sum.ToUpperInvariant();
+            var targetMd5 = mod.Md5.ToUpperInvariant();
             var md5Sum = Md5.CalculateMd5(archivePath);
 
             var matchResult = md5Sum == targetMd5;
 
             if (matchResult)
             {
-                mod.ModArchivePath = archivePath;
+                mod.FilePath = archivePath;
             }
 
             return (matchResult);

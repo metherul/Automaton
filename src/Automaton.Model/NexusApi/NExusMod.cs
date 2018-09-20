@@ -27,13 +27,15 @@ namespace Automaton.Model.NexusApi
                 httpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
 
                 var response = await httpClient
-                    .GetStringAsync($"/v1/games/{Instance.Automaton.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{fileId}/download_link");
+                    .GetStringAsync($"/v1/games/{Instance.AutomatonInstance.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{fileId}/download_link");
+                var downloadPath = Path.Combine(Instance.AutomatonInstance.SourceLocation, mod.FileName);
 
                 dynamic jsonObject = JObject.Parse(response.Replace("[", "").Replace("]", ""));
 
                 var progressObject = new DownloadModFileProgress()
                 {
-                    Mod = mod
+                    Mod = mod,
+                    DownloadLocation = downloadPath
                 };
 
                 using (var webClient = new WebClient())
@@ -53,9 +55,9 @@ namespace Automaton.Model.NexusApi
                         progress.Report(progressObject);
                     };
 
-                    webClient.DownloadFileAsync(new Uri(jsonObject.URI.Value), Path.Combine(Instance.Automaton.SourceLocation, "Test.7z"));
+                    webClient.DownloadFileAsync(new Uri(jsonObject.URI.Value), downloadPath);
                 }
-            }       
+            }
         }
     }
 
@@ -64,5 +66,7 @@ namespace Automaton.Model.NexusApi
         public Mod Mod;
         public int CurrentDownloadPercentage;
         public bool IsDownloadComplete;
+
+        public string DownloadLocation;
     }
 }

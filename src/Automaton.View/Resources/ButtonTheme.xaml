@@ -9,5 +9,4 @@
         <Setter Property="Background" Value="{DynamicResource ButtonColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundColor}" />
     </Style>
-
 </ResourceDictionary>

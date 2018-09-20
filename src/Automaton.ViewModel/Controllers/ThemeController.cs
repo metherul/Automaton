@@ -9,7 +9,7 @@ namespace Automaton.ViewModel.Controllers
     {
         public static void ApplyTheme()
         {
-            var modpackHeader = Model.Instance.Automaton.ModpackHeader;
+            var modpackHeader = Model.Instance.AutomatonInstance.ModpackHeader;
 
             if (!string.IsNullOrEmpty(modpackHeader.BackgroundColor))
             {

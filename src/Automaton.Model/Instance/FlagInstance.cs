@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Automaton.Model.Extensions;
+﻿using Automaton.Model.Extensions;
 using Automaton.Model.ModpackBase;
-using Automaton.Model.Utility;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Automaton.Model.Instance
 {
-    public class Flag
+    public class FlagInstance
     {
         private static List<FlagKeyValue> _flagKeyValueList = new List<FlagKeyValue>();
+
         public static List<FlagKeyValue> FlagKeyValueList
         {
             get => _flagKeyValueList;
@@ -79,15 +79,15 @@ namespace Automaton.Model.Instance
                 return;
             }
 
-            if (flagKey == "$ModInstallFolders" && !Automaton.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).ContainsAny())
+            if (flagKey == "$ModInstallFolders" && !AutomatonInstance.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).ContainsAny())
             {
                 if (flagActionType == FlagActionType.Add)
                 {
-                    Automaton.AddModInstallFolder(flagValue);
+                    AutomatonInstance.AddModInstallFolder(flagValue);
                 }
                 else if (flagActionType == FlagActionType.Remove)
                 {
-                    Automaton.RemoveModInstallFolder(flagValue);
+                    AutomatonInstance.RemoveModInstallFolder(flagValue);
                 }
             }
         }

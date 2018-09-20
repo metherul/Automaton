@@ -1,5 +1,5 @@
-﻿using System;
-using NamedPipeWrapper;
+﻿using NamedPipeWrapper;
+using System;
 
 namespace Automaton.Model.Utility
 {

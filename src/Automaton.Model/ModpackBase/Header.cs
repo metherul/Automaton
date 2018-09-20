@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Automaton.Model.ModpackBase
 {
@@ -33,7 +33,7 @@ namespace Automaton.Model.ModpackBase
         [JsonProperty("header_image")]
         public string HeaderImage
         {
-            get => System.IO.Path.Combine(Instance.Automaton.ModpackExtractionLocation, Extensions.Path.StandardizePathSeparators(_headerImage));
+            get => System.IO.Path.Combine(Instance.AutomatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_headerImage));
             set => _headerImage = value;
         }
 
@@ -76,7 +76,7 @@ namespace Automaton.Model.ModpackBase
         [JsonProperty("default_image")]
         public string DefaultImage
         {
-            get => System.IO.Path.Combine(Instance.Automaton.ModpackExtractionLocation, Extensions.Path.StandardizePathSeparators(_defaultImage));
+            get => System.IO.Path.Combine(Instance.AutomatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_defaultImage));
             set => _defaultImage = value;
         }
 
@@ -116,7 +116,7 @@ namespace Automaton.Model.ModpackBase
             {
                 if (!string.IsNullOrEmpty(_ControlHoverImage))
                 {
-                    return System.IO.Path.Combine(Instance.Automaton.ModpackExtractionLocation, Extensions.Path.StandardizePathSeparators(_ControlHoverImage));
+                    return System.IO.Path.Combine(Instance.AutomatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_ControlHoverImage));
                 }
 
                 return _ControlHoverImage;
@@ -166,5 +166,5 @@ namespace Automaton.Model.ModpackBase
         Set
     }
 
-    #endregion Optional Installation Objects
+    #endregion Setup Assistant Objects
 }

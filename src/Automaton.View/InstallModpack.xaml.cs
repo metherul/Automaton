@@ -3,11 +3,11 @@
 namespace Automaton.View
 {
     /// <summary>
-    /// Interaction logic for InitialSetupView.xaml
+    /// Interaction logic for InstallModpack.xaml
     /// </summary>
-    public partial class InitialSetup : UserControl
+    public partial class InstallModpack : UserControl
     {
-        public InitialSetup()
+        public InstallModpack()
         {
             InitializeComponent();
         }

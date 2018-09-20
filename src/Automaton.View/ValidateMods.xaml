@@ -150,11 +150,12 @@
 
                                         <ProgressBar
                                             Grid.Column="0"
-                                            Height="3"
+                                            Height="6"
                                             Margin="4,0"
                                             Background="Transparent"
                                             BorderBrush="Transparent"
                                             Foreground="{DynamicResource BackgroundColor}"
+                                            IsIndeterminate="{Binding IsIndeterminateProcess}"
                                             Value="{Binding CurrentDownloadPercentage}" />
 
                                         <TextBlock
@@ -169,11 +170,46 @@
                                     </Grid>
                                 </Grid>
                             </materialDesign:Card>
-
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
+            <Image
+                Grid.RowSpan="2"
+                Width="150"
+                Height="Auto"
+                Margin="0,0,0,140"
+                VerticalAlignment="Center"
+                RenderOptions.BitmapScalingMode="Fant"
+                Source="{DynamicResource HeaderImage}"
+                Visibility="{Binding NoMissingMods, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <Grid Grid.RowSpan="2" VerticalAlignment="Bottom">
+                <Button
+                    Height="45"
+                    Margin="0,0,0,30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding InstallModpackCommand}"
+                    Visibility="{Binding NoMissingMods, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid
+                        Margin="10,0,10,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Style="{DynamicResource ButtonText}">
+                            <Run Text="Install " /><Run Text="{DynamicResource ModpackName}" />
+                        </TextBlock>
+                    </Grid>
+                </Button>
+            </Grid>
         </Grid>
 
         <!--  Sign into Nexus Mods  -->
@@ -238,8 +274,6 @@
                         TextAlignment="Left">
                         To continue offline, click the button on the left.
                     </TextBlock>
-
-
                 </StackPanel>
 
                 <Grid Grid.Row="1" Margin="5">
@@ -269,8 +303,6 @@
                             Text="{Binding LogInButtonText}" />
                     </Button>
                 </Grid>
-
-
             </Grid>
         </materialDesign:Card>
 
@@ -387,7 +419,6 @@
                         Foreground="{DynamicResource FontColor}"
                         IsIndeterminate="True"
                         Style="{DynamicResource MaterialDesignCircularProgressBar}" />
-
                 </Grid>
             </Grid>
         </Expander>

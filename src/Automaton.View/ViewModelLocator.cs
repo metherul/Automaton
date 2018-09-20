@@ -4,7 +4,7 @@
       <vm:ViewModelLocator xmlns:vm="clr-namespace:Automaton"
                            x:Key="Locator" />
   </Application.Resources>
-  
+
   In the View:
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 
@@ -13,9 +13,7 @@
 */
 
 using CommonServiceLocator;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using Automaton.ViewModel;
 
 namespace Automaton.View
 {
@@ -37,10 +35,9 @@ namespace Automaton.View
             SimpleIoc.Default.Register<ViewModel.InitialSetup>();
             SimpleIoc.Default.Register<ViewModel.SetupAssistant>();
             SimpleIoc.Default.Register<ViewModel.ValidateMods>();
+            SimpleIoc.Default.Register<ViewModel.InstallModpack>();
 
             SimpleIoc.Default.Register<ViewModel.Controllers.SnackbarController>();
-
-
         }
 
         public ViewModel.MainWindow MainWindow
@@ -83,6 +80,14 @@ namespace Automaton.View
             }
         }
 
+        public ViewModel.InstallModpack InstallModpack
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ViewModel.InstallModpack>();
+            }
+        }
+
         public ViewModel.Controllers.SnackbarController SnackbarController
         {
             get
@@ -90,7 +95,6 @@ namespace Automaton.View
                 return ServiceLocator.Current.GetInstance<ViewModel.Controllers.SnackbarController>();
             }
         }
-
 
         public static void Cleanup()
         {

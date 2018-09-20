@@ -27,7 +27,6 @@
         <Setter Property="Foreground" Value="{DynamicResource FontColor}" />
         <Setter Property="FontFamily" Value="{DynamicResource ProductSans}" />
         <Setter Property="FontSize" Value="25" />
-
     </Style>
 
     <!--  Button Text Theme  -->
@@ -45,5 +44,4 @@
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="TextWrapping" Value="WrapWithOverflow" />
     </Style>
-
 </ResourceDictionary>

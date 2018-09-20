@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using Automaton.Model.Extensions;
+﻿using Automaton.Model.Extensions;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Automaton.Model.ModpackBase
 {
@@ -15,29 +15,32 @@ namespace Automaton.Model.ModpackBase
         [JsonProperty("mod_name")]
         public string ModName { get; set; }
 
-        [JsonProperty("mod_archive_name")]
-        public string ModArchiveName { get; set; }
+        [JsonProperty("file_name")]
+        public string FileName { get; set; }
 
-        [JsonProperty("mod_archive_size")]
-        public string ModArchiveSize { get; set; }
+        [JsonProperty("file_size")]
+        public string FileSize { get; set; }
 
         [JsonIgnore]
-        public string ModArchivePath { get; set; }
+        public string FilePath { get; set; }
 
         [JsonIgnore]
         public string ModInstallParameterPath { get; set; }
 
-        [JsonProperty("archive_md5sum")]
-        public string ArchiveMd5Sum { get; set; }
+        [JsonProperty("md5")]
+        public string Md5 { get; set; }
 
         [JsonProperty("mod_source_url")]
         public string ModSourceUrl { get; set; }
 
         [JsonProperty("nexus_mod_id")]
         public string NexusModId { get; set; }
-        
+
         [JsonIgnore]
         public int CurrentDownloadPercentage { get; set; } // Temporary fix, will work out later
+
+        [JsonIgnore]
+        public bool IsIndeterminateProcess { get; set; }
 
         [JsonProperty("installation_parameters")]
         public List<Installation> InstallationParameters { get; set; }
@@ -51,6 +54,7 @@ namespace Automaton.Model.ModpackBase
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string _sourceLocation;
+
         [JsonProperty("source_location")]
         public string SourceLocation
         {
@@ -59,6 +63,7 @@ namespace Automaton.Model.ModpackBase
         }
 
         private string _targetLocation;
+
         [JsonProperty("target_location")]
         public string TargetLocation
         {

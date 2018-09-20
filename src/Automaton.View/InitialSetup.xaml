@@ -95,7 +95,6 @@
                     Style="{DynamicResource MaterialDesignToolButton}">
                     <materialDesign:PackIcon Kind="Magnify" />
                 </Button>
-
             </Grid>
 
             <!--  Next Button  -->

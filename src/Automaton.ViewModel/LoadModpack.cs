@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using System.Windows.Forms;
-using Automaton.Model.Utility;
+﻿using Automaton.Model.Utility;
 using GalaSoft.MvvmLight.Command;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Automaton.ViewModel
 {

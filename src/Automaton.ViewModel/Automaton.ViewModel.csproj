@@ -80,6 +80,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InstallModpack.cs" />
+    <Compile Include="WindowNofiticationControls.cs" />
     <Compile Include="Controllers\SnackbarController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Converters\BoolToIntConverter.cs" />

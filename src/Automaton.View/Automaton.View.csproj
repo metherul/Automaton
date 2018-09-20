@@ -82,6 +82,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="InstallModpack.xaml.cs">
+      <DependentUpon>InstallModpack.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValidateMods.xaml.cs">
       <DependentUpon>ValidateMods.xaml</DependentUpon>
     </Compile>
@@ -95,6 +98,10 @@
       <DependentUpon>SetupAssistant.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModelLocator.cs" />
+    <Page Include="InstallModpack.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\ButtonTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

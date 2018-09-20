@@ -86,6 +86,9 @@
                 <view:ValidateMods />
             </materialDesign:TransitionerSlide>
 
+            <materialDesign:TransitionerSlide>
+                <view:InstallModpack />
+            </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
 
         <Grid Grid.Row="2">
@@ -113,7 +116,6 @@
                 Foreground="{DynamicResource FontColor}">
                 Automaton v.1.0
             </Label>
-
         </Grid>
 
         <!--<materialDesign:Snackbar

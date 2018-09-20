@@ -21,7 +21,6 @@
                 <!--  App Themes  -->
                 <ResourceDictionary Source="Resources/TextTheme.xaml" />
                 <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
-
             </ResourceDictionary.MergedDictionaries>
 
             <!--  Fonts  -->
@@ -36,6 +35,7 @@
             <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
 
             <!--  Content  -->
+            <BitmapImage x:Key="AutomatonImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
             <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
             <BitmapImage x:Key="NexusLogo">/Automaton;component/Content/Images/NexusMods.png</BitmapImage>
             <BitmapImage x:Key="DownloadWithManager">/Automaton;component/Content/Images/DownloadWithManager.png</BitmapImage>
@@ -48,7 +48,6 @@
             <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
             <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-
 
             <vm:ViewModelLocator
                 xmlns:vm="clr-namespace:Automaton.View"
