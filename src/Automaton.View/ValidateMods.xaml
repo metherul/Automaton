@@ -30,7 +30,7 @@
                     Grid.Column="0"
                     HorizontalAlignment="Center"
                     Style="{DynamicResource HeaderText}"
-                    Text="Mod Validation" />
+                    Text="Missing Mods" />
 
                 <!--  Nexus Log-in button  -->
                 <Grid
@@ -263,11 +263,18 @@
                         Style="{DynamicResource BodyText}"
                         TextAlignment="Left">
                         To continue with Automaton downloads, click the button on the right. This will take you to nexusmods.com to allow Automaton to use your account.<LineBreak />
-                        More info:<Hyperlink>https://goo.gl/e9Pvyn</Hyperlink>
                     </TextBlock>
 
+                    <Button
+                        HorizontalAlignment="Center"
+                        ClipToBounds="True"
+                        FontFamily="{StaticResource ProductSans}"
+                        Style="{StaticResource MaterialDesignToolButton}">
+                        More Info
+                    </Button>
+
                     <TextBlock
-                        Margin="0,10,0,0"
+                        Margin="0,20,0,0"
                         HorizontalAlignment="Left"
                         Foreground="Black"
                         Style="{DynamicResource BodyText}"

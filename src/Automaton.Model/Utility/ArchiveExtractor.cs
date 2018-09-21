@@ -78,28 +78,12 @@ namespace Automaton.Model.Utility
         {
             if (!File.Exists(SevenZipPath))
             {
-                WriteResourceToFile("Automaton.Content.Resources.7z.exe", SevenZipPath);
+                Resources.WriteResourceToFile("Automaton.Content.Resources.7z.exe", SevenZipPath);
             }
 
             if (!File.Exists(SevenZipDLLPath))
             {
-                WriteResourceToFile("Automaton.Content.Resources.7z.dll", SevenZipDLLPath);
-            }
-        }
-
-        private void WriteResourceToFile(string resourceName, string fileName)
-        {
-            if (!Directory.Exists(Path.GetDirectoryName(fileName)))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(fileName));
-            }
-
-            using (var resource = Assembly.GetEntryAssembly().GetManifestResourceStream(resourceName))
-            {
-                using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-                {
-                    resource.CopyTo(file);
-                }
+                Resources.WriteResourceToFile("Automaton.Content.Resources.7z.dll", SevenZipDLLPath);
             }
         }
     }

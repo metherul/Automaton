@@ -1,4 +1,5 @@
-﻿using Automaton.Model.ModpackBase;
+﻿using Automaton.Model;
+using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
@@ -200,6 +201,7 @@ namespace Automaton.ViewModel
 
                         WindowNotificationControls.MoveToFront();
 
+                        NxmWorker.InitializeNxmWorker();
                         InitializeDownloadHandle();
                     }
                     else
@@ -208,7 +210,7 @@ namespace Automaton.ViewModel
                         IsLoginVisible = true;
                     }
                 }
-            }), "VnVaektQaExmSHF6VlR3WG1kRUVaSzNOZ215TTg3NlRxK0RCQWhnZGtPKzRQR3o5UFJvamY5QjhxM3craTdRSEp2U01QWDZwYTNIQXdYNDFYQTh5c1E9PS0tbnpkT3o2T21ucUJIenN3VnY2bHkwZz09--430ccf1ef83ed723d634589b7e163aa3ca15694b");
+            }));
         }
 
         private void InstallModpack()

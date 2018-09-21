@@ -65,7 +65,8 @@ namespace Automaton.Model.Utility
 
             if (!sourceFileInfos.ContainsAny())
             {
-                return null;
+                // No files have been found in the source path. This means no mod files were able to be found.
+                return Instance.AutomatonInstance.ModpackMods;
             }
 
             foreach (var mod in Instance.AutomatonInstance.ModpackMods)
