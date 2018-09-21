@@ -68,6 +68,7 @@
     <Compile Include="Extensions\Enumerable.cs" />
     <Compile Include="Errors\GenericErrorHandler.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
+    <Compile Include="NxmWorker.cs" />
     <Compile Include="NexusApi\NexusBase.cs" />
     <Compile Include="NexusApi\NexusConnection.cs" />
     <Compile Include="NexusApi\NexusMod.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="ModpackBase\Mod.cs" />
     <Compile Include="ModpackBase\Header.cs" />
     <Compile Include="Utility\Modpack.cs" />
+    <Compile Include="Utility\Resources.cs" />
     <Compile Include="Utility\Validation.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
