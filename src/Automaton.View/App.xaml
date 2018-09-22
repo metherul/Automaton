@@ -1,58 +1,39 @@
-<Application
-    x:Class="Automaton.View.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:clr="clr-namespace:System;assembly=mscorlib"
-    xmlns:converters="clr-namespace:Automaton.ViewModel.Converters;assembly=Automaton.ViewModel"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:Automaton.View"
-    d1p1:Ignorable="d"
-    StartupUri="MainWindow.xaml">
-    <Application.Resources>
-        <ResourceDictionary>
-            <!--  Material Design in XAML definitions  -->
-            <ResourceDictionary.MergedDictionaries>
-                <!--  Material Design Themes  -->
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="Resources/CustomScrollbar.xaml" />
-                <!--  App Themes  -->
-                <ResourceDictionary Source="Resources/TextTheme.xaml" />
-                <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <!--  Fonts  -->
-            <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
-            <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
-            <FontFamily x:Key="Roboto">pack://application:,,,/Content/Fonts/Roboto/#Roboto</FontFamily>
-
-            <!--  Colors  -->
-            <Brush x:Key="BackgroundColor">#282C35</Brush>
-            <Brush x:Key="FontColor">#FFFFFF</Brush>
-            <Brush x:Key="ButtonColor">#42464F</Brush>
-            <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
-
-            <!--  Content  -->
-            <BitmapImage x:Key="AutomatonImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
-            <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
-            <BitmapImage x:Key="NexusLogo">/Automaton;component/Content/Images/NexusMods.png</BitmapImage>
-            <BitmapImage x:Key="DownloadWithManager">/Automaton;component/Content/Images/DownloadWithManager.png</BitmapImage>
-            <BitmapImage x:Key="NexusLogoColor">/Automaton;component/Content/Images/NexusModsColor.png</BitmapImage>
-
-            <!--  Modpack strings  -->
-            <clr:String x:Key="ModpackName">Automaton</clr:String>
-            <clr:String x:Key="ModpackDescription">It's dangerous to mod alone. Load a modpack to get started!</clr:String>
-
-            <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
-            <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-
-            <vm:ViewModelLocator
-                xmlns:vm="clr-namespace:Automaton.View"
-                x:Key="ViewModelLocator"
-                d:IsDataSource="True" />
-        </ResourceDictionary>
-    </Application.Resources>
+<Application x:Class="Automaton.View.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:clr="clr-namespace:System;assembly=mscorlib" xmlns:converters="clr-namespace:Automaton.ViewModel.Converters;assembly=Automaton.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:Automaton.View" d1p1:Ignorable="d" Startup="Application_Startup" StartupUri="MainWindow.xaml">
+  <Application.Resources>
+    <ResourceDictionary>
+      <!--  Material Design in XAML definitions  -->
+      <ResourceDictionary.MergedDictionaries>
+        <!--  Material Design Themes  -->
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+        <ResourceDictionary Source="Resources/CustomScrollbar.xaml" />
+        <!--  App Themes  -->
+        <ResourceDictionary Source="Resources/TextTheme.xaml" />
+        <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <!--  Fonts  -->
+      <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
+      <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
+      <FontFamily x:Key="Roboto">pack://application:,,,/Content/Fonts/Roboto/#Roboto</FontFamily>
+      <!--  Colors  -->
+      <Brush x:Key="BackgroundColor">#282C35</Brush>
+      <Brush x:Key="FontColor">#FFFFFF</Brush>
+      <Brush x:Key="ButtonColor">#42464F</Brush>
+      <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
+      <!--  Content  -->
+      <BitmapImage x:Key="AutomatonImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
+      <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
+      <BitmapImage x:Key="NexusLogo">/Automaton;component/Content/Images/NexusMods.png</BitmapImage>
+      <BitmapImage x:Key="DownloadWithManager">/Automaton;component/Content/Images/DownloadWithManager.png</BitmapImage>
+      <BitmapImage x:Key="NexusLogoColor">/Automaton;component/Content/Images/NexusModsColor.png</BitmapImage>
+      <!--  Modpack strings  -->
+      <clr:String x:Key="ModpackName">Automaton</clr:String>
+      <clr:String x:Key="ModpackDescription">It's dangerous to mod alone. Load a modpack to get started!</clr:String>
+      <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
+      <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
+      <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+      <vm:ViewModelLocator xmlns:vm="clr-namespace:Automaton.View" x:Key="ViewModelLocator" d:IsDataSource="True" />
+    </ResourceDictionary>
+  </Application.Resources>
 </Application>

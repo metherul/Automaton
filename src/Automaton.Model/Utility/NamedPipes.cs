@@ -23,5 +23,14 @@ namespace Automaton.Model.Utility
         {
             PipeServer.Start();
         }
+
+        public static void SendMessage(string message)
+        {
+            var client = new NamedPipeClient<string>("Automaton_PIPE");
+
+            client.Start();
+            client.WaitForConnection(4000);
+            client.PushMessage(message);
+        }
     }
 }
