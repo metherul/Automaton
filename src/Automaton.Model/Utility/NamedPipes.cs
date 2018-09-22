@@ -1,5 +1,6 @@
 ﻿using NamedPipeWrapper;
 using System;
+using System.IO;
 
 namespace Automaton.Model.Utility
 {
@@ -31,6 +32,10 @@ namespace Automaton.Model.Utility
             client.Start();
             client.WaitForConnection(4000);
             client.PushMessage(message);
+            
+            // What the fuck, why does this make it work.
+            File.AppendAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "output.txt"), "message sent");
+            File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "output.txt")); // Stupid AF hack, but whatever. God damn.
         }
     }
 }

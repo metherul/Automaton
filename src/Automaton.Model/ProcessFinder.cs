@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Automaton.Model
 {
@@ -13,16 +9,7 @@ namespace Automaton.Model
     {
         public static bool IsProcessAlreadyRunning()
         {
-            var exePath = Assembly.GetExecutingAssembly().Location;
-            var fileInfo = new FileInfo(exePath);
-            var exeName = fileInfo.Name;
-            var bCreatedNew = false;
-
-            var mutex = new Mutex(true, "Global\\" + exeName, out bCreatedNew);
-            if (bCreatedNew)
-                mutex.ReleaseMutex();
-
-            return !bCreatedNew;
+            return Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location)).Count() > 1;
         }
     }
 }

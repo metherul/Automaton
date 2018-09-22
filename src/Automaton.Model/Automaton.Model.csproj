@@ -68,7 +68,6 @@
     <Compile Include="Extensions\Enumerable.cs" />
     <Compile Include="Errors\GenericErrorHandler.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
-    <Compile Include="NxmWorker.cs" />
     <Compile Include="NexusApi\NexusBase.cs" />
     <Compile Include="NexusApi\NexusConnection.cs" />
     <Compile Include="NexusApi\NexusMod.cs" />

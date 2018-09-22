@@ -148,8 +148,6 @@ namespace Automaton.ViewModel
             // Start capturing piped messages from the NXMWorker, handle any progress reports.
             nexusProtocol.StartRecievingProtocolValues(new Progress<CaptureProtocolValuesProgress>(async x =>
             {
-                WindowNotificationControls.MoveToFront();
-
                 var matchingMods = MissingMods.Where(y => y.NexusModId == x.ModId);
                 
                 if (!matchingMods.Any())
@@ -161,6 +159,8 @@ namespace Automaton.ViewModel
 
                 if (matchingMod != null)
                 {
+                    WindowNotificationControls.MoveToFront();
+
                     // Start downloading the mod file.
                     await NexusMod.DownloadModFile(matchingMod, x.FileId, new Progress<DownloadModFileProgress>(downloadProgress =>
                     {
@@ -201,7 +201,6 @@ namespace Automaton.ViewModel
 
                         WindowNotificationControls.MoveToFront();
 
-                        NxmWorker.InitializeNxmWorker();
                         InitializeDownloadHandle();
                     }
                     else

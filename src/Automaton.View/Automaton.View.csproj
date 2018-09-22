@@ -225,9 +225,6 @@
   <ItemGroup>
     <Resource Include="Content\Images\NexusModsColor.png" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\Resources\NXMWorker.exe" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
