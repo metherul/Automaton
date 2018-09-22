@@ -1,4 +1,5 @@
 ﻿using Automaton.Model.ModpackBase;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -18,7 +19,7 @@ namespace Automaton.Model.Instance
         public static string ExtractionLocation { get; set; } 
         public static string ModpackExtractionLocation { get; set; }
 
-        public static string NexusHandlerRegistryValue { get; set; } = "\"C:\\Programming\\C#\\NXMWorker\\src\\NXMWorker\\bin\\Debug\\NXMWorker.exe\" \"%1\"";
+        public static string NexusHandlerRegistryValue { get; set; } = $"\"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Automaton.exe")}\" \"%1\"";
         public static string PreviousRegistryValue { get; set; }
 
         public static void InitializeInstance()
