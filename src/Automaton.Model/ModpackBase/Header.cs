@@ -26,10 +26,15 @@ namespace Automaton.Model.ModpackBase
         public string TargetGame { get; set; }
 
         [JsonProperty("install_mod_organizer")]
-        public bool InstallModOrganizer { get; set; } = false;
+        public bool InstallModOrganizer { get; set; }
+
+        [JsonProperty("mod_organizer_version")]
+        public int ModOrganizerVersion { get; set; }
+
+        [JsonIgnore]
+        public string ModOrganizerArchivePath;
 
         private string _headerImage;
-
         [JsonProperty("header_image")]
         public string HeaderImage
         {

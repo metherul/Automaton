@@ -35,6 +35,9 @@
     <Reference Include="AngleSharp, Version=0.9.9.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
       <HintPath>..\packages\AngleSharp.0.9.10\lib\net45\AngleSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Costura, Version=3.1.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.1.2\lib\net46\Costura.dll</HintPath>
     </Reference>
@@ -68,6 +71,8 @@
     <Compile Include="Extensions\Enumerable.cs" />
     <Compile Include="Errors\GenericErrorHandler.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
+    <Compile Include="Interfaces\IModel.cs" />
+    <Compile Include="ModOrganizer\ModOrganizerHandler.cs" />
     <Compile Include="NexusApi\NexusBase.cs" />
     <Compile Include="NexusApi\NexusConnection.cs" />
     <Compile Include="NexusApi\NexusMod.cs" />

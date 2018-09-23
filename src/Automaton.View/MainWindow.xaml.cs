@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Automaton.ViewModel;
+using System.Windows;
 
 namespace Automaton.View
 {

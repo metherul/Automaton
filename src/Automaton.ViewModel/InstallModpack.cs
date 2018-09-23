@@ -1,12 +1,13 @@
 ﻿using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
+using Automaton.ViewModel.Interfaces;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Automaton.ViewModel
 {
-    public class InstallModpack : ViewController, INotifyPropertyChanged
+    public class InstallModpack : ViewController, IInstallModpack, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

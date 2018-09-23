@@ -1,5 +1,6 @@
 ﻿using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
+using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
 using System.ComponentModel;
@@ -7,7 +8,7 @@ using System.IO;
 
 namespace Automaton.ViewModel
 {
-    public class InitialSetup : ViewController, INotifyPropertyChanged
+    public class InitialSetup : ViewController, IInitialSetup, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

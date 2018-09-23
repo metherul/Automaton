@@ -2,6 +2,7 @@
 using Automaton.Model.ModpackBase;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
+using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using System.Windows.Media;
 
 namespace Automaton.ViewModel
 {
-    public class SetupAssistant : ViewController, INotifyPropertyChanged
+    public class SetupAssistant : ViewController, ISetupAssistant, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

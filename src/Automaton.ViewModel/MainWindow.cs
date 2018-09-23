@@ -1,6 +1,7 @@
 ﻿using Automaton.Model.Instance;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
+using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.ComponentModel;
@@ -8,7 +9,7 @@ using System.Windows;
 
 namespace Automaton.ViewModel
 {
-    public class MainWindow : ViewController, INotifyPropertyChanged
+    public class MainWindow : ViewController, IMainWindow, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

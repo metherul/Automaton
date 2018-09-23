@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualBasic.Devices;
 
 namespace Automaton.Model.Utility
 {
@@ -68,9 +67,7 @@ namespace Automaton.Model.Utility
         /// <param name="archivePath"></param>
         public static void UpdateModArchivePaths(Mod mod, string archivePath)
         {
-            Instance.AutomatonInstance.ModpackMods.Where(x => x == mod).First().FilePath = archivePath;
-
-            var test = Instance.AutomatonInstance.ModpackMods;
+            AutomatonInstance.ModpackMods.Where(x => x == mod).First().FilePath = archivePath;
         }
 
         /// <summary>

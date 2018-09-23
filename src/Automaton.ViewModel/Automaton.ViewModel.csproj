@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
     </Reference>
@@ -80,7 +83,16 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BootStrapper.cs" />
+    <Compile Include="Interfaces\IInstallModpack.cs" />
+    <Compile Include="Interfaces\IInitialSetup.cs" />
+    <Compile Include="Interfaces\ILoadModpack.cs" />
+    <Compile Include="Interfaces\IMainWindow.cs" />
     <Compile Include="InstallModpack.cs" />
+    <Compile Include="Interfaces\IViewModel.cs" />
+    <Compile Include="Interfaces\ISetupAssistant.cs" />
+    <Compile Include="Interfaces\IValidateMods.cs" />
+    <Compile Include="ViewModelLocator.cs" />
     <Compile Include="WindowNofiticationControls.cs" />
     <Compile Include="Controllers\SnackbarController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />

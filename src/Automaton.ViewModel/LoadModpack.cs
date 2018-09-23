@@ -1,11 +1,12 @@
 ﻿using Automaton.Model.Utility;
+using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Automaton.ViewModel
 {
-    public class LoadModpack
+    public class LoadModpack : ILoadModpack
     {
         public RelayCommand LoadModpackCommand { get; set; }
 

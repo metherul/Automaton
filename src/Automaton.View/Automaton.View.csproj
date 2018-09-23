@@ -97,7 +97,6 @@
     <Compile Include="SetupAssistant.xaml.cs">
       <DependentUpon>SetupAssistant.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModelLocator.cs" />
     <Page Include="InstallModpack.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

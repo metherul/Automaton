@@ -3,6 +3,7 @@ using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
+using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
@@ -14,7 +15,7 @@ using System.Windows.Forms;
 
 namespace Automaton.ViewModel
 {
-    public class ValidateMods : ViewController, INotifyPropertyChanged
+    public class ValidateMods : ViewController, IValidateMods, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
