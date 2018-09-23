@@ -11,14 +11,6 @@ namespace Automaton.ViewModel
     {
         private ILifetimeScope _rootScope;
 
-        public IController ViewController
-        {
-            get
-            {
-                return Resolve<IViewController>();
-            }
-        }
-
         public IViewModel MainWindow
         {
             get

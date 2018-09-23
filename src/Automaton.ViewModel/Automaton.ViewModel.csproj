@@ -86,6 +86,7 @@
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\IViewController.cs" />
+    <Compile Include="Controllers\IWindowNotificationController.cs" />
     <Compile Include="IInstallModpack.cs" />
     <Compile Include="IInitialSetup.cs" />
     <Compile Include="ILoadModpack.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="IViewModel.cs" />
     <Compile Include="ISetupAssistant.cs" />
     <Compile Include="IValidateMods.cs" />
-    <Compile Include="WindowNofiticationControls.cs" />
+    <Compile Include="Controllers\WindowNofiticationControls.cs" />
     <Compile Include="Controllers\SnackbarController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Converters\BoolToIntConverter.cs" />

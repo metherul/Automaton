@@ -46,6 +46,8 @@
             <!--  Modpack strings  -->
             <clr:String x:Key="ModpackName">Automaton</clr:String>
             <clr:String x:Key="ModpackDescription">It's dangerous to mod alone. Load a modpack to get started!</clr:String>
+
+            <!--  Converters  -->
             <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
             <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />

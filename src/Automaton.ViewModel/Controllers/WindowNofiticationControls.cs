@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Automaton.ViewModel
+namespace Automaton.ViewModel.Controllers
 {
-    public class WindowNotificationControls
+    public class WindowNotificationController : IWindowNotificationController
     {
         private static string ProcessName = "Automaton";
 
@@ -17,7 +17,7 @@ namespace Automaton.ViewModel
         [DllImport("user32.dll")]
         private static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
-        public static void MoveToFront()
+        public void MoveToFront()
         {
             var allProcs = Process.GetProcessesByName(ProcessName);
             if (allProcs.Length > 0)

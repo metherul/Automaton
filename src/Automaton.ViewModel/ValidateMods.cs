@@ -17,6 +17,7 @@ namespace Automaton.ViewModel
     public class ValidateMods : IValidateMods, INotifyPropertyChanged
     {
         public IViewController _viewController;
+        public IWindowNotificationController _windowNotificationController;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -43,9 +44,10 @@ namespace Automaton.ViewModel
         public bool IsLoggedIn { get; set; }
         public bool IsLoginVisible { get; set; } = true;
 
-        public ValidateMods(IViewController viewController)
+        public ValidateMods(IViewController viewController, IWindowNotificationController windowNotificationController)
         {
             _viewController = viewController;
+            _windowNotificationController = windowNotificationController;
 
             OpenModSourceUrlCommand = new RelayCommand<Mod>(OpenModSourceUrl);
             FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
@@ -163,7 +165,7 @@ namespace Automaton.ViewModel
 
                 if (matchingMod != null)
                 {
-                    WindowNotificationControls.MoveToFront();
+                    _windowNotificationController.MoveToFront();
 
                     // Start downloading the mod file.
                     await NexusMod.DownloadModFile(matchingMod, x.FileId, new Progress<DownloadModFileProgress>(downloadProgress =>
@@ -203,7 +205,7 @@ namespace Automaton.ViewModel
                         IsLoggedIn = true;
                         IsLoginVisible = false;
 
-                        WindowNotificationControls.MoveToFront();
+                        _windowNotificationController.MoveToFront();
 
                         InitializeDownloadHandle();
                     }
