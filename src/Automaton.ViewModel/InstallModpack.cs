@@ -1,28 +1,31 @@
 ﻿using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
-using Automaton.ViewModel.Interfaces;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Automaton.ViewModel
 {
-    public class InstallModpack : ViewController, IInstallModpack, INotifyPropertyChanged
+    public class InstallModpack : IInstallModpack, INotifyPropertyChanged
     {
+        private IViewController _viewController;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string ConsoleOut { get; set; }
 
         private int ThisViewIndex { get; } = 4;
 
-        public InstallModpack()
+        public InstallModpack(IViewController viewController)
         {
-            ViewIndexChangedEvent += IncrementViewIndexUpdate;
+            _viewController = viewController;
+
+            _viewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
-        private void IncrementViewIndexUpdate(int index)
+        private void IncrementViewIndexUpdate(object sender, int currentIndex)
         {
-            if (index == ThisViewIndex)
+            if (currentIndex == ThisViewIndex)
             {
                 StartModpackInstall();
             }

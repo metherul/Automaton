@@ -1,5 +1,4 @@
-﻿using Automaton.Model.Errors;
-using Automaton.Model.Extensions;
+﻿using Automaton.Model.Extensions;
 using Automaton.Model.Instance;
 using Automaton.Model.ModpackBase;
 using System;
@@ -12,10 +11,6 @@ namespace Automaton.Model.Utility
 {
     public class Modpack
     {
-        public delegate void ModpackLoaded();
-
-        public static event ModpackLoaded ModpackLoadedEvent;
-
         /// <summary>
         /// Extracts and loads an archived modpack into the model
         /// </summary>
@@ -39,7 +34,6 @@ namespace Automaton.Model.Utility
 
             if (!File.Exists(modpackHeaderPath))
             {
-                GenericErrorHandler.Throw(GenericErrorType.ModpackStructure, "Valid modpack.json was not found.", new StackTrace());
                 return;
             }
 
@@ -49,15 +43,12 @@ namespace Automaton.Model.Utility
             // The json string was not parsed correctly, throw error
             if (parseError != string.Empty)
             {
-                GenericErrorHandler.Throw(GenericErrorType.JSONParse, parseError, new StackTrace());
                 return;
             }
 
             // Set global instances, these will update viewmodels automatically via the message service
-            Instance.AutomatonInstance.ModpackHeader = modpackHeader;
-            Instance.AutomatonInstance.ModpackMods = LoadModInstallParameters(modpackHeader, modpackExtractionPath);
-
-            ModpackLoadedEvent();
+            AutomatonInstance.ModpackHeader = modpackHeader;
+            AutomatonInstance.ModpackMods = LoadModInstallParameters(modpackHeader, modpackExtractionPath);
         }
 
         /// <summary>
@@ -88,9 +79,8 @@ namespace Automaton.Model.Utility
                 .Where(x => Directory.Exists(x) && Directory.GetFiles(x, $"*.json").Any());
 
             // Check for any valid values
-            if (!existingModInstallFolders.ContainsAny())
+            if (!existingModInstallFolders.NullAndAny())
             {
-                GenericErrorHandler.Throw(GenericErrorType.ModpackStructure, "mod_install_folders not found in modpack.", new StackTrace());
                 return null;
             }
 
@@ -113,8 +103,6 @@ namespace Automaton.Model.Utility
 
                     if (parseError != string.Empty)
                     {
-                        GenericErrorHandler.Throw(GenericErrorType.JSONParse, parseError, new StackTrace());
-
                         return null;
                     }
 
@@ -159,7 +147,7 @@ namespace Automaton.Model.Utility
                 }
                 
                 // Catch non-existent install parameters. In this instance, move all files / directories.
-                if (!mod.InstallationParameters.ContainsAny())
+                if (!mod.InstallationParameters.NullAndAny())
                 {
                     if (Directory.Exists(modInstallPath))
                     {

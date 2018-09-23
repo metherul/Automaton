@@ -1,5 +1,5 @@
 ﻿using Automaton.Model.Utility;
-using Automaton.ViewModel.Interfaces;
+using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,14 +8,18 @@ namespace Automaton.ViewModel
 {
     public class LoadModpack : ILoadModpack
     {
+        private IViewController _viewController;
+
         public RelayCommand LoadModpackCommand { get; set; }
 
-        public LoadModpack()
+        public LoadModpack(IViewController viewController)
         {
+            _viewController = viewController;
+
             LoadModpackCommand = new RelayCommand(Load);
         }
 
-        private static void Load()
+        private void Load()
         {
             var fileBrowser = new OpenFileDialog()
             {
@@ -26,8 +30,13 @@ namespace Automaton.ViewModel
 
             if (fileBrowser.ShowDialog() == DialogResult.OK)
             {
-                Task.Factory.StartNew(() => { Modpack.LoadModpack(fileBrowser.FileName); });
+                Task.Factory.StartNew(() => 
+                {
+                    Modpack.LoadModpack(fileBrowser.FileName);
+                }).Wait();
             }
+
+            _viewController.IncrementCurrentViewIndex();
         }
     }
 }

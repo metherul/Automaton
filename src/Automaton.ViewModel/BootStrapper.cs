@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
-using Automaton.ViewModel.Interfaces;
+using Automaton.ViewModel.Controllers;
 using System.Linq;
 using System.Reflection;
 
@@ -10,6 +10,14 @@ namespace Automaton.ViewModel
     public class BootStrapper
     {
         private ILifetimeScope _rootScope;
+
+        public IController ViewController
+        {
+            get
+            {
+                return Resolve<IViewController>();
+            }
+        }
 
         public IViewModel MainWindow
         {
@@ -57,13 +65,18 @@ namespace Automaton.ViewModel
         public BootStrapper()
         {
             var builder = new ContainerBuilder();
-            var assemblies = new[] { Assembly.GetExecutingAssembly() };
+            var assembly = Assembly.GetExecutingAssembly();
 
-            builder.RegisterAssemblyTypes(assemblies)
+            builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IModel).IsAssignableFrom(t))
                 .AsImplementedInterfaces();
 
-            builder.RegisterAssemblyTypes(assemblies)
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IController).IsAssignableFrom(t))
+                .SingleInstance()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IViewModel).IsAssignableFrom(t))
                 .AsImplementedInterfaces();
 

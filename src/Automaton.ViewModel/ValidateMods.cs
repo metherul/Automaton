@@ -3,7 +3,6 @@ using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
-using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
@@ -15,8 +14,10 @@ using System.Windows.Forms;
 
 namespace Automaton.ViewModel
 {
-    public class ValidateMods : ViewController, IValidateMods, INotifyPropertyChanged
+    public class ValidateMods : IValidateMods, INotifyPropertyChanged
     {
+        public IViewController _viewController;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<Mod> MissingMods { get; set; }
@@ -42,8 +43,10 @@ namespace Automaton.ViewModel
         public bool IsLoggedIn { get; set; }
         public bool IsLoginVisible { get; set; } = true;
 
-        public ValidateMods()
+        public ValidateMods(IViewController viewController)
         {
+            _viewController = viewController;
+
             OpenModSourceUrlCommand = new RelayCommand<Mod>(OpenModSourceUrl);
             FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
 
@@ -53,7 +56,7 @@ namespace Automaton.ViewModel
             InstallModpackCommand = new RelayCommand(InstallModpack);
 
             Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
-            ViewIndexChangedEvent += IncrementViewIndexUpdate;
+            _viewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
         private void ContinueOffline()
@@ -105,7 +108,7 @@ namespace Automaton.ViewModel
             // Show in UI
         }
 
-        private void IncrementViewIndexUpdate(int currentIndex)
+        private void IncrementViewIndexUpdate(object sender, int currentIndex)
         {
             if (currentIndex == ThisViewIndex)
             {
@@ -215,7 +218,7 @@ namespace Automaton.ViewModel
 
         private void InstallModpack()
         {
-            IncrementCurrentViewIndex();
+            _viewController.IncrementCurrentViewIndex();
         }
     }
 }

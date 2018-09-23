@@ -1,6 +1,5 @@
 ﻿using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
-using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
 using System.ComponentModel;
@@ -8,8 +7,10 @@ using System.IO;
 
 namespace Automaton.ViewModel
 {
-    public class InitialSetup : ViewController, IInitialSetup, INotifyPropertyChanged
+    public class InitialSetup : IInitialSetup, INotifyPropertyChanged
     {
+        private IViewController _viewController;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public RelayCommand OpenInstallFolderCommand { get; set; }
@@ -48,14 +49,14 @@ namespace Automaton.ViewModel
 
         public bool CanContinue { get; set; }
 
-        public InitialSetup()
+        public InitialSetup(IViewController viewController)
         {
+            _viewController = viewController;
+
             OpenInstallFolderCommand = new RelayCommand(OpenInstallFolder);
             OpenDownloadsFolderCommand = new RelayCommand(OpenDownloadsFolder);
 
-            IncrementCurrentViewIndexCommand = new RelayCommand(IncrementCurrentViewIndex);
-
-            Modpack.ModpackLoadedEvent += ModpackLoaded;
+            IncrementCurrentViewIndexCommand = new RelayCommand(_viewController.IncrementCurrentViewIndex);
         }
 
         private void ModpackLoaded()

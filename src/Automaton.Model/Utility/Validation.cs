@@ -63,7 +63,7 @@ namespace Automaton.Model.Utility
             var sourceFileInfos = sourceFiles.Select(x => new FileInfo(x)).ToList();
             var missingModArchives = new List<Mod>();
 
-            if (!sourceFileInfos.ContainsAny())
+            if (!sourceFileInfos.NullAndAny())
             {
                 // No files have been found in the source path. This means no mod files were able to be found.
                 return Instance.AutomatonInstance.ModpackMods;
@@ -75,7 +75,7 @@ namespace Automaton.Model.Utility
 
                 var potentialLengthMatches = sourceFileInfos.Where(x => mod.FileSize == x.Length.ToString()).ToList();
 
-                if (!potentialLengthMatches.ContainsAny())
+                if (!potentialLengthMatches.NullAndAny())
                 {
                     missingModArchives.Add(mod);
                 }

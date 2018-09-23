@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Automaton.ViewModel.Interfaces
+namespace Automaton.ViewModel
 {
     public interface IInstallModpack : IViewModel
     {

@@ -1,8 +1,6 @@
 ﻿using Automaton.Model.Extensions;
 using Automaton.Model.ModpackBase;
-using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
-using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
@@ -17,8 +15,10 @@ using System.Windows.Media;
 
 namespace Automaton.ViewModel
 {
-    public class SetupAssistant : ViewController, ISetupAssistant, INotifyPropertyChanged
+    public class SetupAssistant : ISetupAssistant, INotifyPropertyChanged
     {
+        public IViewController _viewController;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<Group> SetupAssistantGroup { get; set; }
@@ -28,17 +28,15 @@ namespace Automaton.ViewModel
         public string ImagePath { get; set; }
         public string Description { get; set; }
 
-        public SetupAssistant()
+        public SetupAssistant(IViewController viewController)
         {
-            Modpack.ModpackLoadedEvent += ModpackLoaded;
+            _viewController = viewController;
 
-            IncrementCurrentViewIndexCommand = new RelayCommand(IncrementCurrentViewIndex);
+            IncrementCurrentViewIndexCommand = new RelayCommand(_viewController.IncrementCurrentViewIndex);
         }
 
         private void ModpackLoaded()
         {
-            IncrementCurrentViewIndexCommand = new RelayCommand(IncrementCurrentViewIndex);
-
             if (!Model.Instance.AutomatonInstance.ModpackHeader.ContainsSetupAssistant) return;
 
             var setupAssistant = Model.Instance.AutomatonInstance.ModpackHeader.SetupAssistant;
@@ -55,7 +53,7 @@ namespace Automaton.ViewModel
             var matchingControlActions = controlObject.ControlActions
                 .Where(x => x.FlagEvent == flagEventType);
 
-            if (matchingControlActions.ContainsAny())
+            if (matchingControlActions.NullAndAny())
             {
                 foreach (var action in matchingControlActions)
                 {

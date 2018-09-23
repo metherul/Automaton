@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Enumerable.cs" />
-    <Compile Include="Errors\GenericErrorHandler.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="ModOrganizer\ModOrganizerHandler.cs" />

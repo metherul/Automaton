@@ -1,7 +1,5 @@
 ﻿using Automaton.Model.Instance;
-using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
-using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.ComponentModel;
@@ -9,8 +7,10 @@ using System.Windows;
 
 namespace Automaton.ViewModel
 {
-    public class MainWindow : ViewController, IMainWindow, INotifyPropertyChanged
+    public class MainWindow : IMainWindow, INotifyPropertyChanged
     {
+        private IViewController _viewController;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public RelayCommand<Window> CloseWindowCommand { get; set; }
@@ -19,16 +19,17 @@ namespace Automaton.ViewModel
 
         public int CurrentTransitionerIndex { get; set; } = 0;
 
-        public MainWindow()
+        public MainWindow(IViewController viewController)
         {
+            _viewController = viewController;
+
+            // Initialize event handlers
+            _viewController.ViewIndexChangedEvent += ViewIndexUpdate;
+
             // Initialize relaycommand bindings
             CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
             MinimizeWindowCommand = new RelayCommand<Window>(MinimizeWindow);
             MoveWindowCommand = new RelayCommand<Window>(MoveWindow);
-
-            // Initialize event handlers
-            Modpack.ModpackLoadedEvent += ModpackLoaded;
-            ViewIndexChangedEvent += ViewIndexUpdate;
 
             // Initialize the instance
             AutomatonInstance.InitializeInstance();
@@ -36,17 +37,15 @@ namespace Automaton.ViewModel
 
         public void ModpackLoaded()
         {
-            // Modpack has been loaded, so increment the current view index
-            IncrementCurrentViewIndex();
-
             ThemeController.ApplyTheme();
 
-            SnackbarController.EnqueueMessage("Test Message");
+            // Modpack has been loaded, so increment the current view index
+            _viewController.IncrementCurrentViewIndex();
         }
 
-        private void ViewIndexUpdate(int index)
+        private void ViewIndexUpdate(object sender, int currentIndex)
         {
-            CurrentTransitionerIndex = index;
+            CurrentTransitionerIndex = currentIndex;
         }
 
         #region Window Manipulation Code

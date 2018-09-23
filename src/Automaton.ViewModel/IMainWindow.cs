@@ -2,7 +2,7 @@
 using System.Windows;
 using GalaSoft.MvvmLight.Command;
 
-namespace Automaton.ViewModel.Interfaces
+namespace Automaton.ViewModel
 {
     public interface IMainWindow : IViewModel
     {

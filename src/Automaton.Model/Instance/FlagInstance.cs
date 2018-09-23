@@ -36,7 +36,7 @@ namespace Automaton.Model.Instance
                 return;
             }
 
-            var matchingFlagKey = FlagKeyValueList.Where(x => x.Key == flagKey).ContainsAny();
+            var matchingFlagKey = FlagKeyValueList.Where(x => x.Key == flagKey).NullAndAny();
 
             // A key match was found, update the value
             if (matchingFlagKey)
@@ -79,7 +79,7 @@ namespace Automaton.Model.Instance
                 return;
             }
 
-            if (flagKey == "$ModInstallFolders" && !AutomatonInstance.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).ContainsAny())
+            if (flagKey == "$ModInstallFolders" && !AutomatonInstance.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).NullAndAny())
             {
                 if (flagActionType == FlagActionType.Add)
                 {
