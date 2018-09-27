@@ -1,5 +1,4 @@
-﻿using Automaton.Model;
-using Automaton.Model.ModpackBase;
+﻿using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
 using Automaton.Model.Utility;
 using Automaton.ViewModel.Controllers;
