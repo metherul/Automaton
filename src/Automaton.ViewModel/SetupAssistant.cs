@@ -1,6 +1,5 @@
 ﻿using Automaton.Model.Extensions;
 using Automaton.Model.ModpackBase;
-using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Automaton.Model.Instance.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 
@@ -19,7 +19,8 @@ namespace Automaton.ViewModel
 {
     public class SetupAssistant : ISetupAssistant, INotifyPropertyChanged
     {
-        public IViewController _viewController;
+        public readonly IViewController _viewController;
+        public readonly IAutomatonInstance _automatonInstance;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -30,18 +31,19 @@ namespace Automaton.ViewModel
         public string ImagePath { get; set; }
         public string Description { get; set; }
 
-        public SetupAssistant(IViewController viewController)
+        public SetupAssistant(IViewController viewController, IAutomatonInstance automatonInstance)
         {
             _viewController = viewController;
+            _automatonInstance = automatonInstance;
 
             IncrementCurrentViewIndexCommand = new RelayCommand(_viewController.IncrementCurrentViewIndex);
         }
 
         private void ModpackLoaded()
         {
-            if (!Model.Instance.AutomatonInstance.ModpackHeader.ContainsSetupAssistant) return;
+            if (!_automatonInstance.ModpackHeader.ContainsSetupAssistant) return;
 
-            var setupAssistant = Model.Instance.AutomatonInstance.ModpackHeader.SetupAssistant;
+            var setupAssistant = _automatonInstance.ModpackHeader.SetupAssistant;
 
             SetupAssistantGroup = new ObservableCollection<Group>(setupAssistant.ControlGroups);
 

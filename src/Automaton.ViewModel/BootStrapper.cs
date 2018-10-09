@@ -1,7 +1,9 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
 using System.Reflection;
+using Automaton.Model.Instance.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 
@@ -21,10 +23,16 @@ namespace Automaton.ViewModel
         public BootStrapper()
         {
             var builder = new ContainerBuilder();
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = AppDomain.CurrentDomain.GetAssemblies();
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IModel).IsAssignableFrom(t))
+                .Except<IInstance>()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IInstance).IsAssignableFrom(t))
+                .SingleInstance()
                 .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(assembly)

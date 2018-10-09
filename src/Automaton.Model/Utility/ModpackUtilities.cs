@@ -1,54 +1,57 @@
 ﻿using Automaton.Model.Extensions;
-using Automaton.Model.Instance;
 using Automaton.Model.ModpackBase;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.Utility.Interfaces;
 
 namespace Automaton.Model.Utility
 {
-    public class Modpack
+    public class ModpackUtilities : IModpackUtilties
     {
+        private readonly IAutomatonInstance _automatonInstance;
+
+        public ModpackUtilities(IAutomatonInstance automatonInstance)
+        {
+            _automatonInstance = automatonInstance;
+        }
+
         /// <summary>
         /// Extracts and loads an archived modpack into the model
         /// </summary>
         /// <param name="modpackPath"></param>
-        public static void LoadModpack(string modpackPath)
+        public bool LoadModpack(string modpackPath)
         {
-            var modpackExtractionPath = string.Empty;
-            var modpackHeader = new Header();
-            var modpackMods = new List<Mod>();
-
             // Extract the modpack archive out to a temp folder
             using (var extractionHandler = new ArchiveExtractor(modpackPath))
             {
                 extractionHandler.ExtractModpack();
             }
 
-            modpackExtractionPath = AutomatonInstance.ModpackExtractionLocation;
-
             // Load the modpack header
-            var modpackHeaderPath = Path.Combine(modpackExtractionPath, $"modpack.json");
+            var modpackHeaderPath = Path.Combine(_automatonInstance.ModpackExtractionLocation, $"modpack.json");
 
             if (!File.Exists(modpackHeaderPath))
             {
-                return;
+                return false;
             }
 
             // Load modpack header into Instance
-            modpackHeader = Json.TryDeserializeJson<Header>(File.ReadAllText(modpackHeaderPath), out string parseError);
+            var modpackHeader = Json.TryDeserializeJson<Header>(File.ReadAllText(modpackHeaderPath), out string parseError);
 
             // The json string was not parsed correctly, throw error
             if (parseError != string.Empty)
             {
-                return;
+                return false;
             }
 
             // Set global instances, these will update viewmodels automatically via the message service
-            AutomatonInstance.ModpackHeader = modpackHeader;
-            AutomatonInstance.ModpackMods = LoadModInstallParameters(modpackHeader, modpackExtractionPath);
+            _automatonInstance.ModpackHeader = modpackHeader;
+            _automatonInstance.ModpackMods = LoadModInstallParameters(modpackHeader, _automatonInstance.ModpackExtractionLocation);
+
+            return true;
         }
 
         /// <summary>
@@ -56,9 +59,9 @@ namespace Automaton.Model.Utility
         /// </summary>
         /// <param name="mod"></param>
         /// <param name="archivePath"></param>
-        public static void UpdateModArchivePaths(Mod mod, string archivePath)
+        public void UpdateModArchivePaths(Mod mod, string archivePath)
         {
-            AutomatonInstance.ModpackMods.Where(x => x == mod).First().FilePath = archivePath;
+            _automatonInstance.ModpackMods.First(x => x == mod).FilePath = archivePath;
         }
 
         /// <summary>
@@ -67,7 +70,7 @@ namespace Automaton.Model.Utility
         /// <param name="modpackHeader"></param>
         /// <param name="modpackExtractionPath"></param>
         /// <returns></returns>
-        private static List<Mod> LoadModInstallParameters(Header modpackHeader, string modpackExtractionPath)
+        private List<Mod> LoadModInstallParameters(Header modpackHeader, string modpackExtractionPath)
         {
             var modpackMods = new List<Mod>();
 
@@ -113,17 +116,17 @@ namespace Automaton.Model.Utility
             return modpackMods;
         }
 
-        public static void InstallModpack(IProgress<InstallModpackProgress> progress)
+        public void InstallModpack(IProgress<InstallModpackProgress> progress)
         {
             var progressObject = new InstallModpackProgress();
 
             // If Mod Organizer is set to be used, locate it and install
-            if (AutomatonInstance.ModpackHeader.InstallModOrganizer)
+            if (_automatonInstance.ModpackHeader.InstallModOrganizer)
             {
             }
 
-            var mods = AutomatonInstance.ModpackMods;
-            var extractionDirectory = AutomatonInstance.ModpackExtractionLocation;
+            var mods = _automatonInstance.ModpackMods;
+            var extractionDirectory = _automatonInstance.ModpackExtractionLocation;
 
             foreach (var mod in mods)
             {
@@ -135,7 +138,7 @@ namespace Automaton.Model.Utility
                 var archiveExtractor = new ArchiveExtractor(archivePath);
 
                 var modExtractionPath = Path.Combine(extractionDirectory, mod.ModName);
-                string modInstallPath = Path.Combine(AutomatonInstance.InstallLocation, mod.ModName);
+                string modInstallPath = Path.Combine(_automatonInstance.InstallLocation, mod.ModName);
 
                 // Extract the archive into the target path
                 var extractionResponse = archiveExtractor.ExtractArchive(modExtractionPath);
@@ -162,7 +165,7 @@ namespace Automaton.Model.Utility
                 foreach (var installParameter in mod.InstallationParameters)
                 {
                     var sourcePath = Path.Combine(modExtractionPath, installParameter.SourceLocation.StandardizePathSeparators());
-                    var targetPath = Path.Combine(AutomatonInstance.InstallLocation, installParameter.TargetLocation.StandardizePathSeparators());
+                    var targetPath = Path.Combine(_automatonInstance.InstallLocation, installParameter.TargetLocation.StandardizePathSeparators());
 
                     // Copy/move operation if the source is a directory
                     if (Directory.Exists(sourcePath))
@@ -182,7 +185,7 @@ namespace Automaton.Model.Utility
             }
         }
 
-        private static void CopyDirectory(string sourcePath, string destinationPath)
+        private void CopyDirectory(string sourcePath, string destinationPath)
         {
             //Now Create all of the directories
             foreach (string dirPath in Directory.GetDirectories(sourcePath, "*",

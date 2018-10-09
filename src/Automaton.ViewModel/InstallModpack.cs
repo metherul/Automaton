@@ -1,5 +1,4 @@
 ﻿using Automaton.Model.Utility;
-using Automaton.ViewModel.Controllers;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ namespace Automaton.ViewModel
 
         private int ThisViewIndex { get; } = 4;
 
-        public InstallModpack(IViewController viewController)
+        public InstallModpack(IViewController viewController,)
         {
             _viewController = viewController;
 

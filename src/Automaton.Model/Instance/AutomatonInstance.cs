@@ -2,32 +2,26 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Automaton.Model.Instance.Interfaces;
 
 namespace Automaton.Model.Instance
 {
-    public class AutomatonInstance
+    public class AutomatonInstance : IAutomatonInstance
     {
-        public static Header ModpackHeader { get; set; } = new Header();
-        public static List<Mod> ModpackMods { get; set; } = new List<Mod>();
+        public Header ModpackHeader { get; set; }
+        public List<Mod> ModpackMods { get; set; } 
 
-        public static string SourceLocation { get; set; }
+        public string SourceLocation { get; set; }
 
-        public static string InstallLocation { get; set; }
-        public static string ModOrganizerInstallLocation { get; set; }
+        public string InstallLocation { get; set; }
+        public string ModOrganizerInstallLocation { get; set; }
 
-        public static string TempDirectory { get; set; }
-        public static string ExtractionLocation { get; set; } 
-        public static string ModpackExtractionLocation { get; set; }
+        public string TempDirectory { get; set; } = Path.GetTempPath();
+        public string ExtractionLocation { get; set; } = Path.Combine(Path.GetTempPath(), "Automaton", "extract");
+        public string ModpackExtractionLocation { get; set; } = Path.Combine(Path.GetTempPath(), "Automaton", "modpack");
 
-        public static string NexusHandlerRegistryValue { get; set; } = $"\"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Automaton.exe")}\" \"%1\"";
-        public static string PreviousRegistryValue { get; set; }
-
-        public static void InitializeInstance()
-        {
-            TempDirectory = Path.GetTempPath();
-            ExtractionLocation = Path.Combine(TempDirectory, "Automaton", "extract");
-            ModpackExtractionLocation = Path.Combine(TempDirectory, "Automaton", "modpack");
-        }
+        public string NexusHandlerRegistryValue { get; set; } = $"\"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Automaton.exe")}\" \"%1\"";
+        public string PreviousRegistryValue { get; set; }
 
         #region Modification Methods
 
@@ -35,24 +29,24 @@ namespace Automaton.Model.Instance
         /// Adds a new ModInstallFolder to the instance
         /// </summary>
         /// <param name="path"></param>
-        public static void AddModInstallFolder(string path)
+        public void AddModInstallFolder(string path)
         {
-            var tempModpackHeader = AutomatonInstance.ModpackHeader;
+            var tempModpackHeader = ModpackHeader;
             tempModpackHeader.ModInstallFolders.Add(path);
 
-            AutomatonInstance.ModpackHeader = tempModpackHeader;
+            ModpackHeader = tempModpackHeader;
         }
 
         /// <summary>
         /// Removes a ModInstallFolder from the instance
         /// </summary>
         /// <param name="path"></param>
-        public static void RemoveModInstallFolder(string path)
+        public void RemoveModInstallFolder(string path)
         {
-            var tempModpackHeader = AutomatonInstance.ModpackHeader;
+            var tempModpackHeader = ModpackHeader;
             tempModpackHeader.ModInstallFolders.RemoveAll(x => x == path);
 
-            AutomatonInstance.ModpackHeader = tempModpackHeader;
+            ModpackHeader = tempModpackHeader;
         }
 
         #endregion Modification Methods

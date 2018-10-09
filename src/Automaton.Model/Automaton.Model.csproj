@@ -70,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Extensions\Enumerable.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
+    <Compile Include="Instance\Interfaces\IAutomatonInstance.cs" />
+    <Compile Include="Instance\Interfaces\IInstance.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="ModOrganizer\ModOrganizerHandler.cs" />
     <Compile Include="NexusApi\NexusBase.cs" />

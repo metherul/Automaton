@@ -1,7 +1,6 @@
 ﻿using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
 using Automaton.Model.Utility;
-using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
@@ -175,7 +174,7 @@ namespace Automaton.ViewModel
 
                         if (downloadProgress.IsDownloadComplete)
                         {
-                            Modpack.UpdateModArchivePaths(matchingMod, downloadProgress.DownloadLocation);
+                            ModpackUtilities.UpdateModArchivePaths(matchingMod, downloadProgress.DownloadLocation);
                             MissingMods.Remove(matchingMod);
 
                             NoMissingMods = MissingMods.Count == 0;

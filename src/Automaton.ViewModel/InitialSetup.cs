@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
 using System.ComponentModel;
 using System.IO;
+using Automaton.Model.Instance.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 
@@ -11,7 +12,8 @@ namespace Automaton.ViewModel
 {
     public class InitialSetup : IInitialSetup, INotifyPropertyChanged
     {
-        private IViewController _viewController;
+        private readonly IViewController _viewController;
+        private readonly IAutomatonInstance _automatonInstance;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -21,7 +23,6 @@ namespace Automaton.ViewModel
         public RelayCommand IncrementCurrentViewIndexCommand { get; set; }
 
         private string _installDirectory;
-
         public string InstallDirectory
         {
             get => _installDirectory;
@@ -34,7 +35,6 @@ namespace Automaton.ViewModel
         }
 
         private string _downloadsDirectory;
-
         public string DownloadsDirectory
         {
             get => _downloadsDirectory;
@@ -51,9 +51,10 @@ namespace Automaton.ViewModel
 
         public bool CanContinue { get; set; }
 
-        public InitialSetup(IViewController viewController)
+        public InitialSetup(IViewController viewController, IAutomatonInstance automatonInstance)
         {
             _viewController = viewController;
+            _automatonInstance = automatonInstance;
 
             OpenInstallFolderCommand = new RelayCommand(OpenInstallFolder);
             OpenDownloadsFolderCommand = new RelayCommand(OpenDownloadsFolder);
@@ -63,20 +64,20 @@ namespace Automaton.ViewModel
 
         private void ModpackLoaded()
         {
-            ModpackName = Model.Instance.AutomatonInstance.ModpackHeader.ModpackName;
-            Description = Model.Instance.AutomatonInstance.ModpackHeader.Description;
+            ModpackName = _automatonInstance.ModpackHeader.ModpackName;
+            Description = _automatonInstance.ModpackHeader.Description;
         }
 
         private void OpenInstallFolder()
         {
             InstallDirectory = OpenDirectoryBrowser();
-            Model.Instance.AutomatonInstance.InstallLocation = InstallDirectory;
+            _automatonInstance.InstallLocation = InstallDirectory;
         }
 
         private void OpenDownloadsFolder()
         {
             DownloadsDirectory = OpenDirectoryBrowser();
-            Model.Instance.AutomatonInstance.SourceLocation = DownloadsDirectory;
+            _automatonInstance.SourceLocation = DownloadsDirectory;
         }
 
         private string OpenDirectoryBrowser()

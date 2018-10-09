@@ -32,9 +32,6 @@ namespace Automaton.ViewModel
             CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
             MinimizeWindowCommand = new RelayCommand<Window>(MinimizeWindow);
             MoveWindowCommand = new RelayCommand<Window>(MoveWindow);
-
-            // Initialize the instance
-            AutomatonInstance.InitializeInstance();
         }
 
         private void ViewIndexUpdate(object sender, int currentIndex)
