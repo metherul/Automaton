@@ -53,7 +53,7 @@ namespace Automaton.ViewModel
             Description = setupAssistant.DefaultDescription;
         }
 
-        private static void RouteControlActionEvent(dynamic sender, FlagEventType flagEventType)
+        private void RouteControlActionEvent(dynamic sender, FlagEventType flagEventType)
         {
             var controlObject = (GroupControl)sender.CommandParameter;
             var matchingControlActions = controlObject.ControlActions
@@ -68,17 +68,17 @@ namespace Automaton.ViewModel
             }
         }
 
-        public static void ControlChecked(dynamic sender, RoutedEventArgs e)
+        public void ControlChecked(dynamic sender, RoutedEventArgs e)
         {
             RouteControlActionEvent(sender, FlagEventType.Checked);
         }
 
-        public static void ControlUnchecked(dynamic sender, RoutedEventArgs e)
+        public void ControlUnchecked(dynamic sender, RoutedEventArgs e)
         {
             RouteControlActionEvent(sender, FlagEventType.UnChecked);
         }
 
-        public static void ControlHover(dynamic sender, RoutedEventArgs e)
+        public void ControlHover(dynamic sender, RoutedEventArgs e)
         {
             var controlObject = (GroupControl)sender.CommandParameter;
 
@@ -95,6 +95,13 @@ namespace Automaton.ViewModel
 
     public class GroupToControlConverter : IValueConverter
     {
+        private readonly ISetupAssistant _setupAssistant;
+
+        public GroupToControlConverter(ISetupAssistant setupAssistant)
+        {
+            _setupAssistant = setupAssistant;
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var groupControls = value as List<GroupControl>;
@@ -114,9 +121,9 @@ namespace Automaton.ViewModel
                         HorizontalAlignment = HorizontalAlignment.Left
                     };
 
-                    control.Checked += SetupAssistant.ControlChecked;
-                    control.Unchecked += SetupAssistant.ControlUnchecked;
-                    control.MouseEnter += SetupAssistant.ControlHover;
+                    control.Checked += _setupAssistant.ControlChecked;
+                    control.Unchecked += _setupAssistant.ControlUnchecked;
+                    control.MouseEnter += _setupAssistant.ControlHover;
 
                     control.Foreground = (SolidColorBrush)Application.Current.Resources["FontColor"];
                     control.Background = (SolidColorBrush)Application.Current.Resources["AssistantControlColor"];
@@ -127,7 +134,7 @@ namespace Automaton.ViewModel
 
                     if ((bool)control.IsChecked)
                     {
-                        SetupAssistant.ControlChecked(control, new RoutedEventArgs());
+                        _setupAssistant.ControlChecked(control, new RoutedEventArgs());
                     }
 
                     stackPanel.Children.Add(control);
@@ -141,9 +148,9 @@ namespace Automaton.ViewModel
                         HorizontalAlignment = HorizontalAlignment.Left
                     };
 
-                    control.Checked += SetupAssistant.ControlChecked;
-                    control.Unchecked += SetupAssistant.ControlUnchecked;
-                    control.MouseEnter += SetupAssistant.ControlHover;
+                    control.Checked += _setupAssistant.ControlChecked;
+                    control.Unchecked += _setupAssistant.ControlUnchecked;
+                    control.MouseEnter += _setupAssistant.ControlHover;
 
                     control.Foreground = (SolidColorBrush)Application.Current.Resources["FontColor"];
                     control.Background = (SolidColorBrush)Application.Current.Resources["AssistantControlColor"];
@@ -154,7 +161,7 @@ namespace Automaton.ViewModel
 
                     if ((bool)control.IsChecked)
                     {
-                        SetupAssistant.ControlChecked(control, new RoutedEventArgs());
+                        _setupAssistant.ControlChecked(control, new RoutedEventArgs());
                     }
 
                     stackPanel.Children.Add(control);

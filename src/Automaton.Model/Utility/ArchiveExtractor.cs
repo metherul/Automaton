@@ -1,26 +1,34 @@
-﻿using Automaton.Model.Instance;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.Utility.Interfaces;
 
 namespace Automaton.Model.Utility
 {
-    public class ArchiveExtractor : IDisposable
+    public class ArchiveExtractor : IArchiveExtractor, IDisposable
     {
-        private readonly string TempDirectory = Path.Combine(Path.GetTempPath(), "Automaton");
-        private readonly string MetaDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        private readonly IAutomatonInstance _automatonInstance;
 
-        private readonly string SevenZipPath;
-        private readonly string SevenZipDLLPath;
+        private readonly string _tempDirectory = Path.Combine(Path.GetTempPath(), "Automaton");
+        private readonly string _metaDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+        private string _sevenZipPath;
+        private string _sevenZipDllPath;
 
         public string ExtractionPath;
         public string ArchivePath;
 
-        public ArchiveExtractor(string archivePath)
+        public ArchiveExtractor(IAutomatonInstance automatonInstance)
         {
-            SevenZipPath = Path.Combine(TempDirectory, "7z.exe");
-            SevenZipDLLPath = Path.Combine(TempDirectory, "7z.dll");
-            ExtractionPath = Path.Combine(TempDirectory, "extract");
+            _automatonInstance = automatonInstance;
+        }
+
+        public void TargetArchive(string archivePath)
+        {
+            _sevenZipPath = Path.Combine(_tempDirectory, "7z.exe");
+            _sevenZipDllPath = Path.Combine(_tempDirectory, "7z.dll");
+            ExtractionPath = Path.Combine(_tempDirectory, "extract");
             ArchivePath = archivePath;
 
             ExtractSevenzipBinaries();
@@ -33,7 +41,7 @@ namespace Automaton.Model.Utility
 
         public bool ExtractModpack()
         {
-            return Extract(AutomatonInstance.ModpackExtractionLocation);
+            return Extract(_automatonInstance.ModpackExtractionLocation);
         }
 
         public void Dispose()
@@ -54,7 +62,7 @@ namespace Automaton.Model.Utility
             var processInfo = new ProcessStartInfo()
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
-                FileName = SevenZipPath,
+                FileName = _sevenZipPath,
                 Arguments = $"x \"{ArchivePath}\" -o\"{extractionPath}\" -y",
                 UseShellExecute = true
             };
@@ -75,14 +83,14 @@ namespace Automaton.Model.Utility
         /// </summary>
         private void ExtractSevenzipBinaries()
         {
-            if (!File.Exists(SevenZipPath))
+            if (!File.Exists(_sevenZipPath))
             {
-                Resources.WriteResourceToFile("Automaton.Content.Resources.7z.exe", SevenZipPath);
+                Resources.WriteResourceToFile("Automaton.Content.Resources.7z.exe", _sevenZipPath);
             }
 
-            if (!File.Exists(SevenZipDLLPath))
+            if (!File.Exists(_sevenZipDllPath))
             {
-                Resources.WriteResourceToFile("Automaton.Content.Resources.7z.dll", SevenZipDLLPath);
+                Resources.WriteResourceToFile("Automaton.Content.Resources.7z.dll", _sevenZipDllPath);
             }
         }
     }

@@ -2,13 +2,14 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Automaton.Model.ModpackBase.Interfaces;
 
 namespace Automaton.Model.ModpackBase
 {
     /// <summary>
     /// The base mod object
     /// </summary>
-    public class Mod : INotifyPropertyChanged
+    public class Mod : IMod, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -43,49 +44,6 @@ namespace Automaton.Model.ModpackBase
         public bool IsIndeterminateProcess { get; set; }
 
         [JsonProperty("installation_parameters")]
-        public List<Installation> InstallationParameters { get; set; }
-    }
-
-    /// <summary>
-    /// Mod installation parameters
-    /// </summary>
-    public class Installation : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private string _sourceLocation;
-
-        [JsonProperty("source_location")]
-        public string SourceLocation
-        {
-            get => _sourceLocation.StandardizePathSeparators();
-            set => _sourceLocation = value;
-        }
-
-        private string _targetLocation;
-
-        [JsonProperty("target_location")]
-        public string TargetLocation
-        {
-            get => _targetLocation.StandardizePathSeparators();
-            set => _targetLocation = value;
-        }
-
-        [JsonProperty("installation_conditions")]
-        public List<Conditional> InstallationConditions { get; set; }
-    }
-
-    /// <summary>
-    /// Flag conditional parameters
-    /// </summary>
-    public class Conditional : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [JsonProperty("conditional_flag_name")]
-        public string ConditionalFlagName { get; set; }
-
-        [JsonProperty("conditional_flag_value")]
-        public string ConditionalFlagValue { get; set; }
+        public List<IInstallation> InstallationParameters { get; set; }
     }
 }

@@ -12,8 +12,9 @@ namespace Automaton.Model.Utility
     public class ModpackUtilities : IModpackUtilties
     {
         private readonly IAutomatonInstance _automatonInstance;
+        private readonly IArchiveExtractor _archiveExtractor;
 
-        public ModpackUtilities(IAutomatonInstance automatonInstance)
+        public ModpackUtilities(IAutomatonInstance automatonInstance, IArchiveExtractor archiveExtractor)
         {
             _automatonInstance = automatonInstance;
         }
@@ -24,11 +25,8 @@ namespace Automaton.Model.Utility
         /// <param name="modpackPath"></param>
         public bool LoadModpack(string modpackPath)
         {
-            // Extract the modpack archive out to a temp folder
-            using (var extractionHandler = new ArchiveExtractor(modpackPath))
-            {
-                extractionHandler.ExtractModpack();
-            }
+            _archiveExtractor.TargetArchive(modpackPath);
+            _archiveExtractor.ExtractModpack();
 
             // Load the modpack header
             var modpackHeaderPath = Path.Combine(_automatonInstance.ModpackExtractionLocation, $"modpack.json");

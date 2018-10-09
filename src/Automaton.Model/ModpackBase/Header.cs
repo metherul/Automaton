@@ -1,10 +1,19 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.ModpackBase.Interfaces;
 
 namespace Automaton.Model.ModpackBase
 {
-    public class Header
+    public class Header : IHeader
     {
+        private readonly IAutomatonInstance _automatonInstance;
+
+        public Header(IAutomatonInstance automatonInstance)
+        {
+            _automatonInstance = automatonInstance;
+        }
+
         #region Meta Modpack information
 
         [JsonProperty("automaton_version")]
@@ -38,7 +47,7 @@ namespace Automaton.Model.ModpackBase
         [JsonProperty("header_image")]
         public string HeaderImage
         {
-            get => System.IO.Path.Combine(Instance.AutomatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_headerImage));
+            get => System.IO.Path.Combine(_automatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_headerImage));
             set => _headerImage = value;
         }
 
@@ -69,107 +78,6 @@ namespace Automaton.Model.ModpackBase
         public bool ContainsSetupAssistant { get; set; } = false;
 
         [JsonProperty("setup_assistant")]
-        public SetupAssistant SetupAssistant { get; set; }
+        public ISetupAssistant SetupAssistant { get; set; }
     }
-
-    #region Setup Assistant Objects
-
-    public class SetupAssistant
-    {
-        private string _defaultImage;
-
-        [JsonProperty("default_image")]
-        public string DefaultImage
-        {
-            get => System.IO.Path.Combine(Instance.AutomatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_defaultImage));
-            set => _defaultImage = value;
-        }
-
-        [JsonProperty("default_description")]
-        public string DefaultDescription { get; set; }
-
-        [JsonProperty("control_groups")]
-        public List<Group> ControlGroups { get; set; }
-    }
-
-    public class Group
-    {
-        [JsonProperty("group_header_text")]
-        public string GroupHeaderText { get; set; }
-
-        [JsonProperty("group_controls")]
-        public List<GroupControl> GroupControls { get; set; }
-    }
-
-    public class GroupControl
-    {
-        [JsonProperty("control_type")]
-        public ControlType ControlType { get; set; }
-
-        [JsonProperty("control_text")]
-        public string ControlText { get; set; }
-
-        [JsonProperty("is_control_checked")]
-        public bool? IsControlChecked { get; set; }
-
-        private string _ControlHoverImage;
-
-        [JsonProperty("control_hover_image")]
-        public string ControlHoverImage
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(_ControlHoverImage))
-                {
-                    return System.IO.Path.Combine(Instance.AutomatonInstance.ModpackExtractionLocation, Extensions.PathExtensions.StandardizePathSeparators(_ControlHoverImage));
-                }
-
-                return _ControlHoverImage;
-            }
-            set => _ControlHoverImage = value;
-        }
-
-        [JsonProperty("control_hover_description")]
-        public string ControlHoverDescription { get; set; }
-
-        [JsonProperty("control_actions")]
-        public List<Flag> ControlActions { get; set; }
-    }
-
-    public class Flag
-    {
-        [JsonProperty("flag_name")]
-        public string FlagName { get; set; }
-
-        [JsonProperty("flag_value")]
-        public string FlagValue { get; set; }
-
-        [JsonProperty("flag_event_type")]
-        public FlagEventType FlagEvent { get; set; }
-
-        [JsonProperty("flag_action_type")]
-        public FlagActionType FlagAction { get; set; }
-    }
-
-    public enum ControlType
-    {
-        CheckBox,
-        RadioButton
-    }
-
-    public enum FlagEventType
-    {
-        Checked,
-        UnChecked
-    }
-
-    public enum FlagActionType
-    {
-        Add,
-        Remove,
-        Subtract,
-        Set
-    }
-
-    #endregion Setup Assistant Objects
 }

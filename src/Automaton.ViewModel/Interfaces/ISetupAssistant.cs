@@ -1,11 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using Automaton.Model.ModpackBase;
 using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel.Interfaces
 {
-    public interface ISetupAssistant : IViewModel
+    public interface ISetupAssistant
     {
         string Description { get; set; }
         string ImagePath { get; set; }
@@ -13,5 +14,9 @@ namespace Automaton.ViewModel.Interfaces
         ObservableCollection<Group> SetupAssistantGroup { get; set; }
 
         event PropertyChangedEventHandler PropertyChanged;
+
+        void ControlChecked(dynamic sender, RoutedEventArgs e);
+        void ControlHover(dynamic sender, RoutedEventArgs e);
+        void ControlUnchecked(dynamic sender, RoutedEventArgs e);
     }
 }

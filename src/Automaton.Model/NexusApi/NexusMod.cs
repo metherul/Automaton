@@ -6,12 +6,18 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Automaton.Model.Instance.Interfaces;
 
 namespace Automaton.Model.NexusApi
 {
     public class NexusMod : NexusBase
     {
-        // Comment to hopefully force Github to update the name of this file.
+        private readonly IAutomatonInstance _automatonInstance;
+
+        public NexusMod(IAutomatonInstance automatonInstance)
+        {
+            _automatonInstance = automatonInstance;
+        }
 
         /// <summary>
         /// Downloads mod file with matching fileId and modId parameters.
@@ -20,7 +26,7 @@ namespace Automaton.Model.NexusApi
         /// <param name="fileId"></param>
         /// <param name="progress"></param>
         /// <returns></returns>
-        public static async Task DownloadModFile(Mod mod, string fileId, IProgress<DownloadModFileProgress> progress)
+        public async Task DownloadModFile(Mod mod, string fileId, IProgress<DownloadModFileProgress> progress)
         {
             using (var httpClient = new HttpClient())
             {
@@ -29,8 +35,8 @@ namespace Automaton.Model.NexusApi
                 httpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
 
                 var response = await httpClient
-                    .GetStringAsync($"/v1/games/{Instance.AutomatonInstance.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{fileId}/download_link");
-                var downloadPath = Path.Combine(Instance.AutomatonInstance.SourceLocation, mod.FileName);
+                    .GetStringAsync($"/v1/games/{_automatonInstance.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{fileId}/download_link");
+                var downloadPath = Path.Combine(_automatonInstance.SourceLocation, mod.FileName);
 
                 dynamic jsonObject = JObject.Parse(response.Replace("[", "").Replace("]", ""));
 

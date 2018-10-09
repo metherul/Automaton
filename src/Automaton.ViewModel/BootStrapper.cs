@@ -2,7 +2,6 @@
 using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
-using System.Reflection;
 using Automaton.Model.Instance.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
@@ -42,6 +41,7 @@ namespace Automaton.ViewModel
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IViewModel).IsAssignableFrom(t))
+                .SingleInstance()
                 .AsImplementedInterfaces();
 
             _rootScope = builder.Build();
