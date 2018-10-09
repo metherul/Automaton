@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {

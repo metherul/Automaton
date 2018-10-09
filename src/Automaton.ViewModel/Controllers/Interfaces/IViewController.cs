@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Automaton.ViewModel.Controllers
+namespace Automaton.ViewModel.Controllers.Interfaces
 {
     public interface IViewController : IController
     {

@@ -1,4 +1,4 @@
-﻿namespace Automaton.ViewModel.Controllers
+﻿namespace Automaton.ViewModel.Controllers.Interfaces
 {
     public interface IWindowNotificationController : IController
     {

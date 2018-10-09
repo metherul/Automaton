@@ -1,58 +1,22 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
-using Automaton.ViewModel.Controllers;
-using System.Linq;
 using System.Reflection;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {
     public class BootStrapper
     {
-        private ILifetimeScope _rootScope;
+        private readonly ILifetimeScope _rootScope;
 
-        public IViewModel MainWindow
-        {
-            get
-            {
-                return Resolve<IMainWindow>();
-            }
-        }
-        public IViewModel LoadModpack
-        {
-            get
-            {
-                return Resolve<ILoadModpack>();
-            }
-        }
-        public IViewModel InitialSetup
-        {
-            get
-            {
-                return Resolve<IInitialSetup>();
-            }
-        }
-        public IViewModel SetupAssistant
-        {
-            get
-            {
-                return Resolve<ISetupAssistant>();
-            }
-        }
-        public IViewModel ValidateMods
-        {
-            get
-            {
-                return Resolve<IValidateMods>();
-            }
-        }
-        public IViewModel InstallModpack
-        {
-            get
-            {
-                return Resolve<IInstallModpack>();
-            }
-        }
+        public IViewModel MainWindow => Resolve<IMainWindow>();
+        public IViewModel LoadModpack => Resolve<ILoadModpack>();
+        public IViewModel InitialSetup => Resolve<IInitialSetup>();
+        public IViewModel SetupAssistant => Resolve<ISetupAssistant>();
+        public IViewModel ValidateMods => Resolve<IValidateMods>();
+        public IViewModel InstallModpack => Resolve<IInstallModpack>();
 
         public BootStrapper()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Automaton.ViewModel.Controllers.Interfaces;
 
 namespace Automaton.ViewModel.Controllers
 {

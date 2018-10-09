@@ -84,17 +84,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootStrapper.cs" />
-    <Compile Include="Controllers\IController.cs" />
-    <Compile Include="Controllers\IViewController.cs" />
-    <Compile Include="Controllers\IWindowNotificationController.cs" />
-    <Compile Include="IInstallModpack.cs" />
-    <Compile Include="IInitialSetup.cs" />
-    <Compile Include="ILoadModpack.cs" />
-    <Compile Include="IMainWindow.cs" />
+    <Compile Include="Controllers\Interfaces\IController.cs" />
+    <Compile Include="Controllers\Interfaces\IViewController.cs" />
+    <Compile Include="Controllers\Interfaces\IWindowNotificationController.cs" />
+    <Compile Include="Controllers\Interfaces\IThemeController.cs" />
+    <Compile Include="Interfaces\IInstallModpack.cs" />
+    <Compile Include="Interfaces\IInitialSetup.cs" />
+    <Compile Include="Interfaces\ILoadModpack.cs" />
+    <Compile Include="Interfaces\IMainWindow.cs" />
     <Compile Include="InstallModpack.cs" />
-    <Compile Include="IViewModel.cs" />
-    <Compile Include="ISetupAssistant.cs" />
-    <Compile Include="IValidateMods.cs" />
+    <Compile Include="Interfaces\IViewModel.cs" />
+    <Compile Include="Interfaces\ISetupAssistant.cs" />
+    <Compile Include="Interfaces\IValidateMods.cs" />
     <Compile Include="Controllers\WindowNofiticationControls.cs" />
     <Compile Include="Controllers\SnackbarController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />

@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {

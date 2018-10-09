@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using GalaSoft.MvvmLight.Command;
 
-namespace Automaton.ViewModel
+namespace Automaton.ViewModel.Interfaces
 {
     public interface IInitialSetup : IViewModel
     {

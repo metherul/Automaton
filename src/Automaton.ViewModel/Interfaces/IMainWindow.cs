@@ -2,7 +2,7 @@
 using System.Windows;
 using GalaSoft.MvvmLight.Command;
 
-namespace Automaton.ViewModel
+namespace Automaton.ViewModel.Interfaces
 {
     public interface IMainWindow : IViewModel
     {
@@ -12,7 +12,5 @@ namespace Automaton.ViewModel
         RelayCommand<Window> MoveWindowCommand { get; set; }
 
         event PropertyChangedEventHandler PropertyChanged;
-
-        void ModpackLoaded();
     }
 }

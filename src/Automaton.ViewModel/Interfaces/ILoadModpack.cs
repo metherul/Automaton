@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 
-namespace Automaton.ViewModel
+namespace Automaton.ViewModel.Interfaces
 {
     public interface ILoadModpack : IViewModel
     {

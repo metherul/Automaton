@@ -3,6 +3,8 @@ using Automaton.ViewModel.Controllers;
 using GalaSoft.MvvmLight.Command;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {

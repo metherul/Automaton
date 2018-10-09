@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Automaton.Model.ModpackBase;
 using GalaSoft.MvvmLight.Command;
 
-namespace Automaton.ViewModel
+namespace Automaton.ViewModel.Interfaces
 {
     public interface IValidateMods : IViewModel
     {

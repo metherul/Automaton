@@ -2,12 +2,13 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Automaton.ViewModel.Controllers.Interfaces;
 
 namespace Automaton.ViewModel.Controllers
 {
-    public class ThemeController
+    public class ThemeController : IThemeController
     {
-        public static void ApplyTheme()
+        public void ApplyTheme()
         {
             var modpackHeader = Model.Instance.AutomatonInstance.ModpackHeader;
 

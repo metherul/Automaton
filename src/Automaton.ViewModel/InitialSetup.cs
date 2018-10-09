@@ -4,6 +4,8 @@ using GalaSoft.MvvmLight.Command;
 using Ookii.Dialogs.Wpf;
 using System.ComponentModel;
 using System.IO;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {

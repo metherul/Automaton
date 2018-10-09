@@ -1,4 +1,4 @@
-﻿namespace Automaton.ViewModel
+﻿namespace Automaton.ViewModel.Interfaces
 {
     public interface IViewModel
     {

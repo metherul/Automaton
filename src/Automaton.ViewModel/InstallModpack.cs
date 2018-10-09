@@ -3,6 +3,8 @@ using Automaton.ViewModel.Controllers;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {

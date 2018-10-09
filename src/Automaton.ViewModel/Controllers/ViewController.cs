@@ -1,4 +1,5 @@
 ﻿using System;
+using Automaton.ViewModel.Controllers.Interfaces;
 
 namespace Automaton.ViewModel.Controllers
 {

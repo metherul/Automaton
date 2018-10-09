@@ -4,6 +4,8 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.ComponentModel;
 using System.Windows;
+using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {
@@ -33,14 +35,6 @@ namespace Automaton.ViewModel
 
             // Initialize the instance
             AutomatonInstance.InitializeInstance();
-        }
-
-        public void ModpackLoaded()
-        {
-            ThemeController.ApplyTheme();
-
-            // Modpack has been loaded, so increment the current view index
-            _viewController.IncrementCurrentViewIndex();
         }
 
         private void ViewIndexUpdate(object sender, int currentIndex)
