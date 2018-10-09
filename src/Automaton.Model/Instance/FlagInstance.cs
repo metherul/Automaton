@@ -2,14 +2,15 @@
 using Automaton.Model.ModpackBase;
 using System.Collections.Generic;
 using System.Linq;
+using Automaton.Model.Instance.Interfaces;
 
 namespace Automaton.Model.Instance
 {
-    public class FlagInstance
+    public class FlagInstance : IFlagInstance
     {
-        private static List<FlagKeyValue> _flagKeyValueList = new List<FlagKeyValue>();
+        private readonly IAutomatonInstance _automatonInstance;
 
-        public static List<FlagKeyValue> FlagKeyValueList
+        public List<FlagKeyValue> FlagKeyValueList
         {
             get => _flagKeyValueList;
             set
@@ -21,15 +22,21 @@ namespace Automaton.Model.Instance
             }
         }
 
-        private static readonly List<string> ApplicationFlagKeys = new List<string>()
+        private List<FlagKeyValue> _flagKeyValueList = new List<FlagKeyValue>();
+        private readonly List<string> _applicationFlagKeys = new List<string>()
         {
             "$ModInstallFolders" // Can only add or remove
         };
 
-        public static void AddOrModifyFlag(string flagKey, string flagValue, FlagActionType flagActionType)
+        public FlagInstance(IAutomatonInstance automatonInstance)
+        {
+            _automatonInstance = automatonInstance;
+        }
+
+        public void AddOrModifyFlag(string flagKey, string flagValue, FlagActionType flagActionType)
         {
             // Detect if the flag is attempting to modify a application flag property
-            if (ApplicationFlagKeys.Contains(flagKey))
+            if (_applicationFlagKeys.Contains(flagKey))
             {
                 ModifyApplicationFlag(flagKey, flagValue, flagActionType);
 
@@ -71,7 +78,7 @@ namespace Automaton.Model.Instance
         /// <param name="flagKey"></param>
         /// <param name="flagValue"></param>
         /// <param name="flagActionType"></param>
-        private static void ModifyApplicationFlag(string flagKey, string flagValue, FlagActionType flagActionType)
+        private void ModifyApplicationFlag(string flagKey, string flagValue, FlagActionType flagActionType)
         {
             // Make sure the flagValue isn't null or empty
             if (string.IsNullOrEmpty(flagValue))
@@ -79,15 +86,15 @@ namespace Automaton.Model.Instance
                 return;
             }
 
-            if (flagKey == "$ModInstallFolders" && !AutomatonInstance.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).NullAndAny())
+            if (flagKey == "$ModInstallFolders" && !_automatonInstance.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).NullAndAny())
             {
                 if (flagActionType == FlagActionType.Add)
                 {
-                    AutomatonInstance.AddModInstallFolder(flagValue);
+                    _automatonInstance.AddModInstallFolder(flagValue);
                 }
                 else if (flagActionType == FlagActionType.Remove)
                 {
-                    AutomatonInstance.RemoveModInstallFolder(flagValue);
+                    _automatonInstance.RemoveModInstallFolder(flagValue);
                 }
             }
         }

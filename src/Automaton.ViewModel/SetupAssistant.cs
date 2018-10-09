@@ -19,8 +19,9 @@ namespace Automaton.ViewModel
 {
     public class SetupAssistant : ISetupAssistant, INotifyPropertyChanged
     {
-        public readonly IViewController _viewController;
-        public readonly IAutomatonInstance _automatonInstance;
+        private readonly IViewController _viewController;
+        private readonly IAutomatonInstance _automatonInstance;
+        private readonly IFlagInstance _flagInstance;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -31,10 +32,11 @@ namespace Automaton.ViewModel
         public string ImagePath { get; set; }
         public string Description { get; set; }
 
-        public SetupAssistant(IViewController viewController, IAutomatonInstance automatonInstance)
+        public SetupAssistant(IViewController viewController, IAutomatonInstance automatonInstance, IFlagInstance flagInstance)
         {
             _viewController = viewController;
             _automatonInstance = automatonInstance;
+            _flagInstance = flagInstance;
 
             IncrementCurrentViewIndexCommand = new RelayCommand(_viewController.IncrementCurrentViewIndex);
         }
@@ -61,7 +63,7 @@ namespace Automaton.ViewModel
             {
                 foreach (var action in matchingControlActions)
                 {
-                    Model.Instance.FlagInstance.AddOrModifyFlag(action.FlagName, action.FlagValue, action.FlagAction);
+                    _flagInstance.AddOrModifyFlag(action.FlagName, action.FlagValue, action.FlagAction);
                 }
             }
         }
