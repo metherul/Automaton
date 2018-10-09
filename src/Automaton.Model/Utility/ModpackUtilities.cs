@@ -133,13 +133,13 @@ namespace Automaton.Model.Utility
 
                 // Extract the archive into the extract folder
                 var archivePath = mod.FilePath;
-                var archiveExtractor = new ArchiveExtractor(archivePath);
 
                 var modExtractionPath = Path.Combine(extractionDirectory, mod.ModName);
                 string modInstallPath = Path.Combine(_automatonInstance.InstallLocation, mod.ModName);
 
                 // Extract the archive into the target path
-                var extractionResponse = archiveExtractor.ExtractArchive(modExtractionPath);
+                _archiveExtractor.TargetArchive(archivePath);
+                var extractionResponse = _archiveExtractor.ExtractArchive(modExtractionPath);
 
                 // Something broke during the extraction process, pass message back to user and attempt to solve
                 if (!extractionResponse)
@@ -179,7 +179,7 @@ namespace Automaton.Model.Utility
                 }
 
                 // Delete the extracted files
-                archiveExtractor.Dispose();
+                _archiveExtractor.Dispose();
             }
         }
 

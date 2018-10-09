@@ -96,6 +96,7 @@
     <Compile Include="NexusApi\NexusProtocol.cs" />
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Utility\ArchiveExtractor.cs" />
+    <Compile Include="Utility\Interfaces\IArchiveExtractor.cs" />
     <Compile Include="Utility\Interfaces\IModpackUtilities.cs" />
     <Compile Include="Utility\Interfaces\IValidationUtilities.cs" />
     <Compile Include="Utility\JSON.cs" />

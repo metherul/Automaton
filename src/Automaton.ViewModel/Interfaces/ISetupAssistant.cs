@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel.Interfaces
 {
-    public interface ISetupAssistant
+    public interface ISetupAssistant : IViewModel
     {
         string Description { get; set; }
         string ImagePath { get; set; }
