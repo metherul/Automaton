@@ -57,7 +57,7 @@ namespace Automaton.ViewModel
 
             InstallModpackCommand = new RelayCommand(InstallModpack);
 
-            Validation.ValidateSourcesUpdateEvent += ModValidationUpdate;
+            ValidationUtilities.ValidateSourcesUpdateEvent += ModValidationUpdate;
             _viewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
@@ -93,7 +93,7 @@ namespace Automaton.ViewModel
 
             await Task.Factory.StartNew(() =>
             {
-                validationResult = Validation.IsMatchingModArchive(currentMod, archivePath).Result;
+                validationResult = ValidationUtilities.IsMatchingModArchive(currentMod, archivePath).Result;
             });
 
             if (validationResult)
@@ -122,10 +122,10 @@ namespace Automaton.ViewModel
         {
             InitialValidationComplete = false;
 
-            var sourceFiles = Validation.GetSourceFiles();
+            var sourceFiles = ValidationUtilities.GetSourceFiles();
             TotalSourceFileCount = sourceFiles.Count;
 
-            MissingMods = new ObservableCollection<Mod>(Validation.GetMissingMods(sourceFiles));
+            MissingMods = new ObservableCollection<Mod>(ValidationUtilities.GetMissingMods(sourceFiles));
 
             NoMissingMods = MissingMods.Count == 0;
 

@@ -4,19 +4,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.Utility.Interfaces;
 
 namespace Automaton.Model.Utility
 {
-    public class Validation
+    public class ValidationUtilities : IValidationUtilities
     {
+        private readonly IAutomatonInstance _automatonInstance;
+
         public delegate void ValidateSourcesUpdate(Mod currentMod, bool isComputeMd5);
 
-        public static event ValidateSourcesUpdate ValidateSourcesUpdateEvent;
+        public event ValidateSourcesUpdate ValidateSourcesUpdateEvent;
 
-        // Static variables to store information required for the UI to update
-        private static Mod _currentMod;
-
-        private static Mod CurrentMod
+        // variables to store information required for the UI to update
+        private Mod _currentMod;
+        private Mod CurrentMod
         {
             get => _currentMod;
             set
@@ -30,9 +33,8 @@ namespace Automaton.Model.Utility
             }
         }
 
-        private static bool _isComputeMd5;
-
-        private static bool IsComputeMd5
+        private bool _isComputeMd5;
+        private bool IsComputeMd5
         {
             get => _isComputeMd5;
             set
@@ -46,11 +48,16 @@ namespace Automaton.Model.Utility
             }
         }
 
-        public static List<Mod> MissingMods { get; set; } = new List<Mod>();
+        public List<Mod> MissingMods { get; set; } = new List<Mod>();
 
-        public static List<string> GetSourceFiles()
+        public ValidationUtilities(IAutomatonInstance automatonInstance)
         {
-            return Directory.GetFiles(Instance.AutomatonInstance.SourceLocation, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            _automatonInstance = automatonInstance;
+        }
+
+        public List<string> GetSourceFiles()
+        {
+            return Directory.GetFiles(_automatonInstance.SourceLocation, "*.*", SearchOption.TopDirectoryOnly).ToList();
         }
 
         /// <summary>
@@ -58,7 +65,7 @@ namespace Automaton.Model.Utility
         /// Patches any existing <see cref="Mod"/> objects with updated archive paths.
         /// </summary>
         /// <returns></returns>
-        public static List<Mod> GetMissingMods(List<string> sourceFiles)
+        public List<Mod> GetMissingMods(List<string> sourceFiles)
         {
             var sourceFileInfos = sourceFiles.Select(x => new FileInfo(x)).ToList();
             var missingModArchives = new List<Mod>();
@@ -66,10 +73,10 @@ namespace Automaton.Model.Utility
             if (!sourceFileInfos.NullAndAny())
             {
                 // No files have been found in the source path. This means no mod files were able to be found.
-                return Instance.AutomatonInstance.ModpackMods;
+                return _automatonInstance.ModpackMods;
             }
 
-            foreach (var mod in Instance.AutomatonInstance.ModpackMods)
+            foreach (var mod in _automatonInstance.ModpackMods)
             {
                 CurrentMod = mod;
 
@@ -116,12 +123,12 @@ namespace Automaton.Model.Utility
             return missingModArchives;
         }
 
-        public static async Task<List<Mod>> GetMissingModsAsync(List<string> sourceFiles)
+        public async Task<List<Mod>> GetMissingModsAsync(List<string> sourceFiles)
         {
             return await Task.Run(() => GetMissingMods(sourceFiles));
         }
 
-        public static async Task<bool> IsMatchingModArchive(Mod mod, string archivePath)
+        public async Task<bool> IsMatchingModArchive(Mod mod, string archivePath)
         {
             var targetMd5 = mod.Md5.ToUpperInvariant();
             var md5Sum = Md5.CalculateMd5(archivePath);
@@ -136,7 +143,7 @@ namespace Automaton.Model.Utility
             return (matchResult);
         }
 
-        public static async Task<bool> IsMatchingModArchiveAsync(Mod mod, string archivePath)
+        public async Task<bool> IsMatchingModArchiveAsync(Mod mod, string archivePath)
         {
             return await Task.Run(() => IsMatchingModArchive(mod, archivePath));
         }

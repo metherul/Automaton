@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Automaton.Model.Utility.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 
@@ -9,7 +10,7 @@ namespace Automaton.ViewModel
 {
     public class InstallModpack : IInstallModpack, INotifyPropertyChanged
     {
-        private IViewController _viewController;
+        private readonly IModpackUtilties _modpackUtilties;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -17,11 +18,11 @@ namespace Automaton.ViewModel
 
         private int ThisViewIndex { get; } = 4;
 
-        public InstallModpack(IViewController viewController,)
+        public InstallModpack(IViewController viewController, IModpackUtilties modpackUtilties)
         {
-            _viewController = viewController;
+            _modpackUtilties = modpackUtilties;
 
-            _viewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
+            viewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
         private void IncrementViewIndexUpdate(object sender, int currentIndex)
@@ -36,7 +37,7 @@ namespace Automaton.ViewModel
         {
             Task.Factory.StartNew(() =>
             {
-                Modpack.InstallModpack(new Progress<InstallModpackProgress>(installProgress =>
+                _modpackUtilties.InstallModpack(new Progress<InstallModpackProgress>(installProgress =>
                 {
                     ConsoleOut += installProgress.UpdateString + "\n";
                 }));

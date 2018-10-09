@@ -80,6 +80,8 @@
     <Compile Include="NexusApi\NexusProtocol.cs" />
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Utility\ArchiveExtractor.cs" />
+    <Compile Include="Utility\Interfaces\IModpackUtilities.cs" />
+    <Compile Include="Utility\Interfaces\IValidationUtilities.cs" />
     <Compile Include="Utility\JSON.cs" />
     <Compile Include="Utility\Md5.cs" />
     <Compile Include="Utility\NamedPipes.cs" />
@@ -87,9 +89,9 @@
     <Compile Include="Instance\AutomatonInstance.cs" />
     <Compile Include="ModpackBase\Mod.cs" />
     <Compile Include="ModpackBase\Header.cs" />
-    <Compile Include="Utility\Modpack.cs" />
+    <Compile Include="Utility\ModpackUtilities.cs" />
     <Compile Include="Utility\Resources.cs" />
-    <Compile Include="Utility\Validation.cs" />
+    <Compile Include="Utility\ValidationUtilities.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
