@@ -1,6 +1,5 @@
 ﻿using Automaton.Model.ModpackBase;
 using Automaton.Model.NexusApi;
-using Automaton.Model.Utility;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
@@ -9,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Automaton.Model.Utility.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 
@@ -16,8 +16,10 @@ namespace Automaton.ViewModel
 {
     public class ValidateMods : IValidateMods, INotifyPropertyChanged
     {
-        public IViewController _viewController;
-        public IWindowNotificationController _windowNotificationController;
+        private readonly IViewController _viewController;
+        private readonly IWindowNotificationController _windowNotificationController;
+        private readonly IValidationUtilities _validateUtilities;
+        private readonly IModpackUtilties _modpackUtilties;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,10 +46,13 @@ namespace Automaton.ViewModel
         public bool IsLoggedIn { get; set; }
         public bool IsLoginVisible { get; set; } = true;
 
-        public ValidateMods(IViewController viewController, IWindowNotificationController windowNotificationController)
+        public ValidateMods(IViewController viewController, IWindowNotificationController windowNotificationController, IValidationUtilities validateUtilities,
+                            IModpackUtilties modpackUtilties)
         {
             _viewController = viewController;
             _windowNotificationController = windowNotificationController;
+            _validateUtilities = validateUtilities;
+            _modpackUtilties = modpackUtilties;
 
             OpenModSourceUrlCommand = new RelayCommand<Mod>(OpenModSourceUrl);
             FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
@@ -57,7 +62,7 @@ namespace Automaton.ViewModel
 
             InstallModpackCommand = new RelayCommand(InstallModpack);
 
-            ValidationUtilities.ValidateSourcesUpdateEvent += ModValidationUpdate;
+            _validateUtilities.ValidateSourcesUpdateEvent += ModValidationUpdate;
             _viewController.ViewIndexChangedEvent += IncrementViewIndexUpdate;
         }
 
@@ -93,7 +98,7 @@ namespace Automaton.ViewModel
 
             await Task.Factory.StartNew(() =>
             {
-                validationResult = ValidationUtilities.IsMatchingModArchive(currentMod, archivePath).Result;
+                validationResult = _validateUtilities.IsMatchingModArchive(currentMod, archivePath).Result;
             });
 
             if (validationResult)
@@ -122,10 +127,10 @@ namespace Automaton.ViewModel
         {
             InitialValidationComplete = false;
 
-            var sourceFiles = ValidationUtilities.GetSourceFiles();
+            var sourceFiles = _validateUtilities.GetSourceFiles();
             TotalSourceFileCount = sourceFiles.Count;
 
-            MissingMods = new ObservableCollection<Mod>(ValidationUtilities.GetMissingMods(sourceFiles));
+            MissingMods = new ObservableCollection<Mod>(_validateUtilities.GetMissingMods(sourceFiles));
 
             NoMissingMods = MissingMods.Count == 0;
 
@@ -174,7 +179,7 @@ namespace Automaton.ViewModel
 
                         if (downloadProgress.IsDownloadComplete)
                         {
-                            ModpackUtilities.UpdateModArchivePaths(matchingMod, downloadProgress.DownloadLocation);
+                            _modpackUtilties.UpdateModArchivePaths(matchingMod, downloadProgress.DownloadLocation);
                             MissingMods.Remove(matchingMod);
 
                             NoMissingMods = MissingMods.Count == 0;
