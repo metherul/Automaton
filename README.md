@@ -1,7 +1,7 @@
 ![Automaton Logo](content/automaton_logo.png)
 <sub><sup>[Thanks to gatonegro for the logo](http://gatonegro.co/)</sup></sub>
 
-![travis build status](https://travis-ci.org/metherul/Automaton.svg?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/f7ryudgygy9r9ptw/branch/di-conversion?svg=true)](https://ci.appveyor.com/project/metherul/automaton/branch/di-conversion)
 
 # What is Automaton?
 > Automaton is the foundation and installer for the similarly  named _automaton framework_, which allows for modpack installation and creation in a way which respects mod author's rights. 
