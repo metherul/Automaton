@@ -10,7 +10,7 @@ namespace Automaton.Model.Instance
     {
         private readonly IAutomatonInstance _automatonInstance;
 
-        public List<FlagKeyValue> FlagKeyValueList
+        public List<FlagKeyValue>Types FlagKeyValueList
         {
             get => _flagKeyValueList;
             set
@@ -33,7 +33,7 @@ namespace Automaton.Model.Instance
             _automatonInstance = automatonInstance;
         }
 
-        public void AddOrModifyFlag(string flagKey, string flagValue, FlagActionType flagActionType)
+        public void AddOrModifyFlag(string flagKey, string flagValue, Types.FlagActionType flagActionType)
         {
             // Detect if the flag is attempting to modify a application flag property
             if (_applicationFlagKeys.Contains(flagKey))
@@ -49,13 +49,13 @@ namespace Automaton.Model.Instance
             if (matchingFlagKey)
             {
                 // Set the value
-                if (flagActionType == FlagActionType.Set)
+                if (flagActionType == Types.FlagActionType.Set)
                 {
                     FlagKeyValueList.Find(x => x.Key == flagKey).Value = flagValue;
                 }
 
                 // Remove the value
-                else if (flagActionType == FlagActionType.Remove)
+                else if (flagActionType == Types.FlagActionType.Remove)
                 {
                     FlagKeyValueList.RemoveAll(x => x.Key == flagKey);
                 }
@@ -78,7 +78,7 @@ namespace Automaton.Model.Instance
         /// <param name="flagKey"></param>
         /// <param name="flagValue"></param>
         /// <param name="flagActionType"></param>
-        private void ModifyApplicationFlag(string flagKey, string flagValue, FlagActionType flagActionType)
+        private void ModifyApplicationFlag(string flagKey, string flagValue, Types.FlagActionType flagActionType)
         {
             // Make sure the flagValue isn't null or empty
             if (string.IsNullOrEmpty(flagValue))
@@ -88,11 +88,11 @@ namespace Automaton.Model.Instance
 
             if (flagKey == "$ModInstallFolders" && !_automatonInstance.ModpackHeader.ModInstallFolders.Where(x => x == flagValue).NullAndAny())
             {
-                if (flagActionType == FlagActionType.Add)
+                if (flagActionType == Types.FlagActionType.Add)
                 {
                     _automatonInstance.AddModInstallFolder(flagValue);
                 }
-                else if (flagActionType == FlagActionType.Remove)
+                else if (flagActionType == Types.FlagActionType.Remove)
                 {
                     _automatonInstance.RemoveModInstallFolder(flagValue);
                 }

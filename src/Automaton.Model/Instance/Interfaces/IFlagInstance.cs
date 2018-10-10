@@ -7,6 +7,6 @@ namespace Automaton.Model.Instance.Interfaces
     {
         List<FlagKeyValue> FlagKeyValueList { get; set; }
 
-        void AddOrModifyFlag(string flagKey, string flagValue, FlagActionType flagActionType);
+        void AddOrModifyFlag(string flagKey, string flagValue, Types.FlagActionType flagActionType);
     }
 }
