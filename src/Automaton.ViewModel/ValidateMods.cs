@@ -8,13 +8,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Automaton.Model.ModpackBase.Interfaces;
 using Automaton.Model.Utility.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel
 {
-    public class ValidateMods : IValidateMods, INotifyPropertyChanged
+    public class ValidateMods : INotifyPropertyChanged, IValidateMods
     {
         private readonly IViewController _viewController;
         private readonly IWindowNotificationController _windowNotificationController;
@@ -23,10 +24,10 @@ namespace Automaton.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Mod> MissingMods { get; set; }
+        public ObservableCollection<IMod> MissingMods { get; set; }
 
-        public RelayCommand<Mod> OpenModSourceUrlCommand { get; set; }
-        public RelayCommand<Mod> FindAndValidateModFileCommand { get; set; }
+        public RelayCommand<IMod> OpenModSourceUrlCommand { get; set; }
+        public RelayCommand<IMod> FindAndValidateModFileCommand { get; set; }
         public RelayCommand NexusLogInCommand { get; set; }
         public RelayCommand ContinueOfflineCommand { get; set; }
 
@@ -54,8 +55,8 @@ namespace Automaton.ViewModel
             _validateUtilities = validateUtilities;
             _modpackUtilties = modpackUtilties;
 
-            OpenModSourceUrlCommand = new RelayCommand<Mod>(OpenModSourceUrl);
-            FindAndValidateModFileCommand = new RelayCommand<Mod>(FindAndValidateModFile);
+            OpenModSourceUrlCommand = new RelayCommand<IMod>(OpenModSourceUrl);
+            FindAndValidateModFileCommand = new RelayCommand<IMod>(FindAndValidateModFile);
 
             NexusLogInCommand = new RelayCommand(NexusLogIn);
             ContinueOfflineCommand = new RelayCommand(ContinueOffline);
@@ -72,12 +73,12 @@ namespace Automaton.ViewModel
             IsLoginVisible = false;
         }
 
-        private void OpenModSourceUrl(Mod currentMod)
+        private void OpenModSourceUrl(IMod currentMod)
         {
             Process.Start(currentMod.ModSourceUrl);
         }
 
-        private async void FindAndValidateModFile(Mod currentMod)
+        private async void FindAndValidateModFile(IMod currentMod)
         {
             var fileBrowser = new OpenFileDialog()
             {
@@ -130,14 +131,14 @@ namespace Automaton.ViewModel
             var sourceFiles = _validateUtilities.GetSourceFiles();
             TotalSourceFileCount = sourceFiles.Count;
 
-            MissingMods = new ObservableCollection<Mod>(_validateUtilities.GetMissingMods(sourceFiles));
+            MissingMods = new ObservableCollection<IMod>(_validateUtilities.GetMissingMods(sourceFiles));
 
             NoMissingMods = MissingMods.Count == 0;
 
             InitialValidationComplete = true;
         }
 
-        private void ModValidationUpdate(Mod currentMod, bool isComputeMd5)
+        private void ModValidationUpdate(IMod currentMod, bool isComputeMd5)
         {
             CurrentModName = currentMod.ModName;
             CurrentArchiveMd5 = currentMod.Md5;

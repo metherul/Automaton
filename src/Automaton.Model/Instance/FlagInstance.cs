@@ -10,7 +10,7 @@ namespace Automaton.Model.Instance
     {
         private readonly IAutomatonInstance _automatonInstance;
 
-        public List<FlagKeyValue>Types FlagKeyValueList
+        public List<FlagKeyValue> FlagKeyValueList
         {
             get => _flagKeyValueList;
             set

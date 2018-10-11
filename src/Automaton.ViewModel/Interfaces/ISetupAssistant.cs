@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using Automaton.Model.ModpackBase;
+using Automaton.Model.ModpackBase.Interfaces;
 using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel.Interfaces
@@ -11,7 +12,7 @@ namespace Automaton.ViewModel.Interfaces
         string Description { get; set; }
         string ImagePath { get; set; }
         RelayCommand IncrementCurrentViewIndexCommand { get; set; }
-        ObservableCollection<Group> SetupAssistantGroup { get; set; }
+        ObservableCollection<IGroup> SetupAssistantGroup { get; set; }
 
         event PropertyChangedEventHandler PropertyChanged;
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.ModpackBase.Interfaces;
 using Automaton.Model.Utility.Interfaces;
 
 namespace Automaton.Model.Utility
@@ -13,10 +14,12 @@ namespace Automaton.Model.Utility
     {
         private readonly IAutomatonInstance _automatonInstance;
         private readonly IArchiveExtractor _archiveExtractor;
+        private readonly IJsonUtilities _jsonUtilities;
 
-        public ModpackUtilities(IAutomatonInstance automatonInstance, IArchiveExtractor archiveExtractor)
+        public ModpackUtilities(IAutomatonInstance automatonInstance, IArchiveExtractor archiveExtractor, IJsonUtilities jsonUtilities)
         {
             _automatonInstance = automatonInstance;
+            _jsonUtilities = jsonUtilities;
         }
 
         /// <summary>
@@ -37,7 +40,7 @@ namespace Automaton.Model.Utility
             }
 
             // Load modpack header into Instance
-            var modpackHeader = Json.TryDeserializeJson<Header>(File.ReadAllText(modpackHeaderPath), out string parseError);
+            var modpackHeader = _jsonUtilities.DeserializeHeader(File.ReadAllText(modpackHeaderPath), out string parseError);
 
             // The json string was not parsed correctly, throw error
             if (parseError != string.Empty)
@@ -68,13 +71,13 @@ namespace Automaton.Model.Utility
         /// <param name="modpackHeader"></param>
         /// <param name="modpackExtractionPath"></param>
         /// <returns></returns>
-        private List<Mod> LoadModInstallParameters(Header modpackHeader, string modpackExtractionPath)
+        private List<IMod> LoadModInstallParameters(IHeader modpackHeader, string modpackExtractionPath)
         {
-            var modpackMods = new List<Mod>();
+            var modpackMods = new List<IMod>();
 
             // Detect for mod install directories outlined by ModInstallFolders
             var modInstallFolders = modpackHeader.ModInstallFolders
-                .Select(x => System.IO.Path.Combine(modpackExtractionPath, x).StandardizePathSeparators());
+                .Select(x => Path.Combine(modpackExtractionPath, x).StandardizePathSeparators());
 
             var existingModInstallFolders = modInstallFolders
                 .Where(x => Directory.Exists(x) && Directory.GetFiles(x, $"*.json").Any());
@@ -98,7 +101,7 @@ namespace Automaton.Model.Utility
 
                 foreach (var modFile in modFiles)
                 {
-                    var modObject = Json.TryDeserializeJson<Mod>(File.ReadAllText(modFile), out string parseError);
+                    var modObject = _jsonUtilities.DeserializeMod(File.ReadAllText(modFile), out string parseError);
 
                     modObject.ModInstallParameterPath = modFile;
 
@@ -135,7 +138,7 @@ namespace Automaton.Model.Utility
                 var archivePath = mod.FilePath;
 
                 var modExtractionPath = Path.Combine(extractionDirectory, mod.ModName);
-                string modInstallPath = Path.Combine(_automatonInstance.InstallLocation, mod.ModName);
+                var modInstallPath = Path.Combine(_automatonInstance.InstallLocation, mod.ModName);
 
                 // Extract the archive into the target path
                 _archiveExtractor.TargetArchive(archivePath);

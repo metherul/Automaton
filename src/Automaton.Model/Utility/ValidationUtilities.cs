@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.ModpackBase.Interfaces;
 using Automaton.Model.Utility.Interfaces;
 
 namespace Automaton.Model.Utility
@@ -13,13 +14,13 @@ namespace Automaton.Model.Utility
     {
         private readonly IAutomatonInstance _automatonInstance;
 
-        public delegate void ValidateSourcesUpdate(Mod currentMod, bool isComputeMd5);
+        public delegate void ValidateSourcesUpdate(IMod currentMod, bool isComputeMd5);
 
         public event ValidateSourcesUpdate ValidateSourcesUpdateEvent;
 
         // variables to store information required for the UI to update
-        private Mod _currentMod;
-        private Mod CurrentMod
+        private IMod _currentMod;
+        private IMod CurrentMod
         {
             get => _currentMod;
             set
@@ -48,7 +49,7 @@ namespace Automaton.Model.Utility
             }
         }
 
-        public List<Mod> MissingMods { get; set; } = new List<Mod>();
+        public List<IMod> MissingMods { get; set; } = new List<IMod>();
 
         public ValidationUtilities(IAutomatonInstance automatonInstance)
         {
@@ -65,10 +66,10 @@ namespace Automaton.Model.Utility
         /// Patches any existing <see cref="Mod"/> objects with updated archive paths.
         /// </summary>
         /// <returns></returns>
-        public List<Mod> GetMissingMods(List<string> sourceFiles)
+        public List<IMod> GetMissingMods(List<string> sourceFiles)
         {
             var sourceFileInfos = sourceFiles.Select(x => new FileInfo(x)).ToList();
-            var missingModArchives = new List<Mod>();
+            var missingModArchives = new List<IMod>();
 
             if (!sourceFileInfos.NullAndAny())
             {
@@ -123,12 +124,12 @@ namespace Automaton.Model.Utility
             return missingModArchives;
         }
 
-        public async Task<List<Mod>> GetMissingModsAsync(List<string> sourceFiles)
+        public async Task<List<IMod>> GetMissingModsAsync(List<string> sourceFiles)
         {
             return await Task.Run(() => GetMissingMods(sourceFiles));
         }
 
-        public async Task<bool> IsMatchingModArchive(Mod mod, string archivePath)
+        public async Task<bool> IsMatchingModArchive(IMod mod, string archivePath)
         {
             var targetMd5 = mod.Md5.ToUpperInvariant();
             var md5Sum = Md5.CalculateMd5(archivePath);
@@ -143,7 +144,7 @@ namespace Automaton.Model.Utility
             return (matchResult);
         }
 
-        public async Task<bool> IsMatchingModArchiveAsync(Mod mod, string archivePath)
+        public async Task<bool> IsMatchingModArchiveAsync(IMod mod, string archivePath)
         {
             return await Task.Run(() => IsMatchingModArchive(mod, archivePath));
         }

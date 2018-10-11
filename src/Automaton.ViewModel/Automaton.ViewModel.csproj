@@ -94,7 +94,6 @@
     <Compile Include="Interfaces\IMainWindow.cs" />
     <Compile Include="InstallModpack.cs" />
     <Compile Include="Interfaces\IViewModel.cs" />
-    <Compile Include="Interfaces\IValidateMods.cs" />
     <Compile Include="Controllers\WindowNofiticationControls.cs" />
     <Compile Include="Controllers\SnackbarController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
@@ -102,6 +101,7 @@
     <Compile Include="Converters\BoolToInverseConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Interfaces\ISetupAssistant.cs" />
+    <Compile Include="Interfaces\IValidateMods.cs" />
     <Compile Include="ValidateMods.cs" />
     <Compile Include="InitialSetup.cs" />
     <Compile Include="LoadModpack.cs" />

@@ -12,8 +12,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.ModpackBase.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
-using Automaton.ViewModel.Interfaces;
+using ISetupAssistant = Automaton.ViewModel.Interfaces.ISetupAssistant;
 
 namespace Automaton.ViewModel
 {
@@ -25,7 +26,7 @@ namespace Automaton.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Group> SetupAssistantGroup { get; set; }
+        public ObservableCollection<IGroup> SetupAssistantGroup { get; set; }
 
         public RelayCommand IncrementCurrentViewIndexCommand { get; set; }
 
@@ -47,13 +48,13 @@ namespace Automaton.ViewModel
 
             var setupAssistant = _automatonInstance.ModpackHeader.SetupAssistant;
 
-            SetupAssistantGroup = new ObservableCollection<Group>(setupAssistant.ControlGroups);
+            SetupAssistantGroup = new ObservableCollection<IGroup>(setupAssistant.ControlGroups);
 
             ImagePath = setupAssistant.DefaultImage;
             Description = setupAssistant.DefaultDescription;
         }
 
-        private void RouteControlActionEvent(dynamic sender, FlagEventType flagEventType)
+        private void RouteControlActionEvent(dynamic sender, Types.FlagEventType flagEventType)
         {
             var controlObject = (GroupControl)sender.CommandParameter;
             var matchingControlActions = controlObject.ControlActions
@@ -70,12 +71,12 @@ namespace Automaton.ViewModel
 
         public void ControlChecked(dynamic sender, RoutedEventArgs e)
         {
-            RouteControlActionEvent(sender, FlagEventType.Checked);
+            RouteControlActionEvent(sender, Types.FlagEventType.Checked);
         }
 
         public void ControlUnchecked(dynamic sender, RoutedEventArgs e)
         {
-            RouteControlActionEvent(sender, FlagEventType.UnChecked);
+            RouteControlActionEvent(sender, Types.FlagEventType.UnChecked);
         }
 
         public void ControlHover(dynamic sender, RoutedEventArgs e)
@@ -112,7 +113,7 @@ namespace Automaton.ViewModel
             foreach (var groupControl in groupControls)
             {
                 // Convert control object to a WPF equivalent
-                if (groupControl.ControlType == ControlType.CheckBox)
+                if (groupControl.ControlType == Types.ControlType.CheckBox)
                 {
                     var control = new CheckBox()
                     {
@@ -139,7 +140,7 @@ namespace Automaton.ViewModel
 
                     stackPanel.Children.Add(control);
                 }
-                else if (groupControl.ControlType == ControlType.RadioButton)
+                else if (groupControl.ControlType == Types.ControlType.RadioButton)
                 {
                     var control = new RadioButton()
                     {

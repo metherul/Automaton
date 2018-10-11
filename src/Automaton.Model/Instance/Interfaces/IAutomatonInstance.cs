@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Automaton.Model.ModpackBase;
+using Automaton.Model.ModpackBase.Interfaces;
 
 namespace Automaton.Model.Instance.Interfaces
 {
@@ -9,8 +9,8 @@ namespace Automaton.Model.Instance.Interfaces
         string InstallLocation { get; set; }
         string ModOrganizerInstallLocation { get; set; }
         string ModpackExtractionLocation { get; set; }
-        Header ModpackHeader { get; set; }
-        List<Mod> ModpackMods { get; set; }
+        IHeader ModpackHeader { get; set; }
+        List<IMod> ModpackMods { get; set; }
         string NexusHandlerRegistryValue { get; set; }
         string PreviousRegistryValue { get; set; }
         string SourceLocation { get; set; }

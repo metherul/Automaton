@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.ModpackBase.Interfaces;
 
 namespace Automaton.Model.Instance
 {
     public class AutomatonInstance : IAutomatonInstance
     {
-        public Header ModpackHeader { get; set; }
-        public List<Mod> ModpackMods { get; set; } 
+        public IHeader ModpackHeader { get; set; }
+        public List<IMod> ModpackMods { get; set; } 
 
         public string SourceLocation { get; set; }
 
