@@ -177,8 +177,8 @@ namespace Automaton.Model.Utility
 
                 foreach (var installParameter in mod.InstallationParameters)
                 {
-                    var sourcePath = Path.Combine(modExtractionPath, installParameter.SourceLocation.StandardizePathSeparators());
-                    var targetPath = Path.Combine(AutomatonInstance.InstallLocation, installParameter.TargetLocation.StandardizePathSeparators());
+                    var sourcePath = modExtractionPath + installParameter.SourceLocation;
+                    var targetPath = modInstallPath + installParameter.TargetLocation;
 
                     // Copy/move operation if the source is a directory
                     if (Directory.Exists(sourcePath))
@@ -189,6 +189,11 @@ namespace Automaton.Model.Utility
                     // Copy/move directory if the source is a file
                     if (File.Exists(sourcePath))
                     {
+                        if (!Directory.Exists(Path.GetDirectoryName(targetPath)))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
+                        }
+
                         File.Copy(sourcePath, targetPath);
                     }
                 }
