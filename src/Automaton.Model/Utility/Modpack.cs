@@ -135,6 +135,7 @@ namespace Automaton.Model.Utility
             // If Mod Organizer is set to be used, locate it and install
             if (AutomatonInstance.ModpackHeader.InstallModOrganizer)
             {
+
             }
 
             var mods = AutomatonInstance.ModpackMods;

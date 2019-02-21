@@ -33,6 +33,9 @@ namespace Automaton.Model.ModpackBase
         [JsonProperty("mod_source_url")]
         public string ModSourceUrl { get; set; }
 
+        [JsonProperty("nexus_file_id")]
+        public string FileId { get; set; }
+
         [JsonProperty("nexus_mod_id")]
         public string NexusModId { get; set; }
 
