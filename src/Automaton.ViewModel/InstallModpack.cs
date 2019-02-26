@@ -12,7 +12,7 @@ namespace Automaton.ViewModel
 
         public string ConsoleOut { get; set; }
 
-        private int ThisViewIndex { get; } = 4;
+        private int ThisViewIndex { get; } = 3;
 
         public InstallModpack()
         {

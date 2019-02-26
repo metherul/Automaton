@@ -78,9 +78,9 @@
                 <view:InitialSetup />
             </materialDesign:TransitionerSlide>
 
-            <materialDesign:TransitionerSlide>
+            <!--<materialDesign:TransitionerSlide>
                 <view:SetupAssistant />
-            </materialDesign:TransitionerSlide>
+            </materialDesign:TransitionerSlide>-->
 
             <materialDesign:TransitionerSlide>
                 <view:ValidateMods />

@@ -32,7 +32,7 @@ namespace Automaton.ViewModel
         public string LogInButtonText { get; set; } = "Nexus Login";
 
         public int TotalSourceFileCount { get; set; }
-        private int ThisViewIndex { get; } = 3;
+        private int ThisViewIndex { get; } = 2;
 
         public bool InitialValidationComplete { get; set; }
         public bool NoMissingMods { get; set; }
@@ -83,7 +83,7 @@ namespace Automaton.ViewModel
             var archivePath = fileBrowser.FileName;
             var validationResult = false;
 
-            MissingMods.Where(x => x == currentMod).First().IsIndeterminateProcess = true;
+            MissingMods.First(x => x == currentMod).IsIndeterminateProcess = true;
 
             await Task.Factory.StartNew(() =>
             {
@@ -92,14 +92,14 @@ namespace Automaton.ViewModel
 
             if (validationResult)
             {
-                MissingMods.Where(x => x == currentMod).First().IsIndeterminateProcess = false;
+                MissingMods.First(x => x == currentMod).IsIndeterminateProcess = false;
                 MissingMods.Remove(currentMod);
 
                 NoMissingMods = MissingMods.Count == 0;
             }
             else
             {
-                MissingMods.Where(x => x == currentMod).First().IsIndeterminateProcess = false;
+                MissingMods.First(x => x == currentMod).IsIndeterminateProcess = false;
             }
             // Show in UI
         }
@@ -143,6 +143,15 @@ namespace Automaton.ViewModel
                 return;
             }
 
+            if (NexusConnection.PremiumStatus())
+            {
+                // Queue each mod for auto-downloading
+                foreach (var mod in MissingMods)
+                {
+                    NexusMod.QueueModDownload(mod);
+                }
+            }
+
             var nexusProtocol = new NexusProtocol();
 
             // Start capturing piped messages from the NXMWorker, handle any progress reports.
@@ -162,7 +171,7 @@ namespace Automaton.ViewModel
                     WindowNotificationControls.MoveToFront();
 
                     // Start downloading the mod file.
-                    await NexusMod.DownloadModFile(matchingMod, x.FileId, new Progress<DownloadModFileProgress>(downloadProgress =>
+                    await NexusMod.DownloadModFile(matchingMod, new Progress<DownloadModFileProgress>(downloadProgress =>
                     {
                         MissingMods[MissingMods.IndexOf(matchingMod)].CurrentDownloadPercentage = downloadProgress.CurrentDownloadPercentage;
 

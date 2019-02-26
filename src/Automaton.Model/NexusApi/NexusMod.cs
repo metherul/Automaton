@@ -1,6 +1,7 @@
 ﻿using Automaton.Model.ModpackBase;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -11,16 +12,14 @@ namespace Automaton.Model.NexusApi
 {
     public class NexusMod : NexusBase
     {
-        // Comment to hopefully force Github to update the name of this file.
+        private static List<Mod> QueuedModDownloads;
 
-        /// <summary>
-        /// Downloads mod file with matching fileId and modId parameters.
-        /// </summary>
-        /// <param name="fileId"></param>
-        /// <param name="fileId"></param>
-        /// <param name="progress"></param>
-        /// <returns></returns>
-        public static async Task DownloadModFile(Mod mod, string fileId, IProgress<DownloadModFileProgress> progress)
+        public static void QueueModDownload(Mod mod)
+        {
+            QueuedModDownloads.Add(mod);
+        }
+
+        public static async Task DownloadModFile(Mod mod, IProgress<DownloadModFileProgress> progress)
         {
             using (var httpClient = new HttpClient())
             {
@@ -29,10 +28,11 @@ namespace Automaton.Model.NexusApi
                 httpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
 
                 var response = await httpClient
-                    .GetStringAsync($"/v1/games/{Instance.AutomatonInstance.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{fileId}/download_link");
+                    .GetStringAsync(
+                        $"/v1/games/{Instance.AutomatonInstance.ModpackHeader.TargetGame.ToLower()}/mods/{mod.NexusModId}/files/{mod.FileId}/download_link.json");
                 var downloadPath = Path.Combine(Instance.AutomatonInstance.SourceLocation, mod.FileName);
 
-                dynamic jsonObject = JObject.Parse(response.Replace("[", "").Replace("]", ""));
+                dynamic jsonObject = JArray.Parse(response)[0];
 
                 var progressObject = new DownloadModFileProgress()
                 {
@@ -44,7 +44,8 @@ namespace Automaton.Model.NexusApi
                 {
                     webClient.DownloadProgressChanged += (sender, e) =>
                     {
-                        progressObject.CurrentDownloadPercentage = (int)((((double)e.BytesReceived / e.TotalBytesToReceive)) * 100);
+                        progressObject.CurrentDownloadPercentage =
+                            (int) ((((double) e.BytesReceived / e.TotalBytesToReceive)) * 100);
 
                         progress.Report(progressObject);
                     };
@@ -59,6 +60,25 @@ namespace Automaton.Model.NexusApi
 
                     webClient.DownloadFileAsync(new Uri(jsonObject.URI.Value), downloadPath);
                 }
+            }
+        }
+
+        public static async Task<bool> VerifyUserPremium()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri("https://api.nexusmods.com");
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
+
+                var response = await httpClient
+                    .GetStringAsync($"/v1/users/validate.json");
+
+                dynamic jsonObject = JObject.Parse(response);
+                var premiumStatus = (bool) jsonObject["is_premium"];
+
+                return premiumStatus;
+
             }
         }
     }

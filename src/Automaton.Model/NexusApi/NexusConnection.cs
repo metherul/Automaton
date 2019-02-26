@@ -2,11 +2,19 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using WebSocketSharp;
+using Automaton.Model.NexusApi;
 
 namespace Automaton.Model.NexusApi
 {
     public class NexusConnection : NexusBase
     {
+        private static bool IsPremium;
+
+        public static bool PremiumStatus()
+        {
+            return IsPremium;
+        }
+
         /// <summary>
         /// Creates a new websocket connection to Nexusmods.
         /// </summary>
@@ -24,6 +32,8 @@ namespace Automaton.Model.NexusApi
 
                 progress.CurrentMessage = "API key already detected, skipping websocket authentication.";
                 progress.IsComplete = true;
+
+                IsPremium = await NexusMod.VerifyUserPremium();
 
                 progressCallback.Report(progress);
 
@@ -44,6 +54,8 @@ namespace Automaton.Model.NexusApi
                     progress.CurrentMessage = "API key captured. Process successful.";
                     progress.IsComplete = true;
 
+                    IsPremium = NexusMod.VerifyUserPremium().Result;
+
                     progressCallback.Report(progress);
                 }
             };
@@ -56,7 +68,7 @@ namespace Automaton.Model.NexusApi
             progress.CurrentMessage = "Websocket connected. Sending API key to the Nexus.";
             progressCallback.Report(progress);
 
-            await Task.Factory.StartNew(() => WebSocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Vortex\"}"));
+            await Task.Factory.StartNew(() => WebSocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"The Automaton Framework\"}"));
 
             progress.CurrentMessage = "API key sent, opening web browser...";
             progressCallback.Report(progress);

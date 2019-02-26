@@ -247,7 +247,7 @@
                         Foreground="Black"
                         Style="{DynamicResource BodyText}"
                         TextAlignment="Left">
-                        <Bold>This does not mean the process will be automatic, you still need to visit each mod's page and click on the button shown below.</Bold>
+                        <Bold>The ability to automatically download mods is currently restricted to Nexus Mods premium members only.</Bold>
                     </TextBlock>
 
                     <Image
