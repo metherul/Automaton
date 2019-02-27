@@ -19,29 +19,17 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="Resources/CustomScrollbar.xaml" />
+                <ResourceDictionary Source="Resources/Themes/CustomScrollbar.xaml" />
                 <!--  App Themes  -->
-                <ResourceDictionary Source="Resources/TextTheme.xaml" />
-                <ResourceDictionary Source="Resources/ButtonTheme.xaml" />
+                <ResourceDictionary Source="Resources/Themes/TextTheme.xaml" />
+                <ResourceDictionary Source="Resources/Themes/ButtonTheme.xaml" />
+                <ResourceDictionary Source="Resources/Themes/DarkTheme.xaml" />
+                <!--  Resources  -->
+                <ResourceDictionary Source="Resources/Fonts/FontResources.xaml" />
+                <ResourceDictionary Source="Resources/Images/ImageResources.xaml" />
+
+                <ResourceDictionary Source="Resources/Themes/Controls/FloatingButtonTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--  Fonts  -->
-            <FontFamily x:Key="ProductSans">pack://application:,,,/Content/Fonts/ProductSans/#Product Sans</FontFamily>
-            <FontFamily x:Key="RobotoMono">pack://application:,,,/Content/Fonts/RobotoMono/#Roboto Mono</FontFamily>
-            <FontFamily x:Key="Roboto">pack://application:,,,/Content/Fonts/Roboto/#Roboto</FontFamily>
-
-            <!--  Colors  -->
-            <Brush x:Key="BackgroundColor">#282C35</Brush>
-            <Brush x:Key="FontColor">#FFFFFF</Brush>
-            <Brush x:Key="ButtonColor">#42464F</Brush>
-            <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
-
-            <!--  Content  -->
-            <BitmapImage x:Key="AutomatonImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
-            <BitmapImage x:Key="HeaderImage">/Automaton;component/Content/Images/AutomatonHead.png</BitmapImage>
-            <BitmapImage x:Key="NexusLogo">/Automaton;component/Content/Images/NexusMods.png</BitmapImage>
-            <BitmapImage x:Key="DownloadWithManager">/Automaton;component/Content/Images/DownloadWithManager.png</BitmapImage>
-            <BitmapImage x:Key="NexusLogoColor">/Automaton;component/Content/Images/NexusModsColor.png</BitmapImage>
 
             <!--  Modpack strings  -->
             <clr:String x:Key="ModpackName">Automaton</clr:String>

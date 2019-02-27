@@ -1,10 +1,13 @@
 ﻿using System;
 using Autofac;
 using Autofac.Core;
-using Automaton.Model.Interfaces;
 using Automaton.Model.Instance.Interfaces;
+using Automaton.Model.Interfaces;
+using Automaton.ViewModel.Content.Dialogs.Interfaces;
+using Automaton.ViewModel.Content.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
+using Automaton.ViewModel.Utilities.Interfaces;
 
 namespace Automaton.ViewModel
 {
@@ -12,12 +15,13 @@ namespace Automaton.ViewModel
     {
         private readonly ILifetimeScope _rootScope;
 
-        public IViewModel MainWindow => Resolve<IMainWindow>();
-        public IViewModel LoadModpack => Resolve<ILoadModpack>();
-        public IViewModel InitialSetup => Resolve<IInitialSetup>();
-        public IViewModel SetupAssistant => Resolve<ISetupAssistant>();
-        public IViewModel ValidateMods => Resolve<IValidateMods>();
-        public IViewModel InstallModpack => Resolve<IInstallModpack>();
+        public IViewModel MainWindow => Resolve<IMainWindowViewModel>();
+        public IViewModel LoadModpack => Resolve<ILoadModpackViewModel>();
+        public IViewModel InitialSetup => Resolve<IInitialSetupViewModel>();
+
+        public IDialog GenericErrorDialog => Resolve<IGenericErrorDialog>();
+
+        public IController DialogController => Resolve<IDialogController>();
 
         public BootStrapper()
         {
@@ -25,17 +29,26 @@ namespace Automaton.ViewModel
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
 
             builder.RegisterAssemblyTypes(assembly)
-                .Where(t => typeof(IModel).IsAssignableFrom(t))
-                .Except<IInstance>()
-                .AsImplementedInterfaces();
-
-            builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IInstance).IsAssignableFrom(t))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IModel).IsAssignableFrom(t))
+                .Except<IInstance>()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IUtility).IsAssignableFrom(t))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IController).IsAssignableFrom(t))
+                .SingleInstance()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IDialog).IsAssignableFrom(t))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 

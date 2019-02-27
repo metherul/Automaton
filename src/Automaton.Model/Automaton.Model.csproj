@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props" Condition="Exists('..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props')" />
+  <Import Project="..\packages\Costura.Fody.3.1.6\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.3.1.6\build\Costura.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -38,8 +40,8 @@
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Costura, Version=3.1.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.3.1.2\lib\net46\Costura.dll</HintPath>
+    <Reference Include="Costura, Version=3.1.6.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.3.1.6\lib\net46\Costura.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NamedPipeWrapper, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -48,13 +50,20 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyChanged, Version=2.5.11.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.2.5.11\lib\net452\PropertyChanged.dll</HintPath>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PropertyChanged, Version=2.5.13.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.2.5.13\lib\net452\PropertyChanged.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenZipExtractor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SevenZipExtractor.1.0.12\lib\net45\SevenZipExtractor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -68,63 +77,39 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Enumerable.cs" />
-    <Compile Include="Extensions\PathExtensions.cs" />
-    <Compile Include="Instance\Interfaces\IFlagInstance.cs" />
-    <Compile Include="Instance\Interfaces\IAutomatonInstance.cs" />
-    <Compile Include="Instance\Interfaces\IInstance.cs" />
+    <Compile Include="Archive\ArchiveContents.cs" />
+    <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
     <Compile Include="Interfaces\IModel.cs" />
-    <Compile Include="ModOrganizer\ModOrganizerHandler.cs" />
-    <Compile Include="ModpackBase\Conditional.cs" />
-    <Compile Include="ModpackBase\Flag.cs" />
-    <Compile Include="ModpackBase\Group.cs" />
-    <Compile Include="ModpackBase\GroupControl.cs" />
-    <Compile Include="ModpackBase\Interfaces\IInstallation.cs" />
-    <Compile Include="ModpackBase\Interfaces\IConditional.cs" />
-    <Compile Include="ModpackBase\Installation.cs" />
-    <Compile Include="ModpackBase\Interfaces\IFlag.cs" />
-    <Compile Include="ModpackBase\Interfaces\IGroupControl.cs" />
-    <Compile Include="ModpackBase\Interfaces\IGroup.cs" />
-    <Compile Include="ModpackBase\Interfaces\IMod.cs" />
-    <Compile Include="ModpackBase\Interfaces\IHeader.cs" />
-    <Compile Include="ModpackBase\Interfaces\ISetupAssistant.cs" />
-    <Compile Include="ModpackBase\SetupAssistant.cs" />
-    <Compile Include="ModpackBase\Types.cs" />
-    <Compile Include="NexusApi\NexusBase.cs" />
-    <Compile Include="NexusApi\NexusConnection.cs" />
-    <Compile Include="NexusApi\NexusMod.cs" />
-    <Compile Include="NexusApi\NexusProtocol.cs" />
+    <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
+    <Compile Include="Modpack\Base\InstallParameter.cs" />
+    <Compile Include="Modpack\Base\Header.cs" />
+    <Compile Include="Modpack\Base\Mod.cs" />
+    <Compile Include="Modpack\Base\ModpackStructure.cs" />
+    <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
+    <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
+    <Compile Include="Modpack\ModpackValidate.cs" />
+    <Compile Include="Modpack\ModpackRead.cs" />
     <Compile Include="ProcessFinder.cs" />
-    <Compile Include="Utility\ArchiveExtractor.cs" />
-    <Compile Include="Utility\Interfaces\IJsonUtilities.cs" />
-    <Compile Include="Utility\Interfaces\IArchiveExtractor.cs" />
-    <Compile Include="Utility\Interfaces\IModpackUtilities.cs" />
-    <Compile Include="Utility\Interfaces\IValidationUtilities.cs" />
-    <Compile Include="Utility\JsonUtilities.cs" />
-    <Compile Include="Utility\Md5.cs" />
-    <Compile Include="Utility\NamedPipes.cs" />
-    <Compile Include="Instance\FlagInstance.cs" />
-    <Compile Include="Instance\AutomatonInstance.cs" />
-    <Compile Include="ModpackBase\Mod.cs" />
-    <Compile Include="ModpackBase\Header.cs" />
-    <Compile Include="Utility\ModpackUtilities.cs" />
-    <Compile Include="Utility\Resources.cs" />
-    <Compile Include="Utility\ValidationUtilities.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ModOrganizer\" />
+    <Folder Include="Nexus\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.3.2.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.4\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.2\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.2\build\Costura.Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.6\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.6\build\Costura.Fody.props'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.2.17\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.17\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props'))" />
+    <Error Condition="!Exists('..\packages\SevenZipExtractor.1.0.12\build\SevenZipExtractor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SevenZipExtractor.1.0.12\build\SevenZipExtractor.targets'))" />
   </Target>
-  <Import Project="..\packages\Fody.3.2.4\build\Fody.targets" Condition="Exists('..\packages\Fody.3.2.4\build\Fody.targets')" />
-  <Import Project="..\packages\Costura.Fody.3.1.2\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.3.1.2\build\Costura.Fody.targets')" />
+  <Import Project="..\packages\Fody.3.2.17\build\Fody.targets" Condition="Exists('..\packages\Fody.3.2.17\build\Fody.targets')" />
+  <Import Project="..\packages\SevenZipExtractor.1.0.12\build\SevenZipExtractor.targets" Condition="Exists('..\packages\SevenZipExtractor.1.0.12\build\SevenZipExtractor.targets')" />
 </Project>

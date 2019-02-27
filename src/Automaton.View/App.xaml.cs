@@ -1,9 +1,11 @@
 ﻿using Automaton.Model;
-using Automaton.Model.Utility;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Automaton.View
 {
@@ -16,14 +18,14 @@ namespace Automaton.View
         {
             if (ProcessFinder.IsProcessAlreadyRunning())
             {
-                if (e.Args.Any() // Check if args contain any data
-                    && e.Args[0].StartsWith("nxm", StringComparison.OrdinalIgnoreCase)) // Check to see if it contains correct data
-                {
-                    NamedPipes.SendMessage(e.Args[0]);
-                }
+                //if (e.Args.Any() // Check if args contain any data
+                //    && e.Args[0].StartsWith("nxm", StringComparison.OrdinalIgnoreCase)) // Check to see if it contains correct data
+                //{
+                //    NamedPipes.SendMessage(e.Args[0]);
+                //}
 
-                // We only want one instance of Automaton running at one time
-                Environment.Exit(0);
+                //// We only want one instance of Automaton running at one time
+                //Environment.Exit(0);
             }
         }
     }
