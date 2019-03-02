@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Automaton.Model.Interfaces;
-using SevenZipExtractor;
+using SharpCompress.Archives.Zip;
 
 namespace Automaton.Model.Modpack.Interfaces
 {
     public interface IModpackValidate : IModel
     {
-        (bool, string) ValidateCorrectModpackStructure(List<Entry> modpackEntries);
+        bool ValidateCorrectModpackStructure(List<ZipArchiveEntry> modpackEntries);
     }
 }

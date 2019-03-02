@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Automaton.Model.Interfaces;
-using SevenZipExtractor;
+using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 
 namespace Automaton.Model.Archive.Interfaces
 {
     public interface IArchiveContents : IModel
     {
-        List<Entry> GetArchiveEntries(string archivePath);
+        List<ZipArchiveEntry> GetArchiveEntries(string archivePath);
         MemoryStream GetMemoryStreamFromEntry(Entry entry);
     }
 }

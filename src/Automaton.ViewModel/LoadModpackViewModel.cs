@@ -1,5 +1,5 @@
-﻿using Automaton.Model.Modpack.Interfaces;
-using Automaton.ViewModel.Controllers;
+﻿using Autofac;
+using Automaton.Model.Modpack.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
@@ -14,16 +14,14 @@ namespace Automaton.ViewModel
         private readonly IModpackRead _modpackRead;
         private readonly IDialogController _dialogController;
 
-        public RelayCommand ChooseModpackCommand { get; set; }
+        public RelayCommand ChooseModpackCommand { get => new RelayCommand(ChooseModpack); }
 
-        public LoadModpackViewModel(IViewController viewController, IFileSystemBrowser filesystemBrowser, IModpackRead modpackRead, IDialogController dialogController)
+        public LoadModpackViewModel(IComponentContext components)
         {
-            _viewController = viewController;
-            _filesystemBrowser = filesystemBrowser;
-            _modpackRead = modpackRead;
-            _dialogController = dialogController;
-
-            ChooseModpackCommand = new RelayCommand(ChooseModpack);
+            _viewController = components.Resolve<IViewController>();
+            _filesystemBrowser = components.Resolve<IFileSystemBrowser>(); 
+            _modpackRead = components.Resolve<IModpackRead>(); 
+            _dialogController = components.Resolve<IDialogController>(); 
         }
 
         private async void ChooseModpack()
@@ -35,11 +33,10 @@ namespace Automaton.ViewModel
                 return;
             }
 
-            var (isSuccessful, errorMessage) = await _modpackRead.LoadModpackAsync(modpackPath);
+            var isSuccessful = await _modpackRead.LoadModpackAsync(modpackPath);
 
             if (!isSuccessful)
             {
-                _dialogController.OpenDialog(DialogType.GenericErrorDialog, "Modpack Read", errorMessage, true);
                 return;
             }
 

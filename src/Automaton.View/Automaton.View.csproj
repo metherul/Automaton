@@ -98,6 +98,9 @@
     <Compile Include="InstallModpackView.xaml.cs">
       <DependentUpon>InstallModpackView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NexusLoginView.xaml.cs">
+      <DependentUpon>NexusLoginView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValidateModsView.xaml.cs">
       <DependentUpon>ValidateModsView.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InstallModpackView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NexusLoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

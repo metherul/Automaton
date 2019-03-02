@@ -1,7 +1,6 @@
 ﻿using System;
 using Autofac;
 using Autofac.Core;
-using Automaton.Model.Instance.Interfaces;
 using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Content.Dialogs.Interfaces;
 using Automaton.ViewModel.Content.Interfaces;
@@ -18,6 +17,7 @@ namespace Automaton.ViewModel
         public IViewModel MainWindow => Resolve<IMainWindowViewModel>();
         public IViewModel LoadModpack => Resolve<ILoadModpackViewModel>();
         public IViewModel InitialSetup => Resolve<IInitialSetupViewModel>();
+        public IViewModel NexusLogin => Resolve<INexusLoginViewModel>();
 
         public IDialog GenericErrorDialog => Resolve<IGenericErrorDialog>();
 
@@ -27,16 +27,6 @@ namespace Automaton.ViewModel
         {
             var builder = new ContainerBuilder();
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
-
-            builder.RegisterAssemblyTypes(assembly)
-                .Where(t => typeof(IInstance).IsAssignableFrom(t))
-                .SingleInstance()
-                .AsImplementedInterfaces();
-
-            builder.RegisterAssemblyTypes(assembly)
-                .Where(t => typeof(IModel).IsAssignableFrom(t))
-                .Except<IInstance>()
-                .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IUtility).IsAssignableFrom(t))
@@ -55,6 +45,15 @@ namespace Automaton.ViewModel
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IViewModel).IsAssignableFrom(t))
                 .SingleInstance()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IService).IsAssignableFrom(t))
+                .SingleInstance()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IModel).IsAssignableFrom(t))
                 .AsImplementedInterfaces();
 
             _rootScope = builder.Build();

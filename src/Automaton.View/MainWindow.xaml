@@ -93,6 +93,10 @@
                 </materialDesign:TransitionerSlide>
 
                 <materialDesign:TransitionerSlide>
+                    <view:NexusLoginView />
+                </materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide>
                     <view:ValidateModsView />
                 </materialDesign:TransitionerSlide>
 

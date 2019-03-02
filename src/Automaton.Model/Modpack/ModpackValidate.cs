@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Automaton.Model.Modpack.Base.Interfaces;
 using Automaton.Model.Modpack.Interfaces;
-using SevenZipExtractor;
+using SharpCompress.Archives.Zip;
 
 namespace Automaton.Model.Modpack
 {
@@ -19,9 +19,9 @@ namespace Automaton.Model.Modpack
         /// </summary>
         /// <param name="modpackEntries"></param>
         /// <returns></returns>
-        public (bool, string) ValidateCorrectModpackStructure(List<Entry> modpackEntries)
+        public bool ValidateCorrectModpackStructure(List<ZipArchiveEntry> modpackEntries)
         {
-            return (true, "");
+            return true;
         }
     }
 }

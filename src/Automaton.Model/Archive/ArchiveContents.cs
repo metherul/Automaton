@@ -2,22 +2,24 @@
 using System.IO;
 using System.Linq;
 using Automaton.Model.Archive.Interfaces;
-using SevenZipExtractor;
+using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
 
 namespace Automaton.Model.Archive
 {
     public class ArchiveContents : IArchiveContents
     {
-        public List<Entry> GetArchiveEntries(string archivePath)
+        public List<ZipArchiveEntry> GetArchiveEntries(string archivePath)
         {
-            var archiveFile = new ArchiveFile(archivePath);
-            return archiveFile.Entries.ToList();
+            return ZipArchive.Open(archivePath).Entries.ToList();
+
+            //var archiveFile = new ArchiveFile(archivePath);
+            //return archiveFile.Entries.ToList();
         }
 
         public MemoryStream GetMemoryStreamFromEntry(Entry entry)
         {
             var memoryStream = new MemoryStream();
-            entry.Extract(memoryStream);
 
             return memoryStream;
         }

@@ -57,6 +57,9 @@
     <Reference Include="SevenZipExtractor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SevenZipExtractor.1.0.12\lib\net45\SevenZipExtractor.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
@@ -79,7 +82,12 @@
   <ItemGroup>
     <Compile Include="Archive\ArchiveContents.cs" />
     <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
+    <Compile Include="Install\Intefaces\IInstallBase.cs" />
+    <Compile Include="Install\InstallBase.cs" />
+    <Compile Include="Install\Intefaces\IValidate.cs" />
+    <Compile Include="Install\Validate.cs" />
     <Compile Include="Interfaces\IModel.cs" />
+    <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
     <Compile Include="Modpack\Base\InstallParameter.cs" />
     <Compile Include="Modpack\Base\Header.cs" />
@@ -96,10 +104,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ModOrganizer\" />
-    <Folder Include="Nexus\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

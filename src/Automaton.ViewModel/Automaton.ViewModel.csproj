@@ -105,6 +105,7 @@
     <Compile Include="InitialSetupViewModel.cs" />
     <Compile Include="Interfaces\IInitialSetupViewModel.cs" />
     <Compile Include="Interfaces\ILoadModpackViewModel.cs" />
+    <Compile Include="Interfaces\INexusLoginViewModel.cs" />
     <Compile Include="LoadModpackViewModel.cs" />
     <Compile Include="Controllers\DialogController.cs" />
     <Compile Include="Controllers\Interfaces\IDialogController.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Interfaces\IViewModel.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="NexusLoginViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
