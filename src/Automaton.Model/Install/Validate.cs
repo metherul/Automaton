@@ -18,17 +18,34 @@ namespace Automaton.Model.Install
 
         public List<Mod> GetMissingMods(params string[] directoriesToScan)
         {
+            var missingMods = new List<Mod>();
             var directoryContents = directoriesToScan
                 .Select(x => Directory.GetFiles(x, "*.*", SearchOption.TopDirectoryOnly)).ToList();
 
-            
+            foreach (var mod in _installBase.ModpackMods)
+            {
+                var possibleArchiveMatches =
+                    directoriesToScan.Where(x => new FileInfo(x).Length.ToString() == mod.FileSize).ToList();
 
-            return null;
-        }
+                if (!possibleArchiveMatches.Any())
+                {
+                    missingMods.Add(mod);
+                    continue;
+                }
 
-        public bool FindMissingMod(Mod mod, List<string> possibleFileMatches)
-        {
-            return false;
+                if (possibleArchiveMatches.Count() == 1)
+                {
+                    mod.FilePath = possibleArchiveMatches.First();
+                    continue;
+                }
+
+                if (possibleArchiveMatches.Count() > 1)
+                {
+
+                }
+            }
+
+            return missingMods;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Automaton.ViewModel
         public IViewModel LoadModpack => Resolve<ILoadModpackViewModel>();
         public IViewModel InitialSetup => Resolve<IInitialSetupViewModel>();
         public IViewModel NexusLogin => Resolve<INexusLoginViewModel>();
+        public IViewModel ValidateMods => Resolve<IValidateModsViewModel>();
 
         public IDialog GenericErrorDialog => Resolve<IGenericErrorDialog>();
 
