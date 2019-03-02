@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootStrapper.cs" />
+    <Compile Include="Controllers\ViewIndex.cs" />
     <Compile Include="Dialogs\Interfaces\IGenericErrorDialog.cs" />
     <Compile Include="Dialogs\Interfaces\IDialog.cs" />
     <Compile Include="Dialogs\GenericErrorDialog.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Interfaces\IInitialSetupViewModel.cs" />
     <Compile Include="Interfaces\ILoadModpackViewModel.cs" />
     <Compile Include="Interfaces\INexusLoginViewModel.cs" />
+    <Compile Include="Interfaces\IValidateModsViewModel.cs" />
     <Compile Include="LoadModpackViewModel.cs" />
     <Compile Include="Controllers\DialogController.cs" />
     <Compile Include="Controllers\Interfaces\IDialogController.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="Utilities\FileSystemBrowser.cs" />
     <Compile Include="Utilities\Interfaces\IFileSystemBrowser.cs" />
     <Compile Include="Utilities\Interfaces\IUtility.cs" />
+    <Compile Include="ValidateModsViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -9,6 +9,6 @@ namespace Automaton.Model.Install.Intefaces
         List<string> SourceDirectories { get; set; }
         string InstallDirectory { get; set; }
         Header ModpackHeader { get; set; }
-        List<Mod> ModpackMods { get; set; }
+        List<ExtendedMod> ModpackMods { get; set; }
     }
 }

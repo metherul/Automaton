@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Automaton.Model.Modpack.Base;
 using Newtonsoft.Json;
 
 namespace Automaton.Model.Modpack.Base
@@ -11,9 +10,6 @@ namespace Automaton.Model.Modpack.Base
 
         [JsonProperty("file_name")]
         public string FileName { get; set; }
-
-        [JsonIgnore]
-        public string FilePath { get; set; }
 
         [JsonProperty("file_size")]
         public string FileSize { get; set; }

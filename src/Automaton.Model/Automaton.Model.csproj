@@ -85,10 +85,12 @@
   <ItemGroup>
     <Compile Include="Archive\ArchiveContents.cs" />
     <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
+    <Compile Include="Interfaces\IClassExtensions.cs" />
     <Compile Include="Install\Intefaces\IInstallBase.cs" />
     <Compile Include="Install\InstallBase.cs" />
     <Compile Include="Install\Intefaces\IValidate.cs" />
     <Compile Include="Install\Validate.cs" />
+    <Compile Include="Install\ExtendedMod.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToDerived.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

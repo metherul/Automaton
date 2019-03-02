@@ -19,14 +19,14 @@ namespace Automaton.Model.Install
             _installBase = components.Resolve<IInstallBase>();
         }
 
-        public Task<List<Mod>> GetMissingModsAsync(params string[] directoriesToScan)
+        public async Task<List<ExtendedMod>> GetMissingModsAsync(params string[] directoriesToScan)
         {
-            return Task.Factory.StartNew(() => GetMissingMods(directoriesToScan));
+            return await Task.Factory.StartNew(() => GetMissingMods(directoriesToScan));
         }
 
-        public List<Mod> GetMissingMods(params string[] directoriesToScan)
+        public List<ExtendedMod> GetMissingMods(params string[] directoriesToScan)
         {
-            var missingMods = new List<Mod>();
+            var missingMods = new List<ExtendedMod>();
             var directoryContents = directoriesToScan
                 .SelectMany(x => Directory.GetFiles(x, "*.*", SearchOption.TopDirectoryOnly)).ToList();
 

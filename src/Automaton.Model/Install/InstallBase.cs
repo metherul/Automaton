@@ -10,6 +10,6 @@ namespace Automaton.Model.Install
         public List<string> SourceDirectories { get; set; } = new List<string>();
 
         public Header ModpackHeader { get; set; }
-        public List<Mod> ModpackMods { get; set; } = new List<Mod>();
+        public List<ExtendedMod> ModpackMods { get; set; } = new List<ExtendedMod>();
     }
 }

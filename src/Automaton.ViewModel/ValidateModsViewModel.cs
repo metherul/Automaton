@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using Autofac;
+using Automaton.Model.Install;
 using Automaton.Model.Install.Intefaces;
-using Automaton.Model.Modpack.Base;
 using Automaton.ViewModel.Controllers;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
@@ -13,7 +15,7 @@ namespace Automaton.ViewModel
         private readonly IViewController _viewController;
         private readonly IValidate _validate;
 
-        public ObservableCollection<Mod> MissingMods { get; set; }
+        public ObservableCollection<ExtendedMod> MissingMods { get; set; }
 
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -29,11 +31,17 @@ namespace Automaton.ViewModel
             {
                 return;
             }
+
+            ValidateMods();
         }
 
         private async void ValidateMods()
         {
-            await _validate.GetMissingModsAsync();
+            var missingMods = await _validate.GetMissingModsAsync();
+
+            MissingMods = new ObservableCollection<ExtendedMod>(missingMods.Select(x => x as ExtendedMod));
+
+            Debug.WriteLine("Finished analysis");
         }
     }
 }

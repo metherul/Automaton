@@ -11,7 +11,9 @@ using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Automaton.Model.Install;
 using Automaton.Model.Install.Intefaces;
+using Automaton.Model.Interfaces;
 using Automaton.Model.Modpack.Base;
 using Automaton.Model.Modpack.Base.Interfaces;
 
@@ -23,13 +25,15 @@ namespace Automaton.Model.Modpack
         private readonly IModpackValidate _modpackValidate;
         private readonly IModpackStructure _modpackStructure;
         private readonly IInstallBase _installBase;
+        private readonly IClassExtensions _classExtensions;
 
         public ModpackRead(IComponentContext components)
         {
             _archiveContents = components.Resolve<IArchiveContents>(); 
             _modpackValidate = components.Resolve<IModpackValidate>(); 
             _modpackStructure = components.Resolve<IModpackStructure>(); 
-            _installBase = components.Resolve<IInstallBase>(); 
+            _installBase = components.Resolve<IInstallBase>();
+            _classExtensions = components.Resolve<IClassExtensions>();
         }
 
         public async Task<bool> LoadModpackAsync(string modpackPath)
@@ -71,7 +75,7 @@ namespace Automaton.Model.Modpack
 
                 var mod = ConsumeModpackJsonFile<Mod>(modFileMemoryStream);
 
-                _installBase.ModpackMods.Add(mod);
+                _installBase.ModpackMods.Add(_classExtensions.ToDerived<Mod, ExtendedMod>(mod));
             }
 
             return true;
