@@ -58,119 +58,12 @@
                 </Grid>
             </Grid>
 
-            <ItemsControl
+            <DataGrid
                 Grid.Row="1"
-                Margin="5,0,5,0"
-                ItemsSource="{Binding MissingMods, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                ScrollViewer.CanContentScroll="True"
-                ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch" Background="{DynamicResource BackgroundColor}">
-                            <materialDesign:Card Margin="3,2,3,0">
-                                <materialDesign:Card.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="{Binding ModName}" />
-                                        <Separator />
-                                        <MenuItem Header="Copy File Name" />
-                                        <MenuItem Header="Copy Mod Name" />
-                                        <MenuItem Header="Copy Mod Download Link" />
-                                        <MenuItem Header="Copy Nexus Mod Id" />
-                                    </ContextMenu>
-                                </materialDesign:Card.ContextMenu>
-                                <Grid>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Grid Grid.Row="0" Margin="10,0,0,-5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontFamily="{StaticResource RobotoMono}"
-                                            FontSize="13"
-                                            FontWeight="Bold"
-                                            Foreground="Black"
-                                            Text="{Binding ModName}"
-                                            TextWrapping="NoWrap"
-                                            ToolTip="{Binding FileName}" />
-
-                                        <StackPanel
-                                            Grid.Column="2"
-                                            VerticalAlignment="Center"
-                                            FlowDirection="LeftToRight"
-                                            Orientation="Horizontal"
-                                            Tag="{Binding}">
-                                            <Button
-                                                Margin="3,0,2,0"
-                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.FindAndValidateModFileCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}"
-                                                Style="{StaticResource MaterialDesignToolButton}">
-                                                <materialDesign:PackIcon
-                                                    Width="17"
-                                                    Height="Auto"
-                                                    Foreground="Black"
-                                                    Kind="FileFind" />
-                                            </Button>
-                                            <Button
-                                                Margin="0,0,3,0"
-                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.OpenModSourceUrlCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}"
-                                                Style="{StaticResource MaterialDesignToolButton}">
-                                                <materialDesign:PackIcon
-                                                    Width="17"
-                                                    Height="Auto"
-                                                    Foreground="Black"
-                                                    Kind="Link" />
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-
-                                    <Grid
-                                        Grid.Row="1"
-                                        Grid.ColumnSpan="3"
-                                        Margin="0,0,0,2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <ProgressBar
-                                            Grid.Column="0"
-                                            Height="6"
-                                            Margin="4,0"
-                                            Background="Transparent"
-                                            BorderBrush="Transparent"
-                                            Foreground="{DynamicResource BackgroundColor}"
-                                            IsIndeterminate="{Binding IsIndeterminateProcess}"
-                                            Value="{Binding CurrentDownloadProgress}" />
-
-                                        <TextBlock
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Margin="0,0,5,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            FontFamily="{StaticResource RobotoMono}">
-                                            <Run Text="{Binding CurrentDownloadProgress}" /><Run Text="%" />
-                                        </TextBlock>
-                                    </Grid>
-                                </Grid>
-                            </materialDesign:Card>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                EnableRowVirtualization="True"
+                ItemsSource="{Binding MissingMods}">
+                <DataGridColumnHeader Content="Test" />
+            </DataGrid>
         </Grid>
     </Grid>
 </UserControl>

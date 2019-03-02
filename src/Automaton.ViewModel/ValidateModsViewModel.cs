@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using Autofac;
 using Automaton.Model.Install;
@@ -18,7 +21,7 @@ namespace Automaton.ViewModel
         public RelayCommand FindAndValidateModFileCommand { get; set; }
         public RelayCommand OpenModSourceUrlCommand { get; set; }
 
-        public ObservableCollection<ExtendedMod> MissingMods { get; set; } = new ObservableCollection<ExtendedMod>();
+        public RangeObservableCollection<ExtendedMod> MissingMods { get; set; } = new RangeObservableCollection<ExtendedMod>();
 
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -41,8 +44,35 @@ namespace Automaton.ViewModel
         private async void ValidateMods()
         {
             var missingMods = await _validate.GetMissingModsAsync();
+            MissingMods.AddRange(missingMods);
 
             Debug.WriteLine("Finished analysis");
+        }
+    }
+
+    public class RangeObservableCollection<T> : ObservableCollection<T>
+    {
+        private bool _suppressNotification = false;
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (!_suppressNotification)
+                base.OnCollectionChanged(e);
+        }
+
+        public void AddRange(IEnumerable<T> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException("list");
+
+            _suppressNotification = true;
+
+            foreach (T item in list)
+            {
+                Add(item);
+            }
+            _suppressNotification = false;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 }
