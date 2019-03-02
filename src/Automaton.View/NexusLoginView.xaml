@@ -93,7 +93,7 @@
                 Grid.Column="1"
                 Height="35"
                 Margin="5,0,0,0"
-                Command="{Binding NexusLogInCommand}"
+                Command="{Binding LoginToNexusCommand}"
                 Template="{DynamicResource FloatingButtonTemplate}">
                 <TextBlock
                     FontSize="15"
