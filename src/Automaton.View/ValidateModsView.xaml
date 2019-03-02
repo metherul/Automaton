@@ -103,7 +103,7 @@
                                             Foreground="Black"
                                             Text="{Binding ModName}"
                                             TextWrapping="NoWrap"
-                                            ToolTip="{Binding ModArchiveName}" />
+                                            ToolTip="{Binding FileName}" />
 
                                         <StackPanel
                                             Grid.Column="2"
@@ -113,9 +113,8 @@
                                             Tag="{Binding}">
                                             <Button
                                                 Margin="3,0,2,0"
-                                                Command="{Binding FindAndValidateModFileCommand}"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.FindAndValidateModFileCommand}"
                                                 CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}"
-                                                DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
                                                 Style="{StaticResource MaterialDesignToolButton}">
                                                 <materialDesign:PackIcon
                                                     Width="17"
@@ -125,9 +124,8 @@
                                             </Button>
                                             <Button
                                                 Margin="0,0,3,0"
-                                                Command="{Binding OpenModSourceUrlCommand}"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.OpenModSourceUrlCommand}"
                                                 CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}"
-                                                DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
                                                 Style="{StaticResource MaterialDesignToolButton}">
                                                 <materialDesign:PackIcon
                                                     Width="17"
@@ -155,7 +153,7 @@
                                             BorderBrush="Transparent"
                                             Foreground="{DynamicResource BackgroundColor}"
                                             IsIndeterminate="{Binding IsIndeterminateProcess}"
-                                            Value="{Binding CurrentDownloadPercentage}" />
+                                            Value="{Binding CurrentDownloadProgress}" />
 
                                         <TextBlock
                                             Grid.Row="1"
@@ -164,7 +162,7 @@
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"
                                             FontFamily="{StaticResource RobotoMono}">
-                                            <Run Text="{Binding CurrentDownloadPercentage}" /><Run Text="%" />
+                                            <Run Text="{Binding CurrentDownloadProgress}" /><Run Text="%" />
                                         </TextBlock>
                                     </Grid>
                                 </Grid>
