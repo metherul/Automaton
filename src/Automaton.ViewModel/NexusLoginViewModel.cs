@@ -14,6 +14,7 @@ namespace Automaton.ViewModel
         private readonly IViewController _viewController;
 
         public RelayCommand LoginToNexusCommand => new RelayCommand(LoginToNexus);
+        public RelayCommand ContinueOfflineCommand => new RelayCommand(ContinueOffline);
 
         public NexusLoginViewModel(IComponentContext components)
         {
@@ -30,6 +31,11 @@ namespace Automaton.ViewModel
             };
 
             await _apiBase.InitializeAsync(_installBase.ModpackHeader.TargetGame);
+        }
+
+        public void ContinueOffline()
+        {
+            _viewController.IncrementCurrentViewIndex();
         }
     }
 }
