@@ -16,6 +16,8 @@ namespace Automaton.ViewModel
         public RelayCommand LoginToNexusCommand => new RelayCommand(LoginToNexus);
         public RelayCommand ContinueOfflineCommand => new RelayCommand(ContinueOffline);
 
+        public bool IsLoggingIn { get; set; }
+
         public NexusLoginViewModel(IComponentContext components)
         {
             _apiBase = components.Resolve<IApiBase>();
@@ -25,6 +27,8 @@ namespace Automaton.ViewModel
 
         public async void LoginToNexus()
         {
+            IsLoggingIn = true;
+
             _apiBase.HasLoggedInEvent += () =>
             {
                 _viewController.IncrementCurrentViewIndex();

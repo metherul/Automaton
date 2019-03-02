@@ -83,6 +83,7 @@
                 Height="35"
                 Margin="0,0,5,0"
                 Command="{Binding ContinueOfflineCommand}"
+                IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}"
                 Template="{DynamicResource FloatingButtonTemplate}">
                 <TextBlock Style="{DynamicResource ButtonText}">
                     Offline Install
@@ -94,11 +95,21 @@
                 Height="35"
                 Margin="5,0,0,0"
                 Command="{Binding LoginToNexusCommand}"
-                Template="{DynamicResource FloatingButtonTemplate}">
-                <TextBlock
-                    FontSize="15"
-                    Style="{DynamicResource ButtonText}"
-                    Text="Login" />
+                IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}">
+                <TextBlock>
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource ButtonText}" TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLoggingIn}" Value="false">
+                                    <Setter Property="Text" Value="Login" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsLoggingIn}" Value="true">
+                                    <Setter Property="Text" Value="Logging in..." />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Button>
         </Grid>
     </Grid>
