@@ -58,12 +58,32 @@
                 </Grid>
             </Grid>
 
-            <DataGrid
+            <ListBox
                 Grid.Row="1"
-                EnableRowVirtualization="True"
-                ItemsSource="{Binding MissingMods}">
-                <DataGridColumnHeader Content="Test" />
-            </DataGrid>
+                ItemsSource="{Binding MissingMods}"
+                VirtualizingStackPanel.IsVirtualizing="True">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <VirtualizingStackPanel HorizontalAlignment="Stretch">
+                            <Label
+                                Content="{Binding ModName}"
+                                FontFamily="{StaticResource RobotoMono}"
+                                Foreground="{DynamicResource FontColor}" />
+
+                            <Label
+                                Content="{Binding FileName}"
+                                FontFamily="{StaticResource RobotoMono}"
+                                Foreground="{DynamicResource FontColor}" />
+
+                            <ProgressBar
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Foreground="{DynamicResource FontColor}"
+                                IsIndeterminate="True" />
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
     </Grid>
 </UserControl>
