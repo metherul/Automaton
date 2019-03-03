@@ -43,10 +43,8 @@ namespace Automaton.ViewModel
 
         private async void ValidateMods()
         {
-            var missingMods = await _validate.GetMissingModsAsync();
+            var missingMods = await _validate.GetMissingModsAsync(new List<string>());
             MissingMods.AddRange(missingMods);
-
-            Debug.WriteLine("Finished analysis");
         }
     }
 

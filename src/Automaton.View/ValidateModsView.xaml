@@ -96,8 +96,7 @@
                                 HorizontalAlignment="Stretch"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                Foreground="{DynamicResource FontColor}"
-                                IsIndeterminate="True" />
+                                Foreground="{DynamicResource FontColor}" />
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
