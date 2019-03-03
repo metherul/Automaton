@@ -18,7 +18,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="20,0,20,20">
+            <Grid Grid.Row="0" Margin="20,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -60,22 +60,40 @@
 
             <ListBox
                 Grid.Row="1"
+                Margin="5,0,0,0"
+                HorizontalAlignment="Stretch"
                 ItemsSource="{Binding MissingMods}"
                 VirtualizingStackPanel.IsVirtualizing="True">
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <VirtualizingStackPanel HorizontalAlignment="Stretch">
-                            <Label
-                                Content="{Binding ModName}"
-                                FontFamily="{StaticResource RobotoMono}"
-                                Foreground="{DynamicResource FontColor}" />
-
-                            <Label
-                                Content="{Binding FileName}"
-                                FontFamily="{StaticResource RobotoMono}"
-                                Foreground="{DynamicResource FontColor}" />
+                            <VirtualizingStackPanel Orientation="Horizontal">
+                                <Button VerticalAlignment="Center" Style="{DynamicResource MaterialDesignToolButton}">
+                                    <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
+                                </Button>
+                                <Button VerticalAlignment="Center" Style="{DynamicResource MaterialDesignToolButton}">
+                                    <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="Link" />
+                                </Button>
+                                <Grid
+                                    Width="1.5"
+                                    Height="Auto"
+                                    Margin="2,10"
+                                    Background="{DynamicResource FontColor}" />
+                                <Label
+                                    VerticalAlignment="Center"
+                                    Content="{Binding ModName}"
+                                    FontFamily="{StaticResource RobotoMono}"
+                                    Foreground="{DynamicResource FontColor}" />
+                            </VirtualizingStackPanel>
 
                             <ProgressBar
+                                HorizontalAlignment="Stretch"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 Foreground="{DynamicResource FontColor}"

@@ -8,6 +8,6 @@ namespace Automaton.Model.Install
 
         public int CurrentDownloadProgress { get; set; }
 
-        public bool IsIndeterminateProcess { get; set; } = true;
+        public bool IsIndeterminateProcess { get; set; } 
     }
 }
