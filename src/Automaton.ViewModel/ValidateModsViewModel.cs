@@ -21,6 +21,7 @@ namespace Automaton.ViewModel
         private readonly IValidate _validate;
         private readonly IFileSystemBrowser _fileSystemBrowser;
         private readonly INxmHandle _nxmHandle;
+        private readonly IApiEndpoints _apiEndpoints;
 
         public RelayCommand ScanDirectoryCommand => new RelayCommand(ScanDirectory);
         public RelayCommand FindAndValidateModFileCommand { get; set; }
@@ -34,6 +35,7 @@ namespace Automaton.ViewModel
             _validate = components.Resolve<IValidate>();
             _fileSystemBrowser = components.Resolve<IFileSystemBrowser>();
             _nxmHandle = components.Resolve<INxmHandle>();
+            _apiEndpoints = components.Resolve<IApiEndpoints>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _nxmHandle.RecievedPipedDataEvent += HandlePipedData;
@@ -51,9 +53,9 @@ namespace Automaton.ViewModel
             ValidateMods();
         }
 
-        private void HandlePipedData(object caller, PipedData pipedData)
+        private async void HandlePipedData(object caller, PipedData pipedData)
         {
-
+            var downloadUrl = await _apiEndpoints.GenerateModDownloadLinkAsync(pipedData);
         }
 
         private async void ValidateMods()
