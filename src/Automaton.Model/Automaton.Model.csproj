@@ -103,7 +103,11 @@
     <Compile Include="Modpack\ModpackValidate.cs" />
     <Compile Include="Modpack\ModpackRead.cs" />
     <Compile Include="NexusApi\ApiBase.cs" />
+    <Compile Include="NexusApi\ApiEndpoints.cs" />
     <Compile Include="NexusApi\Interfaces\IApiBase.cs" />
+    <Compile Include="NexusApi\Interfaces\INxmHandle.cs" />
+    <Compile Include="NexusApi\NxmHandle.cs" />
+    <Compile Include="NexusApi\PipedData.cs" />
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

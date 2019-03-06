@@ -9,5 +9,7 @@ namespace Automaton.Model.Install.Intefaces
     {
         Task<List<ExtendedMod>> GetMissingModsAsync(List<string> directoriesToScan);
         List<ExtendedMod> GetMissingMods(List<string> directoriesToScan);
+        List<ExtendedMod> FilterMissingMods(string directoryPath);
+        Task<List<ExtendedMod>> FilterMissingModsAsync(string directoryPath);
     }
 }

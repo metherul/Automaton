@@ -63,6 +63,47 @@ namespace Automaton.Model.Install
             return missingMods;
         }
 
+        public List<ExtendedMod> FilterMissingMods(string directoryPath)
+        {
+            var missingMods = new List<ExtendedMod>();
+            var directoryContents = Directory.GetFiles(directoryPath, "*.*", SearchOption.TopDirectoryOnly).ToList();
+
+            foreach (var mod in _installBase.ModpackMods)
+            {
+                var possibleArchiveMatches =
+                    directoryContents.Where(x => new FileInfo(x).Length.ToString() == mod.FileSize).ToList();
+
+                if (!possibleArchiveMatches.Any())
+                {
+                    missingMods.Add(mod);
+                    continue;
+                }
+
+                if (possibleArchiveMatches.Count() == 1)
+                {
+                    mod.FilePath = possibleArchiveMatches.First();
+                    continue;
+                }
+
+                if (possibleArchiveMatches.Count() > 1)
+                {
+                    var matchingArchive = GetMatchingArchive(mod, possibleArchiveMatches);
+
+                    if (matchingArchive != null)
+                    {
+                        mod.FilePath = matchingArchive;
+                    }
+                }
+            }
+
+            return missingMods;
+        }
+
+        public async Task<List<ExtendedMod>> FilterMissingModsAsync(string directoryPath)
+        {
+            return await Task.Factory.StartNew(() => FilterMissingMods(directoryPath));
+        }
+
         private string GetMatchingArchive(Mod mod, List<string> possibleArchiveMatches)
         {
             foreach (var possibleMatch in possibleArchiveMatches)

@@ -25,11 +25,17 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    Style="{DynamicResource HeaderText}"
-                    Text="Missing Mods" />
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Style="{DynamicResource HeaderText}" Text="Missing Mods" />
+
+                    <Button
+                        Margin="10,0,0,0"
+                        ClipToBounds="True"
+                        Command="{Binding ScanDirectoryCommand}"
+                        Style="{DynamicResource MaterialDesignToolButton}">
+                        <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FolderSearch" />
+                    </Button>
+                </StackPanel>
 
                 <!--  Nexus Log-in button  -->
                 <Grid
@@ -89,7 +95,16 @@
                                     VerticalAlignment="Center"
                                     Content="{Binding ModName}"
                                     FontFamily="{StaticResource RobotoMono}"
-                                    Foreground="{DynamicResource FontColor}" />
+                                    Foreground="{DynamicResource FontColor}"
+                                    ToolTip="{Binding FileName}">
+                                    <Label.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
+                                            <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
+                                            <Setter Property="Background" Value="White" />
+                                            <Setter Property="Foreground" Value="Black" />
+                                        </Style>
+                                    </Label.Resources>
+                                </Label>
                             </VirtualizingStackPanel>
 
                             <ProgressBar
