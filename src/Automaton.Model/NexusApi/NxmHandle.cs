@@ -18,7 +18,7 @@ namespace Automaton.Model.NexusApi
             _server = new NamedPipeServer<PipedData>(ServerName);
 
             _server.ClientConnected += connection => ConnectClient();
-            _server.ClientMessage += (connection, message) => ServerCallback(message);
+            _server.ClientMessage += (connection, message) => ReceieveClientMessage(message);
 
             _server.Start();
         }

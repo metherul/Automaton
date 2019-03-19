@@ -104,6 +104,8 @@
     <Compile Include="Modpack\ModpackRead.cs" />
     <Compile Include="NexusApi\ApiBase.cs" />
     <Compile Include="NexusApi\ApiEndpoints.cs" />
+    <Compile Include="NexusApi\DownloadClient.cs" />
+    <Compile Include="NexusApi\Interfaces\IApiEndpoints.cs" />
     <Compile Include="NexusApi\Interfaces\IApiBase.cs" />
     <Compile Include="NexusApi\Interfaces\INxmHandle.cs" />
     <Compile Include="NexusApi\NxmHandle.cs" />

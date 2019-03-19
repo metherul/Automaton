@@ -56,6 +56,7 @@ namespace Automaton.ViewModel
         private async void HandlePipedData(object caller, PipedData pipedData)
         {
             var downloadUrl = await _apiEndpoints.GenerateModDownloadLinkAsync(pipedData);
+
         }
 
         private async void ValidateMods()

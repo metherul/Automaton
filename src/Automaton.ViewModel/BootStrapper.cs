@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
+using Automaton.Model.NexusApi;
+using Automaton.Model.NexusApi.Interfaces;
 using Automaton.ViewModel.Content.Dialogs.Interfaces;
 using Automaton.ViewModel.Content.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
@@ -28,6 +33,29 @@ namespace Automaton.ViewModel
         {
             var builder = new ContainerBuilder();
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
+
+            // For performance, the NXM router will initialize and run its checks here.
+            if (Process.GetProcessesByName("Automaton").Any())
+            {
+                var cliArgs = Environment.GetCommandLineArgs();
+
+                if (cliArgs.Any())
+                {
+                    // Build the builder with the router ONLY and pipe the needed data.
+                    builder.RegisterAssemblyTypes(assembly)
+                        .Where(t => typeof(INxmHandle).IsAssignableFrom(t))
+                        .SingleInstance();
+                    builder.Build();
+
+                    var nxmHandle = Resolve<INxmHandle>();
+
+                    nxmHandle.ConnectClient();
+                    nxmHandle.SendClientMessage(new PipedData(cliArgs[0]));
+                }
+
+                // Kill the app, we do not want more than one instance of Automaton floating around.
+                Application.Exit();
+            }
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IUtility).IsAssignableFrom(t))
