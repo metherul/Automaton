@@ -56,6 +56,16 @@ namespace Automaton.ViewModel
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _nxmHandle.RecievedPipedDataEvent += QueueDownload;
             _downloadClient.DownloadUpdate += DownloadUpdate;
+
+            MissingMods.CollectionChanged += MissingMods_CollectionChanged;
+        }
+
+        private void MissingMods_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (MissingMods.Count == 0)
+            {
+                _viewController.IncrementCurrentViewIndex();
+            }
         }
 
         private void ViewControllerOnViewIndexChangedEvent(object sender, int e)
@@ -178,7 +188,7 @@ namespace Automaton.ViewModel
         {
             if (mod.Repository == "NexusMods")
             {
-                Process.Start($"https://nexusmods.com/{mod.TargetGame}/mods/{mod.ModId}?tab=files");
+                Process.Start($"https://nexusmods.com/{mod.TargetGame.ToLower()}/mods/{mod.ModId}?tab=files");
             }
 
             else
