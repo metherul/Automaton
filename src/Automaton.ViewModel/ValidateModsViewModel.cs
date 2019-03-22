@@ -32,6 +32,8 @@ namespace Automaton.ViewModel
         private readonly IApiBase _apiBase;
         private readonly IInstallBase _installBase;
 
+        private bool _missingModsLocked;
+
         public RelayCommand ScanDirectoryCommand => new RelayCommand(ScanDirectory);
         public RelayCommand FindAndValidateModFileCommand { get; set; }
         public RelayCommand OpenModSourceUrlCommand { get; set; }
@@ -66,7 +68,7 @@ namespace Automaton.ViewModel
 
             while (true)
             {
-                if (MissingMods.Count() == 0)
+                if (MissingMods.Count() == 0 && _missingModsLocked == false)
                 {
                     _viewController.IncrementCurrentViewIndex();
 
@@ -133,7 +135,9 @@ namespace Automaton.ViewModel
                 {
                     Application.Current.Dispatcher.BeginInvoke((Action)delegate
                     {
+                        _missingModsLocked = true;
                         MissingMods[MissingMods.IndexOf(matchingMissingMod)].CurrentDownloadProgress = e.CurrentDownloadProgress;
+                        _missingModsLocked = false;
                     });
                 }
             }
@@ -167,8 +171,10 @@ namespace Automaton.ViewModel
 
             await Application.Current.Dispatcher.BeginInvoke((Action)delegate
             {
+                _missingModsLocked = true;
                 MissingMods = new RangeObservableCollection<ExtendedMod>();
                 MissingMods.AddRange(missingMods);
+                _missingModsLocked = false;
             });
 
             ValidatedModCount = StartingMissingModCount - MissingMods.Count;
@@ -190,8 +196,10 @@ namespace Automaton.ViewModel
 
             await Application.Current.Dispatcher.BeginInvoke((Action)delegate
             {
+                _missingModsLocked = true;
                 MissingMods = new RangeObservableCollection<ExtendedMod>();
                 MissingMods.AddRange(filteredMissingMods);
+                _missingModsLocked = false;
             });
         }
 

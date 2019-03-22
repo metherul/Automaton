@@ -68,7 +68,7 @@ namespace Automaton.Model.Install
             var missingMods = new List<ExtendedMod>();
             var directoryContents = Directory.GetFiles(directoryPath, "*.*", SearchOption.TopDirectoryOnly).ToList();
 
-            foreach (var mod in _installBase.ModpackMods)
+            foreach (var mod in _installBase.ModpackMods.Where(x => !File.Exists(x.FilePath)))
             {
                 var possibleArchiveMatches =
                     directoryContents.Where(x => new FileInfo(x).Length.ToString() == mod.FileSize).ToList();

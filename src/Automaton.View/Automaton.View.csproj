@@ -245,7 +245,9 @@
   <ItemGroup>
     <Resource Include="Resources\Images\NexusMods.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\Bin\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\DownloadWithManager.png" />
   </ItemGroup>
