@@ -98,7 +98,12 @@
                                     Style="{DynamicResource MaterialDesignToolButton}">
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
                                 </Button>
-                                <Button VerticalAlignment="Center" Style="{DynamicResource MaterialDesignToolButton}">
+                                <Button
+                                    VerticalAlignment="Center"
+                                    Command="{Binding OpenNexusLinkCommand}"
+                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
+                                    DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
+                                    Style="{DynamicResource MaterialDesignToolButton}">
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
                                 <Grid
