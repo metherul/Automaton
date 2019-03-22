@@ -57,7 +57,7 @@
                     Background="Transparent"
                     BorderBrush="Transparent"
                     Foreground="{DynamicResource BackgroundColor}"
-                    IsIndeterminate="True" />
+                    IsIndeterminate="{Binding IsInstalling}" />
             </Grid>
         </materialDesign:Card>
 
@@ -66,7 +66,7 @@
             Margin="50,10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Visibility="{Binding IsInstalling, Converter={StaticResource BoolToVisibilityConverter}}">
+            Visibility="{Binding IsInstalling, Converter={StaticResource BoolToInverseVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

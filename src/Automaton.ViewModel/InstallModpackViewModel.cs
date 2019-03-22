@@ -26,7 +26,7 @@ namespace Automaton.ViewModel
 
         private void InstallModpack()
         {
-
+            IsInstalling = true;
         }
     }
 }
