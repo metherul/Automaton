@@ -65,21 +65,32 @@ namespace Automaton.Model.Install
                     continue;
                 }
 
+                if (File.Exists(installFilePath))
+                {
+                    File.Delete(installFilePath);
+                }
+
                 if (!Directory.Exists(Path.GetDirectoryName(installFilePath)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(installFilePath));
                 }
 
-                if (mod.InstallParameters.Where(x => x == installParameter).Count() == 1)
-                {
-                    File.Move(matchingSourceFile.First(), installFilePath);
-                }
-
-                else
-                {
-                    File.Copy(matchingSourceFile.First(), installFilePath);
-                }
+                File.Copy(matchingSourceFile.First(), installFilePath);
             }
+
+            // Write the meta.ini
+            var metaPath = Path.Combine(installPath, "meta.ini");
+            File.WriteAllText(metaPath,
+                "[General]\n" +
+                $"gameName={mod.TargetGame}\n" +
+                $"version={mod.Version}\n" +
+                $"installationFile={mod.FilePath}\n" +
+                $"modId={mod.ModId}\n\n" +
+                "[installedFiles]\n" +
+                $"1\\modId={mod.ModId}\n" +
+                $"1\\fileId={mod.FileId}");
+
+            Directory.Delete(extractionDirectory, true);
         }
     }
 }
