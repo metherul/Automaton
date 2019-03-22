@@ -5,6 +5,9 @@ namespace Automaton.Model.Modpack.Base
 {
     public class Header 
     {
+        [JsonProperty("modpack_version")]
+        public string ModpackVersion { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
 

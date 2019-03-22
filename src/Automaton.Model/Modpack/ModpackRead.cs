@@ -62,7 +62,14 @@ namespace Automaton.Model.Modpack
             var headerMemoryStream = new MemoryStream();
             header.OpenEntryStream().CopyTo(headerMemoryStream);
 
-            _installBase.ModpackHeader = ConsumeModpackJsonFile<Header>(headerMemoryStream);
+            var headerObject = ConsumeModpackJsonFile<Header>(headerMemoryStream);
+
+            if (headerObject.Version != "1.0b")
+            {
+                return false;
+            }
+
+            _installBase.ModpackHeader = headerObject;
 
             // Load each modpack config file
             var modDirectory = _installBase.ModpackHeader.ModInstallFolders.First();
