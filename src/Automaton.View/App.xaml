@@ -39,6 +39,7 @@
             <converters:BoolToIntConverter x:Key="BoolToIntConverter" />
             <converters:BoolToInverseConverter x:Key="BoolToInverseConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
 
             <vm:BootStrapper x:Key="ViewModelLocator" d:IsDataSource="True" />
         </ResourceDictionary>

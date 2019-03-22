@@ -60,5 +60,86 @@
                     IsIndeterminate="True" />
             </Grid>
         </materialDesign:Card>
+
+        <Grid
+            Grid.Row="0"
+            Margin="50,10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{Binding IsInstalling, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,20"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource BackgroundColor}"
+                Style="{StaticResource HeaderText}"
+                Text="Ready to Install" />
+            <TextBlock
+                Grid.Row="1"
+                Margin="0,5,0,0"
+                Foreground="{DynamicResource BackgroundColor}"
+                Style="{StaticResource BodyText}"
+                Text="Your Automaton modpack can now be installed. This will take some time, and will install Mod Organizer in the process."
+                TextAlignment="Justify" />
+            <TextBlock
+                Grid.Row="2"
+                Margin="0,5,0,0"
+                Foreground="{DynamicResource BackgroundColor}"
+                Opacity=".4"
+                Style="{StaticResource BodyText}"
+                Text="Once the installation has completed, navigate to the location where you chose to install the modpack, and run the ModOrganizer.exe application."
+                TextAlignment="Justify" />
+            <TextBlock
+                Grid.Row="3"
+                Margin="0,5,0,0"
+                FontWeight="Bold"
+                Foreground="{DynamicResource BackgroundColor}"
+                Opacity=".4"
+                Style="{StaticResource BodyText}"
+                Text="You may still need to install mods such as SKSE and ENB, as well as run patchers within Mod Organizer."
+                TextAlignment="Justify" />
+
+            <!--  Install Modpack button  -->
+            <Button
+                Grid.Row="4"
+                Height="50"
+                Margin="0,40,0,30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Command="{Binding InstallModpackCommand}"
+                Opacity="10"
+                Template="{DynamicResource FloatingButtonTemplate}">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="15"
+                        Style="{DynamicResource ButtonText}">
+                        <Run Text="Install Modpack" />
+                    </TextBlock>
+
+                    <Image
+                        Grid.Column="1"
+                        Width="Auto"
+                        Height="40"
+                        RenderOptions.BitmapScalingMode="Fant"
+                        Source="{DynamicResource AutomatonImage}" />
+                </Grid>
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>

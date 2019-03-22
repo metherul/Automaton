@@ -88,11 +88,14 @@
   <ItemGroup>
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Controllers\ViewIndex.cs" />
+    <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
     <Compile Include="Dialogs\Interfaces\IGenericErrorDialog.cs" />
     <Compile Include="Dialogs\Interfaces\IDialog.cs" />
     <Compile Include="Dialogs\GenericErrorDialog.cs" />
     <Compile Include="InitialSetupViewModel.cs" />
+    <Compile Include="InstallModpackViewModel.cs" />
     <Compile Include="Interfaces\IInitialSetupViewModel.cs" />
+    <Compile Include="Interfaces\IInstallModpackViewModel.cs" />
     <Compile Include="Interfaces\ILoadModpackViewModel.cs" />
     <Compile Include="Interfaces\INexusLoginViewModel.cs" />
     <Compile Include="Interfaces\IValidateModsViewModel.cs" />
