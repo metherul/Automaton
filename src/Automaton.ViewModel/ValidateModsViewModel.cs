@@ -57,8 +57,6 @@ namespace Automaton.ViewModel
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _nxmHandle.RecievedPipedDataEvent += QueueDownload;
             _downloadClient.DownloadUpdate += DownloadUpdate;
-
-            Task.Factory.StartNew(ViewControllerController);
         }
 
         private void ViewControllerController() 
@@ -152,6 +150,8 @@ namespace Automaton.ViewModel
 
             StartingMissingModCount = _installBase.ModpackMods.Count;
             ValidatedModCount = StartingMissingModCount - missingMods.Count;
+
+            Task.Factory.StartNew(ViewControllerController);
         }
 
         private async void ScanDirectory()
