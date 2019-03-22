@@ -54,7 +54,8 @@ namespace Automaton.ViewModel
             _installBase = components.Resolve<IInstallBase>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
-            _nxmHandle.RecievedPipedDataEvent += HandlePipedData;
+            _nxmHandle.RecievedPipedDataEvent += QueueDownload;
+            _downloadClient.DownloadUpdate += DownloadUpdate;
         }
 
         private void ViewControllerOnViewIndexChangedEvent(object sender, int e)
@@ -68,7 +69,7 @@ namespace Automaton.ViewModel
             _nxmHandle.StartServer();
         }
 
-        private async void HandlePipedData(object caller, PipedData pipedData)
+        private async void QueueDownload(object caller, PipedData pipedData)
         {
             if (!MissingMods.Any(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
             {
@@ -76,14 +77,47 @@ namespace Automaton.ViewModel
             }
 
             var downloadUrl = await _apiEndpoints.GenerateModDownloadLinkAsync(pipedData);
-            var missingModObject = MissingMods.First(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId);
+            var matchingModObject = MissingMods.First(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId);
 
-            if (!MissingMods.Any())
+            MissingMods.First(x => x == matchingModObject).IsIndeterminateProcess = true;
+
+            if (matchingModObject == null)
             {
                 return;
             }
 
-            await _downloadClient.DownloadFileAsync(downloadUrl, missingModObject);
+            _downloadClient.QueueDownload(downloadUrl, matchingModObject);
+        }
+
+        private void DownloadUpdate(object sender, ExtendedMod e)
+        {
+            if (e.CurrentDownloadProgress == 100)
+            {
+                _installBase.ModpackMods.Where(x => x.Md5 == e.Md5).ToList()
+                    .ForEach(x => x.FilePath = e.FilePath);
+
+                var matchingMods = MissingMods.Where(x => x.Md5 == e.Md5);
+
+                foreach (var matchingMod in matchingMods)
+                {
+                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
+                    {
+                        MissingMods.RemoveAt(MissingMods.IndexOf(matchingMod));
+                        ValidatedModCount++;
+                    });
+                }
+            }
+
+            else
+            {
+                foreach (var matchingMissingMod in MissingMods.Where(x => x.Md5 == e.Md5))
+                {
+                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
+                    {
+                        MissingMods[MissingMods.IndexOf(matchingMissingMod)].CurrentDownloadProgress = e.CurrentDownloadProgress;
+                    });
+                }
+            }
         }
 
         private async void ValidateMods()
@@ -140,7 +174,7 @@ namespace Automaton.ViewModel
             });
         }
 
-        private async void OpenNexusLink(ExtendedMod mod)
+        private void OpenNexusLink(ExtendedMod mod)
         {
             if (mod.Repository == "NexusMods")
             {

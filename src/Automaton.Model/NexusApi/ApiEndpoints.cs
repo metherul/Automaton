@@ -55,7 +55,10 @@ namespace Automaton.Model.NexusApi
 
             try
             {
-                _baseHttpClient.DefaultRequestHeaders.Add("APIKEY", _apiBase.ApiKey);
+                if (!_baseHttpClient.DefaultRequestHeaders.Contains("APIKEY"))
+                {
+                    _baseHttpClient.DefaultRequestHeaders.Add("APIKEY", _apiBase.ApiKey);
+                }
 
                 var response = await _baseHttpClient.GetAsync(url);
 
@@ -64,6 +67,7 @@ namespace Automaton.Model.NexusApi
 
                 return await response.Content.ReadAsStringAsync();
             }
+
             catch (Exception e)
             {
                 Console.WriteLine(e);   

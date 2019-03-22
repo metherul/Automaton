@@ -6,7 +6,7 @@ namespace Automaton.Model.Install.Intefaces
 {
     public interface IInstallBase : IService
     {
-        string SourceDirectories { get; set; }
+        string DownloadsDirectory { get; set; }
         string InstallDirectory { get; set; }
         Header ModpackHeader { get; set; }
         List<ExtendedMod> ModpackMods { get; set; }

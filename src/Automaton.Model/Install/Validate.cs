@@ -26,7 +26,7 @@ namespace Automaton.Model.Install
 
         public List<ExtendedMod> GetMissingMods(List<string> directoriesToScan)
         {
-            directoriesToScan.Add(_installBase.SourceDirectories);
+            directoriesToScan.Add(_installBase.DownloadsDirectory);
 
             var missingMods = new List<ExtendedMod>();
             var directoryContents = directoriesToScan

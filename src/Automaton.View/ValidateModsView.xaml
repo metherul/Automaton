@@ -88,7 +88,7 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <VirtualizingStackPanel HorizontalAlignment="Stretch">
+                        <VirtualizingStackPanel Width="{Binding RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}, Path=ActualWidth}">
                             <VirtualizingStackPanel Orientation="Horizontal">
                                 <Button
                                     VerticalAlignment="Center"
@@ -150,7 +150,9 @@
                                 HorizontalAlignment="Stretch"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                Foreground="{DynamicResource FontColor}" />
+                                Foreground="{DynamicResource FontColor}"
+                                IsIndeterminate="{Binding IsIndeterminateProcess}"
+                                Value="{Binding CurrentDownloadProgress}" />
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

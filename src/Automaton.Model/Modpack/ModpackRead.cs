@@ -64,10 +64,10 @@ namespace Automaton.Model.Modpack
 
             var headerObject = ConsumeModpackJsonFile<Header>(headerMemoryStream);
 
-            if (headerObject.Version != "1.0b")
-            {
-                return false;
-            }
+            //if (headerObject.Version != "1.0b")
+            //{
+            //    return false;
+            //}
 
             _installBase.ModpackHeader = headerObject;
 

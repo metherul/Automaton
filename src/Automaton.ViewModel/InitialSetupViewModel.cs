@@ -44,7 +44,7 @@ namespace Automaton.ViewModel
             if (Directory.Exists(InstallLocation) && Directory.Exists(DownloadsLocation))
             {
                 _installBase.InstallDirectory = InstallLocation;
-                _installBase.SourceDirectories = DownloadsLocation;
+                _installBase.DownloadsDirectory = DownloadsLocation;
 
                 _viewController.IncrementCurrentViewIndex();
             }
