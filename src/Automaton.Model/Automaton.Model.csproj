@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Archive\ArchiveContents.cs" />
     <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
+    <Compile Include="Install\Intefaces\IInstallModpack.cs" />
     <Compile Include="Install\InstallModpack.cs" />
     <Compile Include="Interfaces\IClassExtensions.cs" />
     <Compile Include="Install\Intefaces\IInstallBase.cs" />

@@ -45,11 +45,10 @@
                     HorizontalAlignment="Stretch"
                     Foreground="Black" />
 
-                <TextBlock
+                <ListBox
                     Grid.Row="2"
                     FontFamily="{StaticResource RobotoMono}"
-                    Text="{Binding ConsoleOut}"
-                    TextWrapping="Wrap" />
+                    ItemsSource="{Binding DebugOutput}" />
 
                 <ProgressBar
                     Grid.Row="3"

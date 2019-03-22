@@ -1,18 +1,21 @@
 ﻿using Autofac;
-using Automaton.Model.Install.Intefaces;
+using Automaton.Model.Install.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace Automaton.ViewModel
 {
     public class InstallModpackViewModel : ViewModelBase, IInstallModpackViewModel
     {
         private readonly IViewController _viewController;
-        private readonly IInstallBase _installBase;
+        private readonly IInstallModpack _installModpack;
 
-        public ObservableCollection<string> DebugOutput => new ObservableCollection<string>();
+        public ObservableCollection<string> DebugOutput { get; set; } = new ObservableCollection<string>();
 
         public RelayCommand InstallModpackCommand => new RelayCommand(InstallModpack);
 
@@ -21,12 +24,24 @@ namespace Automaton.ViewModel
         public InstallModpackViewModel(IComponentContext components)
         {
             _viewController = components.Resolve<IViewController>();
-            _installBase = components.Resolve<IInstallBase>();
+            _installModpack = components.Resolve<IInstallModpack>();
+
+            _installModpack.DebugLogCallback += DebugLogCallback;
         }
 
+        private void DebugLogCallback(object sender, string e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate
+            {
+                DebugOutput.Add(e);
+            });
+        }
+    
         private void InstallModpack()
         {
             IsInstalling = true;
+
+            Task.Factory.StartNew(_installModpack.Install);
         }
     }
 }

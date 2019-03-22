@@ -94,7 +94,7 @@
                                     VerticalAlignment="Center"
                                     Command="{Binding FindAndValidateModCommand}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
-                                    DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
+                                    DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
                                     Style="{DynamicResource MaterialDesignToolButton}">
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
                                 </Button>
@@ -102,7 +102,7 @@
                                     VerticalAlignment="Center"
                                     Command="{Binding OpenNexusLinkCommand}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
-                                    DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
+                                    DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
                                     Style="{DynamicResource MaterialDesignToolButton}">
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
