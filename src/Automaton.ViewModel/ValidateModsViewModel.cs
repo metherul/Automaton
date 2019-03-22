@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Automaton.Model.Install;
@@ -57,14 +58,24 @@ namespace Automaton.ViewModel
             _nxmHandle.RecievedPipedDataEvent += QueueDownload;
             _downloadClient.DownloadUpdate += DownloadUpdate;
 
-            MissingMods.CollectionChanged += MissingMods_CollectionChanged;
+            Task.Factory.StartNew(ViewControllerController);
         }
 
-        private void MissingMods_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ViewControllerController() 
         {
-            if (MissingMods.Count == 0)
+            // Phin would be proud. This will be replaced when I have more time.
+            // That never means anything though. This will be around for a while.
+
+            while (true)
             {
-                _viewController.IncrementCurrentViewIndex();
+                if (MissingMods.Count() == 0)
+                {
+                    _viewController.IncrementCurrentViewIndex();
+
+                    return;
+                }
+
+                Thread.Sleep(10);
             }
         }
 
@@ -81,7 +92,7 @@ namespace Automaton.ViewModel
 
         private async void QueueDownload(object caller, PipedData pipedData)
         {
-            if (!MissingMods.Any(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
+            if (!MissingMods.Any(x => x.FileId == pipedData.FileId || x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
             {
                 return;
             }

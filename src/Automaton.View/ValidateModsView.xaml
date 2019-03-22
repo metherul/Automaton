@@ -116,7 +116,7 @@
                                     Content="{Binding Version}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding ModName}">
+                                    ToolTip="{Binding NexusFileName}">
                                     <Label.Resources>
                                         <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
                                             <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
@@ -135,7 +135,7 @@
                                     Content="{Binding ModName}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding ModName}">
+                                    ToolTip="{Binding NexusFileName}">
                                     <Label.Resources>
                                         <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
                                             <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
