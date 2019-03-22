@@ -142,7 +142,15 @@ namespace Automaton.ViewModel
 
         private async void OpenNexusLink(ExtendedMod mod)
         {
-            Process.Start($"https://nexusmods.com/skyrim/mods/{mod.ModId}?tab=files");
+            if (mod.Repository == "NexusMods")
+            {
+                Process.Start($"https://nexusmods.com/{mod.TargetGame}/mods/{mod.ModId}?tab=files");
+            }
+
+            else
+            {
+                Process.Start($"https://www.google.com/search?q={Path.GetFileNameWithoutExtension(mod.FileName)}");
+            }
         }
     }
 
