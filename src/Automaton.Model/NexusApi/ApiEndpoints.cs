@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
@@ -22,6 +23,8 @@ namespace Automaton.Model.NexusApi
                 BaseAddress = new Uri("https://api.nexusmods.com"),
                 Timeout = TimeSpan.FromSeconds(10)
             };
+
+            _baseHttpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<string> GenerateModDownloadLinkAsync(string gameName, string modId, string fileId)
@@ -52,7 +55,10 @@ namespace Automaton.Model.NexusApi
 
             try
             {
+                _baseHttpClient.DefaultRequestHeaders.Add("APIKEY", _apiBase.ApiKey);
+
                 var response = await _baseHttpClient.GetAsync(url);
+
                 _apiBase.RemainingDailyRequests =
                     Convert.ToInt32(response.Headers.GetValues("X-RL-Daily-Remaining").ToList().First());
 
@@ -60,7 +66,7 @@ namespace Automaton.Model.NexusApi
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e);   
                 throw;
             }
         }

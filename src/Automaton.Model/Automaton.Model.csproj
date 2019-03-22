@@ -97,6 +97,7 @@
     <Compile Include="Modpack\Base\InstallParameter.cs" />
     <Compile Include="Modpack\Base\Header.cs" />
     <Compile Include="Modpack\Base\Mod.cs" />
+    <Compile Include="Modpack\Base\ModOrganizerVersion.cs" />
     <Compile Include="Modpack\Base\ModpackStructure.cs" />
     <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
     <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="NexusApi\ApiBase.cs" />
     <Compile Include="NexusApi\ApiEndpoints.cs" />
     <Compile Include="NexusApi\DownloadClient.cs" />
+    <Compile Include="NexusApi\Interfaces\IDownloadClient.cs" />
     <Compile Include="NexusApi\Interfaces\IApiEndpoints.cs" />
     <Compile Include="NexusApi\Interfaces\IApiBase.cs" />
     <Compile Include="NexusApi\Interfaces\INxmHandle.cs" />

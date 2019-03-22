@@ -34,7 +34,7 @@ namespace Automaton.ViewModel
                 _viewController.IncrementCurrentViewIndex();
             };
 
-            await _apiBase.InitializeAsync(_installBase.ModpackHeader.TargetGame);
+            await _apiBase.InitializeAsync();
         }
 
         public void ContinueOffline()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using Automaton.Model.NexusApi.Interfaces;
 using NamedPipeWrapper;
 
@@ -17,7 +18,6 @@ namespace Automaton.Model.NexusApi
         {
             _server = new NamedPipeServer<PipedData>(ServerName);
 
-            _server.ClientConnected += connection => ConnectClient();
             _server.ClientMessage += (connection, message) => ReceieveClientMessage(message);
 
             _server.Start();
@@ -27,11 +27,20 @@ namespace Automaton.Model.NexusApi
         {
             _client = new NamedPipeClient<PipedData>(ServerName);
             _client.Start();
+
+            _client.WaitForConnection();
         }
 
         public void SendClientMessage(PipedData message)
         {
-            _client.PushMessage(message);
+            try
+            {
+                _client.PushMessage(message);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         public void ReceieveClientMessage(PipedData message)

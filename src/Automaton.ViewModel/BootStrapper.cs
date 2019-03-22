@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
+using System.Reflection;
+using System.Threading;
+using System.Windows;
 using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
@@ -12,6 +14,7 @@ using Automaton.ViewModel.Content.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
+using Application = System.Windows.Forms.Application;
 
 namespace Automaton.ViewModel
 {
@@ -35,22 +38,23 @@ namespace Automaton.ViewModel
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
 
             // For performance, the NXM router will initialize and run its checks here.
-            if (Process.GetProcessesByName("Automaton").Any())
+            if (Process.GetProcessesByName("Automaton").Length > 1)
             {
                 var cliArgs = Environment.GetCommandLineArgs();
 
-                if (cliArgs.Any())
+                if (cliArgs.Length == 2 && cliArgs[0] == Assembly.GetEntryAssembly().Location)
                 {
                     // Build the builder with the router ONLY and pipe the needed data.
                     builder.RegisterAssemblyTypes(assembly)
                         .Where(t => typeof(INxmHandle).IsAssignableFrom(t))
-                        .SingleInstance();
-                    builder.Build();
+                        .SingleInstance()
+                        .AsImplementedInterfaces();
+                    _rootScope = builder.Build();
 
                     var nxmHandle = Resolve<INxmHandle>();
 
                     nxmHandle.ConnectClient();
-                    nxmHandle.SendClientMessage(new PipedData(cliArgs[0]));
+                    nxmHandle.SendClientMessage(new PipedData(cliArgs[1]));
                 }
 
                 // Kill the app, we do not want more than one instance of Automaton floating around.

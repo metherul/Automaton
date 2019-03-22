@@ -8,10 +8,10 @@ namespace Automaton.Model.NexusApi.Interfaces
         event ApiBase.HasLoggedIn HasLoggedInEvent;
 
         string ApiKey { get; set; }
-        string GameName { get; set; }
         int RemainingDailyRequests { get; set; }
 
-        Task<bool> InitializeAsync(string gameName, string apiKey = "");
-        bool Initialize(string gameName, string apiKey = "");
+        Task<bool> InitializeAsync(string apiKey = "");
+        bool Initialize(string apiKey = "");
+        bool IsUserLoggedIn();
     }
 }

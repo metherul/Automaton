@@ -18,7 +18,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="20,0,0,20">
+            <Grid Grid.Row="0" Margin="20,0,20,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -27,7 +27,6 @@
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <TextBlock Style="{DynamicResource HeaderText}" Text="Missing Mods" />
-
                     <Button
                         Margin="10,0,0,0"
                         ClipToBounds="True"
@@ -62,6 +61,17 @@
                         </Image>
                     </StackPanel>
                 </Grid>
+
+                <Grid Grid.Column="2">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource RobotoMono}"
+                        Style="{DynamicResource BodyText}">
+                        <Run Text="{Binding ValidatedModCount}" />
+                        <Run>/</Run>
+                        <Run Text="{Binding StartingMissingModCount}" />
+                    </TextBlock>
+                </Grid>
             </Grid>
 
             <ListBox
@@ -80,23 +90,47 @@
                     <DataTemplate>
                         <VirtualizingStackPanel HorizontalAlignment="Stretch">
                             <VirtualizingStackPanel Orientation="Horizontal">
-                                <Button VerticalAlignment="Center" Style="{DynamicResource MaterialDesignToolButton}">
+                                <Button
+                                    VerticalAlignment="Center"
+                                    Command="{Binding FindAndValidateModCommand}"
+                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
+                                    DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
+                                    Style="{DynamicResource MaterialDesignToolButton}">
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
                                 </Button>
                                 <Button VerticalAlignment="Center" Style="{DynamicResource MaterialDesignToolButton}">
-                                    <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="Link" />
+                                    <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
                                 <Grid
                                     Width="1.5"
                                     Height="Auto"
-                                    Margin="2,10"
+                                    Margin="3,10"
+                                    Background="{DynamicResource FontColor}" />
+                                <Label
+                                    VerticalAlignment="Center"
+                                    Content="{Binding Version}"
+                                    FontFamily="{StaticResource RobotoMono}"
+                                    Foreground="{DynamicResource FontColor}"
+                                    ToolTip="{Binding ModName}">
+                                    <Label.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
+                                            <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
+                                            <Setter Property="Background" Value="White" />
+                                            <Setter Property="Foreground" Value="Black" />
+                                        </Style>
+                                    </Label.Resources>
+                                </Label>
+                                <Grid
+                                    Width="1.5"
+                                    Height="Auto"
+                                    Margin="3,10"
                                     Background="{DynamicResource FontColor}" />
                                 <Label
                                     VerticalAlignment="Center"
                                     Content="{Binding ModName}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding FileName}">
+                                    ToolTip="{Binding ModName}">
                                     <Label.Resources>
                                         <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
                                             <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />

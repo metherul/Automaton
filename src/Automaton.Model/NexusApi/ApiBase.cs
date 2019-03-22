@@ -20,22 +20,19 @@ namespace Automaton.Model.NexusApi
         private HttpClient HttpClient { get; set; }
 
         public string ApiKey { get; set; }
-        public string GameName { get; set; }
 
         public int RemainingDailyRequests { get; set; }
 
         protected bool IsPremium { get; set; }
         protected bool IsLoggedIn { get; set; }
 
-        public async Task<bool> InitializeAsync(string gameName, string apiKey = "")
+        public async Task<bool> InitializeAsync(string apiKey = "")
         {
-            return await Task.Factory.StartNew(() => Initialize(gameName, apiKey));
+            return await Task.Factory.StartNew(() => Initialize(apiKey));
         }
 
-        public bool Initialize(string gameName, string apiKey = "")
+        public bool Initialize(string apiKey = "")
         {
-            GameName = gameName;
-
             HttpClient = new HttpClient()
             {
                 BaseAddress = new Uri("https://api.nexusmods.com"),
@@ -88,12 +85,17 @@ namespace Automaton.Model.NexusApi
                 };
 
                 websocket.Connect();
-                websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"The Automaton Framework\"}");
+                websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
 
                 Process.Start($"https://www.nexusmods.com/sso?id={guid}");
             }
 
             return false;
+        }
+
+        public bool IsUserLoggedIn()
+        {
+            return IsLoggedIn;
         }
     }
 }

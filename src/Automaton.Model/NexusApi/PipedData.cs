@@ -1,5 +1,9 @@
-﻿namespace Automaton.Model.NexusApi
+﻿using System;
+using System.Windows.Forms;
+
+namespace Automaton.Model.NexusApi
 {
+    [Serializable]
     public class PipedData
     {
         public PipedData(string nxmFullText)

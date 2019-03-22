@@ -26,7 +26,7 @@ namespace Automaton.Model.Install
 
         public List<ExtendedMod> GetMissingMods(List<string> directoriesToScan)
         {
-            directoriesToScan.AddRange(_installBase.SourceDirectories);
+            directoriesToScan.Add(_installBase.SourceDirectories);
 
             var missingMods = new List<ExtendedMod>();
             var directoryContents = directoriesToScan
@@ -102,6 +102,26 @@ namespace Automaton.Model.Install
         public async Task<List<ExtendedMod>> FilterMissingModsAsync(string directoryPath)
         {
             return await Task.Factory.StartNew(() => FilterMissingMods(directoryPath));
+        }
+
+        public List<ExtendedMod> ValidateTargetModArchive(string archivePath, List<ExtendedMod> missingMods)
+        {
+            var archiveSize = new FileInfo(archivePath).Length.ToString();
+            var possibleMatchingMods = missingMods.Where(x => x.FileSize == archiveSize).ToList();
+
+            if (!possibleMatchingMods.Any())
+            {
+                return missingMods;
+            }
+
+            foreach (var possibleMatchingMod in possibleMatchingMods)
+            {
+                _installBase.ModpackMods.Where(x => x.FileId == possibleMatchingMod.FileId && x.FileSize == archiveSize).ToList().ForEach(x => x.FilePath = archivePath);
+
+                missingMods.Remove(possibleMatchingMod);
+            }
+
+            return missingMods;
         }
 
         private string GetMatchingArchive(Mod mod, List<string> possibleArchiveMatches)
