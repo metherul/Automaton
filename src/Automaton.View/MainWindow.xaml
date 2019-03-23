@@ -103,6 +103,10 @@
                 <materialDesign:TransitionerSlide>
                     <view:InstallModpackView />
                 </materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide>
+                    <view:FinishedInstallView />
+                </materialDesign:TransitionerSlide>
             </materialDesign:Transitioner>
 
             <Grid Grid.Row="2">
@@ -128,7 +132,7 @@
                     FontFamily="{StaticResource RobotoMono}"
                     FontSize="11"
                     Foreground="{DynamicResource FontColor}">
-                    Automaton v.1.0
+                    Automaton v.1.0.0b
                 </Label>
             </Grid>
 

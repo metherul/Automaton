@@ -29,6 +29,7 @@ namespace Automaton.Model.Modpack
         private readonly IModpackStructure _modpackStructure;
         private readonly IInstallBase _installBase;
         private readonly IClassExtensions _classExtensions;
+        private readonly ILogger _logger;
 
         public ModpackRead(IComponentContext components)
         {
@@ -37,6 +38,7 @@ namespace Automaton.Model.Modpack
             _modpackStructure = components.Resolve<IModpackStructure>(); 
             _installBase = components.Resolve<IInstallBase>();
             _classExtensions = components.Resolve<IClassExtensions>();
+            _logger = components.Resolve<ILogger>();
         }
 
         public async Task<bool> LoadModpackAsync(string modpackPath)
@@ -51,6 +53,8 @@ namespace Automaton.Model.Modpack
 
             if (!isValidateSuccessful)
             {
+                _logger.WriteLine("Validate failure");
+
                 return false;
             }
 
@@ -58,6 +62,8 @@ namespace Automaton.Model.Modpack
 
             if (header is null)
             {
+                _logger.WriteLine("Header is null");
+
                 return false;
             }
 
@@ -69,6 +75,8 @@ namespace Automaton.Model.Modpack
 
             if (headerObject.ModpackVersion != "1.0b")
             {
+                _logger.WriteLine("ModpackVersion mismatch");
+
                 return false;
             }
 
@@ -111,6 +119,8 @@ namespace Automaton.Model.Modpack
 
                 _installBase.ModpackMods.Add(extendedModOrganizerObject);
             }
+
+            _logger.WriteLine("Modpack loaded");
 
             return true;
         }

@@ -2,14 +2,10 @@
 using Automaton.Model.Archive.Interfaces;
 using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Install.Interfaces;
-using SharpCompress.Archives;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Readers;
+using Automaton.Model.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Automaton.Model.Install
 {
@@ -17,6 +13,7 @@ namespace Automaton.Model.Install
     {
         private readonly IInstallBase _installBase;
         private readonly IArchiveContents _archiveContents;
+        private readonly ILogger _logger;
 
         private int _maxConcurrency = 3;
 
@@ -26,6 +23,7 @@ namespace Automaton.Model.Install
         {
             _installBase = components.Resolve<IInstallBase>();
             _archiveContents = components.Resolve<IArchiveContents>();
+            _logger = components.Resolve<ILogger>();
         }
 
         public void Install()
@@ -137,6 +135,7 @@ namespace Automaton.Model.Install
         private void DebugWrite(string message)
         {
             DebugLogCallback.Invoke(this, message);
+            _logger.WriteLine(message);
         }
     }
 }

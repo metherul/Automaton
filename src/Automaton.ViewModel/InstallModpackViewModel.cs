@@ -40,6 +40,7 @@ namespace Automaton.ViewModel
             if (e == "_END")
             {
                 IsInstalling = false;
+                _viewController.IncrementCurrentViewIndex();
                 return;
             }
 

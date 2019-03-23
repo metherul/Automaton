@@ -89,6 +89,9 @@
     <Compile Include="Dialogs\GenericErrorDialog.xaml.cs">
       <DependentUpon>GenericErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FinishedInstallView.xaml.cs">
+      <DependentUpon>FinishedInstallView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InstallModpackView.xaml.cs">
       <DependentUpon>InstallModpackView.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,10 @@
       <DependentUpon>SetupAssistantView.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\GenericErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FinishedInstallView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Archive\ArchiveContents.cs" />
     <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Install\Intefaces\IInstallModpack.cs" />
     <Compile Include="Install\InstallModpack.cs" />
     <Compile Include="Interfaces\IClassExtensions.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Install\ExtendedMod.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
     <Compile Include="Modpack\Base\InstallParameter.cs" />
     <Compile Include="Modpack\Base\Header.cs" />

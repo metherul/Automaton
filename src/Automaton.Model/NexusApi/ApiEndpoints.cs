@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
+using Automaton.Model.Interfaces;
 using Automaton.Model.NexusApi.Interfaces;
 using Newtonsoft.Json.Linq;
 
@@ -12,11 +13,14 @@ namespace Automaton.Model.NexusApi
     public class ApiEndpoints : IApiEndpoints
     {
         private readonly IApiBase _apiBase;
+        private readonly ILogger _logger;
+
         private readonly HttpClient _baseHttpClient;
 
         public ApiEndpoints(IComponentContext components)
         {
             _apiBase = components.Resolve<IApiBase>();
+            _logger = components.Resolve<ILogger>();
 
             _baseHttpClient = new HttpClient()
             {
@@ -29,6 +33,8 @@ namespace Automaton.Model.NexusApi
 
         public async Task<string> GenerateModDownloadLinkAsync(string gameName, string modId, string fileId)
         {
+            _logger.WriteLine($"GenerateModDownloadLink({gameName}, {modId}, {fileId})");
+
             var url = $"/v1/games/{gameName}/mods/{modId}/files/{fileId}/download_link";
 
             var apiResult = await MakeGenericApiCall(url);
@@ -38,6 +44,8 @@ namespace Automaton.Model.NexusApi
 
         public async Task<string> GenerateModDownloadLinkAsync(PipedData pipedData)
         {
+            _logger.WriteLine($"GenerateModDownloadLink()");
+
             var url = $"/v1/games/{pipedData.Game}/mods/{pipedData.ModId}/files/{pipedData.FileId}/download_link" +
                       pipedData.AuthenticationParams;
             var apiResult = await MakeGenericApiCall(url);

@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Autofac;
+using Automaton.Model.Interfaces;
 using Automaton.Model.NexusApi.Interfaces;
 using Newtonsoft.Json.Linq;
 using WebSocketSharp;
@@ -13,6 +15,8 @@ namespace Automaton.Model.NexusApi
 {
     public class ApiBase : IApiBase
     {
+        private readonly ILogger _logger;
+
         public delegate void HasLoggedIn();
 
         public event HasLoggedIn HasLoggedInEvent;
@@ -26,6 +30,11 @@ namespace Automaton.Model.NexusApi
         protected bool IsPremium { get; set; }
         protected bool IsLoggedIn { get; set; }
 
+        public ApiBase(IComponentContext components)
+        {
+            _logger = components.Resolve<ILogger>();
+        }
+
         public async Task<bool> InitializeAsync(string apiKey = "")
         {
             return await Task.Factory.StartNew(() => Initialize(apiKey));
@@ -33,6 +42,8 @@ namespace Automaton.Model.NexusApi
 
         public bool Initialize(string apiKey = "")
         {
+            _logger.WriteLine("Initializing API base");
+
             HttpClient = new HttpClient()
             {
                 BaseAddress = new Uri("https://api.nexusmods.com"),
@@ -41,6 +52,8 @@ namespace Automaton.Model.NexusApi
 
             if (apiKey != string.Empty)
             {
+                _logger.WriteLine("Apikey not empty");
+
                 ApiKey = apiKey;
 
                 HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -58,6 +71,8 @@ namespace Automaton.Model.NexusApi
 
             else
             {
+                _logger.WriteLine("Apikey empty");
+
                 var guid = Guid.NewGuid();
                 var websocket = new WebSocket("wss://sso.nexusmods.com")
                 {
@@ -67,6 +82,8 @@ namespace Automaton.Model.NexusApi
 
                 websocket.OnMessage += (sender, args) =>
                 {
+                    _logger.WriteLine("Key captured");
+
                     if (args == null || string.IsNullOrEmpty(args.Data)) return;
 
                     ApiKey = args.Data;
@@ -80,6 +97,9 @@ namespace Automaton.Model.NexusApi
                     IsLoggedIn = true;
 
                     RemainingDailyRequests = Convert.ToInt32(response.Headers.GetValues("X-RL-Daily-Remaining").ToList().First());
+
+                    _logger.WriteLine($"User premium status: {IsPremium}");
+                    _logger.WriteLine("User is logged in");
 
                     HasLoggedInEvent.Invoke();
                 };

@@ -10,12 +10,14 @@ using System.IO;
 using Autofac;
 using System.Threading;
 using System.Collections.Generic;
+using Automaton.Model.Interfaces;
 
 namespace Automaton.Model.NexusApi
 {
     public class DownloadClient : IDownloadClient
     {
         private readonly IInstallBase _installBase;
+        private readonly ILogger _logger;
 
         private int _currentDownloads;
         private readonly int _maxConcurrentDownloads = 1;
@@ -27,6 +29,7 @@ namespace Automaton.Model.NexusApi
         public DownloadClient(IComponentContext components)
         {
             _installBase = components.Resolve<IInstallBase>();
+            _logger = components.Resolve<ILogger>();
 
             Task.Factory.StartNew(QueueController);
         }
@@ -60,6 +63,8 @@ namespace Automaton.Model.NexusApi
 
         public bool DownloadFile(string downloadUrl, ExtendedMod mod)
         {
+            _logger.WriteLine($"Downlading file: {mod.FileName}");
+
             mod.CurrentDownloadProgress = 0;
             mod.IsIndeterminateProcess = false;
             DownloadUpdate.Invoke(this, mod);
@@ -72,6 +77,8 @@ namespace Automaton.Model.NexusApi
                 {
                     if (mod.CurrentDownloadProgress == 100)
                     {
+                        _logger.WriteLine("Download complete");
+
                         return;
                     }
 

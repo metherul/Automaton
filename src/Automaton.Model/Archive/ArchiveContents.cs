@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Autofac;
 using Automaton.Model.Archive.Interfaces;
+using Automaton.Model.Interfaces;
 using SharpCompress.Archives;
-using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 
 namespace Automaton.Model.Archive
 {
     public class ArchiveContents : IArchiveContents
     {
+        private readonly ILogger _logger;
+
+        public ArchiveContents(IComponentContext components)
+        {
+            _logger = components.Resolve<ILogger>();
+        }
+
         public List<IArchiveEntry> GetArchiveEntries(string archivePath)
         {
             var archive = ArchiveFactory.Open(archivePath);
@@ -29,6 +37,8 @@ namespace Automaton.Model.Archive
 
         public void ExtractToDirectory(string archivePath, string directoryPath)
         {
+            _logger.WriteLine($"Extracting: {archivePath} to {directoryPath}");
+
             var sevenZipExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.exe");
 
             if (Directory.Exists(directoryPath))

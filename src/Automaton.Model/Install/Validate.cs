@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Autofac;
 using Automaton.Model.Install.Intefaces;
+using Automaton.Model.Interfaces;
 using Automaton.Model.Modpack.Base;
 
 namespace Automaton.Model.Install
@@ -13,10 +14,12 @@ namespace Automaton.Model.Install
     public class Validate : IValidate
     {
         private readonly IInstallBase _installBase;
+        private readonly ILogger _logger;
 
         public Validate(IComponentContext components)
         {
             _installBase = components.Resolve<IInstallBase>();
+            _logger = components.Resolve<ILogger>();
         }
 
         public async Task<List<ExtendedMod>> GetMissingModsAsync(List<string> directoriesToScan)
@@ -60,6 +63,8 @@ namespace Automaton.Model.Install
                 }
             }
 
+            _logger.WriteLine($"Missing mod count: {missingMods.Count()}");
+
             return missingMods;
         }
 
@@ -96,6 +101,8 @@ namespace Automaton.Model.Install
                 }
             }
 
+            _logger.WriteLine($"Missing mod count: {missingMods.Count()}");
+
             return missingMods;
         }
 
@@ -120,6 +127,8 @@ namespace Automaton.Model.Install
 
                 missingMods.Remove(possibleMatchingMod);
             }
+
+            _logger.WriteLine($"Missing mod count: {missingMods.Count()}");
 
             return missingMods;
         }
