@@ -16,6 +16,9 @@ using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Interfaces;
 using Automaton.Model.Modpack.Base;
 using Automaton.Model.Modpack.Base.Interfaces;
+using System.Reflection;
+using System.Collections.Generic;
+using SharpCompress.Archives;
 
 namespace Automaton.Model.Modpack
 {
@@ -64,12 +67,15 @@ namespace Automaton.Model.Modpack
 
             var headerObject = ConsumeModpackJsonFile<Header>(headerMemoryStream);
 
-            //if (headerObject.Version != "1.0b")
-            //{
-            //    return false;
-            //}
+            if (headerObject.ModpackVersion != "1.0b")
+            {
+                return false;
+            }
 
             _installBase.ModpackHeader = headerObject;
+
+            // Load in load order config files
+            LoadLoadOrderFiles(modpackEntries.ToList());
 
             // Load each modpack config file
             var modDirectory = _installBase.ModpackHeader.ModInstallFolders.First();
@@ -85,18 +91,73 @@ namespace Automaton.Model.Modpack
                 _installBase.ModpackMods.Add(_classExtensions.ToDerived<Mod, ExtendedMod>(mod));
             }
 
+            var test = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+
+            // Load an extended mod object for the specified mod organizer item
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileName = assembly.GetName().Name + ".ModOrganizer.ModOrganizer" + headerObject.ModOrganizerVersion.ToString() + ".json";
+
+            using (var fileStream = assembly.GetManifestResourceStream(fileName))
+            {
+                var memoryStream = new MemoryStream();
+                fileStream.CopyTo(memoryStream);
+
+                memoryStream.Position = 0;
+
+                var modOrganizerObject = ConsumeModpackJsonFile<Mod>(memoryStream);
+                var extendedModOrganizerObject = _classExtensions.ToDerived<Mod, ExtendedMod>(modOrganizerObject);
+
+                extendedModOrganizerObject.IsModOrganizer = true;
+
+                _installBase.ModpackMods.Add(extendedModOrganizerObject);
+            }
+
             return true;
         }
 
         private T ConsumeModpackJsonFile<T>(MemoryStream memoryStream) where T : class
         {
             var jsonString = Encoding.ASCII.GetString(memoryStream.ToArray());
+
+            if (jsonString.StartsWith("???"))
+            {
+                jsonString = jsonString.Remove(0, 3);
+            }
+
             var jsonObject = JsonConvert.DeserializeObject<T>(jsonString, new JsonSerializerSettings()
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             }) as T;
 
             return jsonObject;
+        }
+
+        private void LoadLoadOrderFiles(List<IArchiveEntry> modpackEntries)
+        {
+            var pluginsTxt = modpackEntries.First(x => x.Key == _modpackStructure.PluginsTxtOffset);
+            var streamReader = new StreamReader(pluginsTxt.OpenEntryStream());
+
+            _installBase.PluginsTxt = streamReader.ReadToEnd();
+
+            var loadorderTxt = modpackEntries.First(x => x.Key == _modpackStructure.LoadorderTxtOffset);
+            streamReader = new StreamReader(loadorderTxt.OpenEntryStream());
+
+            _installBase.LoadorderTxt = streamReader.ReadToEnd();
+
+            var modlistTxt = modpackEntries.First(x => x.Key == _modpackStructure.LoadorderTxtOffset);
+            streamReader = new StreamReader(modlistTxt.OpenEntryStream());
+
+            _installBase.ModlistTxt = streamReader.ReadToEnd();
+
+            var archivesTxt = modpackEntries.First(x => x.Key == _modpackStructure.ArchivesTxtOffset);
+            streamReader = new StreamReader(archivesTxt.OpenEntryStream());
+
+            _installBase.ArchivesTxt = streamReader.ReadToEnd();
+
+            var lockedorderTxt = modpackEntries.First(x => x.Key == _modpackStructure.LockedorderTxtOffset);
+            streamReader = new StreamReader(lockedorderTxt.OpenEntryStream());
+
+            _installBase.LockedorderTxt = streamReader.ReadToEnd();
         }
 
         private bool InjectBitmapImages()

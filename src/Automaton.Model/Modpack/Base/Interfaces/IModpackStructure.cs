@@ -10,5 +10,10 @@ namespace Automaton.Model.Modpack.Base.Interfaces
         string HeaderOffset { get; }
         string ModsInitialDirectoryOffset { get; }
         string ThemeOffset { get; }
+        string PluginsTxtOffset { get; }
+        string LoadorderTxtOffset { get; }
+        string ModlistTxtOffset { get; }
+        string ArchivesTxtOffset { get; }
+        string LockedorderTxtOffset { get; }
     }
 }

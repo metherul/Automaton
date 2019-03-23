@@ -8,6 +8,11 @@ namespace Automaton.Model.Install.Intefaces
     {
         string DownloadsDirectory { get; set; }
         string InstallDirectory { get; set; }
+        string PluginsTxt { get; set; }
+        string LoadorderTxt { get; set; }
+        string ModlistTxt { get; set; }
+        string ArchivesTxt { get; set; }
+        string LockedorderTxt { get; set; }
         Header ModpackHeader { get; set; }
         List<ExtendedMod> ModpackMods { get; set; }
     }

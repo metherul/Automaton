@@ -42,7 +42,9 @@ namespace Automaton.Model.Archive
             var startInfo = new ProcessStartInfo()
             {
                 FileName = sevenZipExe,
-                Arguments = $"x \"{archivePath}\" -o\"{directoryPath}\""
+                Arguments = $"x \"{archivePath}\" -o\"{directoryPath}\"",
+                CreateNoWindow = true,
+                UseShellExecute = false
             };
 
             process.StartInfo = startInfo;

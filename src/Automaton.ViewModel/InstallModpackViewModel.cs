@@ -31,6 +31,18 @@ namespace Automaton.ViewModel
 
         private void DebugLogCallback(object sender, string e)
         {
+            if (e == "_CLEAR")
+            {
+                DebugOutput = new ObservableCollection<string>();
+                return;
+            }
+
+            if (e == "_END")
+            {
+                IsInstalling = false;
+                return;
+            }
+
             Application.Current.Dispatcher.BeginInvoke((Action)delegate
             {
                 DebugOutput.Add(e);

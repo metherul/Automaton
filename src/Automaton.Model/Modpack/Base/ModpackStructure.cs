@@ -11,6 +11,12 @@ namespace Automaton.Model.Modpack.Base
         public string ThemeOffset { get; } = "theme.json";
         public string ConfiguratorOffset { get; } = "configurator.json";
 
+        public string PluginsTxtOffset { get; } = "plugins.txt";
+        public string LoadorderTxtOffset { get; } = "loadorder.txt";
+        public string ModlistTxtOffset { get; } = "modlist.txt";
+        public string ArchivesTxtOffset { get; } = "archives.txt";
+        public string LockedorderTxtOffset { get; } = "lockedorder.txt";
+
         public string ModsInitialDirectoryOffset { get; } = "mods";
     }
 }

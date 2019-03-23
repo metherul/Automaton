@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="ModOrganizer\ModOrganizerv2_1_6.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
