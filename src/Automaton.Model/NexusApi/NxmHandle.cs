@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using Automaton.Model.NexusApi.Interfaces;
+using Microsoft.Win32;
 using NamedPipeWrapper;
 
 namespace Automaton.Model.NexusApi
@@ -17,10 +19,10 @@ namespace Automaton.Model.NexusApi
         public void StartServer()
         {
             _server = new NamedPipeServer<PipedData>(ServerName);
-
             _server.ClientMessage += (connection, message) => ReceieveClientMessage(message);
-
             _server.Start();
+
+            Registry.SetValue(@"HKEY_CURRENT_USER\Software\Classes\nxm\shell\open\command", "", $"\"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Automaton.exe")}\" \"%1\"");
         }
 
         public void ConnectClient()
