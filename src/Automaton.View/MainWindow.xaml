@@ -132,7 +132,7 @@
                     FontFamily="{StaticResource RobotoMono}"
                     FontSize="11"
                     Foreground="{DynamicResource FontColor}">
-                    Automaton v.1.0.4b
+                    Automaton v.1.0.5b
                 </Label>
             </Grid>
 
