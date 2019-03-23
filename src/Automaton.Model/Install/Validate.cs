@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -33,7 +33,7 @@ namespace Automaton.Model.Install
 
             var missingMods = new List<ExtendedMod>();
             var directoryContents = directoriesToScan
-                .SelectMany(x => Directory.GetFiles(x, "*.*", SearchOption.TopDirectoryOnly)).ToList();
+                .SelectMany(x => Directory.GetFiles(x, "*.*", System.IO.SearchOption.TopDirectoryOnly)).ToList();
 
             foreach (var mod in _installBase.ModpackMods)
             {
@@ -71,7 +71,7 @@ namespace Automaton.Model.Install
         public List<ExtendedMod> FilterMissingMods(string directoryPath)
         {
             var missingMods = new List<ExtendedMod>();
-            var directoryContents = Directory.GetFiles(directoryPath, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            var directoryContents = Directory.GetFiles(directoryPath, "*.*", System.IO.SearchOption.TopDirectoryOnly).ToList();
 
             foreach (var mod in _installBase.ModpackMods.Where(x => !File.Exists(x.FilePath)))
             {

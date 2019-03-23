@@ -6,7 +6,7 @@ using Automaton.Model.NexusApi.Interfaces;
 using System;
 using System.Linq;
 using System.Net;
-using System.IO;
+using Alphaleonis.Win32.Filesystem;
 using Autofac;
 using System.Threading;
 using System.Collections.Generic;

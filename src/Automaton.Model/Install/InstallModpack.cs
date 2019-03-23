@@ -4,7 +4,7 @@ using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Install.Interfaces;
 using Automaton.Model.Interfaces;
 using System;
-using System.IO;
+using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 
 namespace Automaton.Model.Install
@@ -14,7 +14,7 @@ namespace Automaton.Model.Install
         private readonly IInstallBase _installBase;
         private readonly IArchiveContents _archiveContents;
         private readonly ILogger _logger;
-
+        private readonly ICommonFilesystemUtility _commonFilesystemUtility;
         private int _maxConcurrency = 3;
 
         public EventHandler<string> DebugLogCallback { get; set; }
@@ -24,6 +24,7 @@ namespace Automaton.Model.Install
             _installBase = components.Resolve<IInstallBase>();
             _archiveContents = components.Resolve<IArchiveContents>();
             _logger = components.Resolve<ILogger>();
+            _commonFilesystemUtility = components.Resolve<ICommonFilesystemUtility>();
         }
 
         public void Install()
@@ -51,11 +52,11 @@ namespace Automaton.Model.Install
             }
 
             // Write the needed profile information
-            var profilePath = Path.Combine(installPath, "profiles", _installBase.ModpackHeader.Name);
+            var profilePath = System.IO.Path.Combine(installPath, "profiles", _installBase.ModpackHeader.Name);
 
             if (Directory.Exists(profilePath))
             {
-                Directory.Delete(profilePath, true);
+                _commonFilesystemUtility.DeleteDirectory(profilePath);
             }
 
             Directory.CreateDirectory(profilePath);
@@ -74,16 +75,16 @@ namespace Automaton.Model.Install
             DebugWrite($"[INSTALL] {mod.ModName}");
             DebugWrite($"[INSTALL] {mod.FileName}");
 
-            var extractionDirectory = Path.Combine(_installBase.DownloadsDirectory, Path.GetFileNameWithoutExtension(mod.FileName));
+            var extractionDirectory = System.IO.Path.Combine(_installBase.DownloadsDirectory, Path.GetFileNameWithoutExtension(mod.FileName));
             var archivePath = mod.FilePath;
-            var installPath = Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name, "mods", mod.ModName);
+            var installPath = System.IO.Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name, "mods", mod.ModName);
 
             // Extract mod archive
             DebugWrite("[!] Extracting files...");
             _archiveContents.ExtractToDirectory(archivePath, extractionDirectory);
 
             DebugWrite("[!] Enumerating files...");
-            var extractedArchiveFiles = Directory.GetFiles(extractionDirectory, "*.*", SearchOption.AllDirectories);
+            var extractedArchiveFiles = Directory.GetFiles(extractionDirectory, "*.*", System.IO.SearchOption.AllDirectories);
 
             if (!Directory.Exists(installPath))
             {
@@ -111,7 +112,7 @@ namespace Automaton.Model.Install
                     Directory.CreateDirectory(Path.GetDirectoryName(installFilePath));
                 }
 
-                File.Copy(matchingSourceFile.First(), installFilePath);
+                File.Copy(matchingSourceFile.First(), installFilePath, true);
             }
 
             // Write the meta.ini
@@ -128,7 +129,7 @@ namespace Automaton.Model.Install
                 $"1\\fileId={mod.FileId}");
 
             DebugWrite("[!] Removing extracted files...");
-            Directory.Delete(extractionDirectory, true);
+            _commonFilesystemUtility.DeleteDirectory(extractionDirectory);
         }
 
         private void DebugWrite(string message)

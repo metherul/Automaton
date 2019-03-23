@@ -117,5 +117,10 @@ namespace Automaton.Model.NexusApi
         {
             return IsLoggedIn;
         }
+
+        public bool IsUserPremium()
+        {
+            return IsPremium;
+        }
     }
 }

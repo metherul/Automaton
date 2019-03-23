@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Automaton.Model.Interfaces;
+﻿using Automaton.Model.Interfaces;
 
 namespace Automaton.Model
 {

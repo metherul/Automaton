@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
+using Automaton.Model.Install;
 using Automaton.Model.Interfaces;
 using Automaton.Model.NexusApi.Interfaces;
 using Newtonsoft.Json.Linq;
@@ -53,6 +54,27 @@ namespace Automaton.Model.NexusApi
             return JArray.Parse(apiResult)[0]["URI"].ToString();
         }
 
+        public async Task<string> GenerateModDownloadLinkAsync(ExtendedMod mod)
+        {
+            _logger.WriteLine($"GenerateModDownloadLink()");
+
+            if (mod.ModId == null || mod.FileId == null)
+            {
+                return null;
+            }
+
+            var url = $"/v1/games/{mod.TargetGame.ToLower()}/mods/{mod.ModId}/files/{mod.FileId}/download_link";
+            var apiResult = await MakeGenericApiCall(url);
+
+            if (apiResult == null)
+            {
+                _logger.WriteLine($"Failed to generate download link: {mod.ModName},{mod.ModId},{mod.FileId}");
+                return null;
+            }
+
+            return JArray.Parse(apiResult)[0]["URI"].ToString();
+        }
+
         private async Task<string> MakeGenericApiCall(string url)
         {
             if (_apiBase.ApiKey == string.Empty)
@@ -69,6 +91,11 @@ namespace Automaton.Model.NexusApi
                 }
 
                 var response = await _baseHttpClient.GetAsync(url);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return null;
+                }
 
                 _apiBase.RemainingDailyRequests =
                     Convert.ToInt32(response.Headers.GetValues("X-RL-Daily-Remaining").ToList().First());

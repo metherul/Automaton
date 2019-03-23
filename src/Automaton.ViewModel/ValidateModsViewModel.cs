@@ -79,14 +79,14 @@ namespace Automaton.ViewModel
             }
         }
 
-        private void ViewControllerOnViewIndexChangedEvent(object sender, int e)
+        private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
         {
             if (e != (int)ViewIndex.ValidateMods)
             {
                 return;
             }
 
-            ValidateMods();
+            await ValidateMods();
             _nxmHandle.StartServer();
         }
 
@@ -117,7 +117,7 @@ namespace Automaton.ViewModel
                 _installBase.ModpackMods.Where(x => x.Md5 == e.Md5).ToList()
                     .ForEach(x => x.FilePath = e.FilePath);
 
-                var matchingMods = MissingMods.Where(x => x.Md5 == e.Md5);
+                var matchingMods = MissingMods.Where(x => x.Md5 == e.Md5).ToList();
 
                 foreach (var matchingMod in matchingMods)
                 {
@@ -138,11 +138,19 @@ namespace Automaton.ViewModel
 
             else
             {
-                foreach (var matchingMissingMod in MissingMods.Where(x => x.Md5 == e.Md5))
+                var missingMods = MissingMods.ToList();
+                foreach (var matchingMissingMod in missingMods.Where(x => x.Md5 == e.Md5).ToList())
                 {
                     Application.Current.Dispatcher.BeginInvoke((Action)delegate
                     {
                         _missingModsLocked = true;
+
+                        var index = MissingMods.IndexOf(matchingMissingMod);
+                        if (index == -1)
+                        {
+                            return;
+                        }
+
                         MissingMods[MissingMods.IndexOf(matchingMissingMod)].CurrentDownloadProgress = e.CurrentDownloadProgress;
                         _missingModsLocked = false;
                     });
@@ -150,7 +158,7 @@ namespace Automaton.ViewModel
             }
         }
 
-        private async void ValidateMods()
+        private async Task ValidateMods()
         {
             var missingMods = await _validate.GetMissingModsAsync(new List<string>());
 

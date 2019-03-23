@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using Autofac;
 using Automaton.Model.Archive.Interfaces;
 using Automaton.Model.Interfaces;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using Alphaleonis.Win32.Filesystem;
 
 namespace Automaton.Model.Archive
 {
     public class ArchiveContents : IArchiveContents
     {
         private readonly ILogger _logger;
+        private readonly ICommonFilesystemUtility _commonFilesystemUtility;
 
         public ArchiveContents(IComponentContext components)
         {
             _logger = components.Resolve<ILogger>();
+            _commonFilesystemUtility = components.Resolve<ICommonFilesystemUtility>();
         }
 
         public List<IArchiveEntry> GetArchiveEntries(string archivePath)
@@ -28,9 +30,9 @@ namespace Automaton.Model.Archive
             return archive.Entries.ToList();
         }
 
-        public MemoryStream GetMemoryStreamFromEntry(Entry entry)
+        public System.IO.MemoryStream GetMemoryStreamFromEntry(Entry entry)
         {
-            var memoryStream = new MemoryStream();
+            var memoryStream = new System.IO.MemoryStream();
 
             return memoryStream;
         }
@@ -43,7 +45,8 @@ namespace Automaton.Model.Archive
 
             if (Directory.Exists(directoryPath))
             {
-                Directory.Delete(directoryPath, true);
+                _logger.WriteLine($"Delete: {directoryPath}");
+                _commonFilesystemUtility.DeleteDirectory(directoryPath);
             }
 
             Directory.CreateDirectory(directoryPath);

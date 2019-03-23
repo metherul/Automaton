@@ -13,5 +13,6 @@ namespace Automaton.Model.NexusApi.Interfaces
         Task<bool> InitializeAsync(string apiKey = "");
         bool Initialize(string apiKey = "");
         bool IsUserLoggedIn();
+        bool IsUserPremium();
     }
 }
