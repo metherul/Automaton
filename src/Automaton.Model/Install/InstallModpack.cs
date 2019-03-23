@@ -124,6 +124,7 @@ namespace Automaton.Model.Install
                 $"gameName={mod.TargetGame}\n" +
                 $"version={mod.Version}\n" +
                 $"installationFile={mod.FilePath}\n" +
+                $"repository={mod.Repository}\n" + 
                 $"modId={mod.ModId}\n\n" +
                 "[installedFiles]\n" +
                 $"1\\modId={mod.ModId}\n" +
