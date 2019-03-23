@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Automaton">
+    <!--  Content  -->
+    <BitmapImage x:Key="AutomatonImage" UriSource="/Automaton;component/Resources/Images/AutomatonHead.png" />
+    <BitmapImage x:Key="HeaderImage" UriSource="/Automaton;component/Resources/Images/AutomatonHead.png" />
+    <BitmapImage x:Key="NexusLogo" UriSource="/Automaton;component/Resources/Images/NexusMods.png" />
+    <BitmapImage x:Key="DownloadWithManager" UriSource="/Automaton;component/Resources/Images/DownloadWithManager.png" />
+    <BitmapImage x:Key="NexusLogoColor" UriSource="/Automaton;component/Resources/Images/NexusModsColor.png" />
+</ResourceDictionary>

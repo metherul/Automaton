@@ -1,0 +1,12 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Automaton.View">
+
+    <!--  Colors  -->
+    <Brush x:Key="BackgroundColor">#282C35</Brush>
+    <Brush x:Key="FontColor">#FFFFFF</Brush>
+    <Brush x:Key="ButtonColor">#42464F</Brush>
+    <Brush x:Key="AssistantControlColor">#FFFFFF</Brush>
+
+</ResourceDictionary>

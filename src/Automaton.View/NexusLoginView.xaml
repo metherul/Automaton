@@ -1,0 +1,116 @@
+﻿<UserControl
+    x:Class="Automaton.View.NexusLoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    DataContext="{Binding NexusLogin, Source={StaticResource ViewModelLocator}}"
+    Foreground="{DynamicResource FontColor}"
+    mc:Ignorable="d">
+
+    <Grid
+        Margin="5,0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Stretch">
+
+        <!--  Sign into Nexus Mods  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="50,10">
+            <TextBlock
+                HorizontalAlignment="Center"
+                Style="{DynamicResource HeaderText}"
+                Text="Nexus Mods Integration" />
+
+            <TextBlock
+                Margin="0,30,0,0"
+                HorizontalAlignment="Center"
+                Style="{DynamicResource BodyText}">
+                Automaton can speed up the install process by downloading mods through its own client.
+            </TextBlock>
+
+            <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                Style="{DynamicResource BodyText}">
+                <Bold>This does not mean the process will be automatic, you still need to visit each mod's page and click on the button shown below.</Bold>
+            </TextBlock>
+
+            <Image
+                Margin="30,20,30,30"
+                HorizontalAlignment="Center"
+                RenderOptions.BitmapScalingMode="Fant"
+                Source="{StaticResource DownloadWithManager}" />
+
+            <TextBlock
+                Margin="0,5,0,0"
+                HorizontalAlignment="Center"
+                Style="{DynamicResource BodyText}">
+                To continue with Automaton downloads, click the button on the right. This will take you to nexusmods.com to allow Automaton to use your account.<LineBreak />
+            </TextBlock>
+
+            <Button
+                HorizontalAlignment="Center"
+                ClipToBounds="True"
+                FontFamily="{StaticResource ProductSans}"
+                Foreground="{DynamicResource FontColor}"
+                Style="{StaticResource MaterialDesignToolButton}">
+                More Info
+            </Button>
+
+            <TextBlock
+                Margin="0,20,0,0"
+                HorizontalAlignment="Left"
+                Style="{DynamicResource BodyText}">
+                To continue offline, click the button on the left.
+            </TextBlock>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Height="35"
+                Margin="0,0,5,0"
+                Command="{Binding ContinueOfflineCommand}"
+                IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}"
+                Template="{DynamicResource FloatingButtonTemplate}">
+                <TextBlock Style="{DynamicResource ButtonText}">
+                    Offline Install
+                </TextBlock>
+            </Button>
+
+            <Button
+                Grid.Column="1"
+                Height="35"
+                Margin="5,0,0,0"
+                Command="{Binding LoginToNexusCommand}"
+                IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}">
+                <TextBlock>
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource ButtonText}" TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLoggingIn}" Value="false">
+                                    <Setter Property="Text" Value="Login" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsLoggingIn}" Value="true">
+                                    <Setter Property="Text" Value="Logging in..." />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

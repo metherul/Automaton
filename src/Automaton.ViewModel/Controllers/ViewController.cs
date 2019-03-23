@@ -1,30 +1,19 @@
-﻿namespace Automaton.ViewModel.Controllers
+﻿using System;
+using Automaton.ViewModel.Controllers.Interfaces;
+
+namespace Automaton.ViewModel.Controllers
 {
-    public class ViewController
+    public class ViewController : IViewController
     {
-        public delegate void ViewIndexChanged(int index);
+        public event EventHandler<int> ViewIndexChangedEvent;
 
-        public static event ViewIndexChanged ViewIndexChangedEvent;
+        public int CurrentViewIndex { get; set; } = 0;
 
-        private static int _currentViewIndex = 0;
-
-        public static int CurrentViewIndex
-        {
-            get => _currentViewIndex;
-            set
-            {
-                if (value != _currentViewIndex)
-                {
-                    _currentViewIndex = value;
-
-                    ViewIndexChangedEvent(_currentViewIndex);
-                }
-            }
-        }
-
-        public static void IncrementCurrentViewIndex()
+        public void IncrementCurrentViewIndex()
         {
             CurrentViewIndex++;
+
+            ViewIndexChangedEvent(this, CurrentViewIndex);
         }
     }
 }

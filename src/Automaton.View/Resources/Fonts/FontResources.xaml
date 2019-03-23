@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Automaton">
+
+    <!--  Fonts  -->
+    <FontFamily x:Key="ProductSans">pack://application:,,,/Resources/Fonts/ProductSans/#Product Sans</FontFamily>
+    <FontFamily x:Key="RobotoMono">pack://application:,,,/Resources/Fonts/RobotoMono/#Roboto Mono</FontFamily>
+    <FontFamily x:Key="Roboto">pack://application:,,,/Resources/Fonts/Roboto/#Roboto</FontFamily>
+
+</ResourceDictionary>

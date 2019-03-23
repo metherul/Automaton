@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="Automaton.View.FinishedInstallView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:Automaton.View"
+    xmlns:viewModel="clr-namespace:Automaton.ViewModel;assembly=Automaton.ViewModel"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    DataContext="{Binding FinishedInstall, Source={StaticResource ViewModelLocator}}"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel
+            Margin="30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image
+                Width="100"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Center"
+                RenderOptions.BitmapScalingMode="Fant"
+                RenderOptions.EdgeMode="Aliased"
+                Source="{DynamicResource HeaderImage}" />
+            <TextBlock
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Style="{DynamicResource HeaderText}"
+                Text="Your Modpack has been Installed"
+                TextAlignment="Justify" />
+            <TextBlock
+                Margin="5,30,5,0"
+                HorizontalAlignment="Center"
+                FontSize="15"
+                Style="{DynamicResource BodyText}"
+                Text="A huge thanks to Phinocio, Gatonegro, the Ultimate Skyrim team and the rest of our fantastic beta testers. Without them, none of this would have ever been possible."
+                TextAlignment="Justify" />
+
+            <TextBlock
+                Margin="5,30,5,0"
+                HorizontalAlignment="Center"
+                FontSize="15"
+                Opacity=".4"
+                Style="{DynamicResource BodyText}"
+                Text="If you are confused to to what's next: Start the ModOrganizer.exe application and follow the steps. Then, install all other prerequisites by following the guides defined by the modpack you installed."
+                TextAlignment="Justify" />
+        </StackPanel>
+    </Grid>
+</UserControl>
