@@ -63,7 +63,7 @@ namespace Automaton.Model.Install
             File.WriteAllText(Path.Combine(profilePath, "plugins.txt"), _installBase.PluginsTxt);
             File.WriteAllText(Path.Combine(profilePath, "loadorder.txt"), _installBase.LoadorderTxt);
             File.WriteAllText(Path.Combine(profilePath, "modlist.txt"), _installBase.ModlistTxt);
-            File.WriteAllText(Path.Combine(profilePath, "archives.txt"), _installBase.ModlistTxt);
+            File.WriteAllText(Path.Combine(profilePath, "archives.txt"), _installBase.ArchivesTxt);
 
             DebugWrite("[DONE] Operation completed.");
             DebugWrite("_END");

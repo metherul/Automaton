@@ -154,7 +154,7 @@ namespace Automaton.Model.Modpack
 
             _installBase.LoadorderTxt = streamReader.ReadToEnd();
 
-            var modlistTxt = modpackEntries.First(x => x.Key == _modpackStructure.LoadorderTxtOffset);
+            var modlistTxt = modpackEntries.First(x => x.Key == _modpackStructure.ModlistTxtOffset);
             streamReader = new StreamReader(modlistTxt.OpenEntryStream());
 
             _installBase.ModlistTxt = streamReader.ReadToEnd();
