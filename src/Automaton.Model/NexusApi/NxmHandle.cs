@@ -27,8 +27,6 @@ namespace Automaton.Model.NexusApi
 
         public void ConnectClient()
         {
-
-
             _client = new NamedPipeClient<PipedData>(ServerName);
             _client.Start();
 

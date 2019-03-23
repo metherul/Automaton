@@ -92,7 +92,7 @@ namespace Automaton.ViewModel
 
         private async void QueueDownload(object caller, PipedData pipedData)
         {
-            if (!MissingMods.Any(x => x.FileId == pipedData.FileId || x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
+            if (!MissingMods.Any(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
             {
                 return;
             }
@@ -123,8 +123,15 @@ namespace Automaton.ViewModel
                 {
                     Application.Current.Dispatcher.BeginInvoke((Action)delegate
                     {
-                        MissingMods.RemoveAt(MissingMods.IndexOf(matchingMod));
-                        ValidatedModCount++;
+                        _missingModsLocked = true;
+
+                        if (MissingMods.IndexOf(matchingMod) != -1)
+                        {
+                            MissingMods.RemoveAt(MissingMods.IndexOf(matchingMod));
+                            ValidatedModCount++;
+                        }
+
+                        _missingModsLocked = false;
                     });
                 }
             }
