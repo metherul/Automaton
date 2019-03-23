@@ -64,7 +64,6 @@ namespace Automaton.Model.Install
             File.WriteAllText(Path.Combine(profilePath, "loadorder.txt"), _installBase.LoadorderTxt);
             File.WriteAllText(Path.Combine(profilePath, "modlist.txt"), _installBase.ModlistTxt);
             File.WriteAllText(Path.Combine(profilePath, "archives.txt"), _installBase.ModlistTxt);
-            File.WriteAllText(Path.Combine(profilePath, "lockedorder.txt"), _installBase.ModlistTxt);
 
             DebugWrite("[DONE] Operation completed.");
             DebugWrite("_END");

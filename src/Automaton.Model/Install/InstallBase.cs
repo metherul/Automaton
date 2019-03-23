@@ -13,7 +13,6 @@ namespace Automaton.Model.Install
         public string LoadorderTxt { get; set; }
         public string ModlistTxt { get; set; }
         public string ArchivesTxt { get; set; }
-        public string LockedorderTxt { get; set; }
 
         public Header ModpackHeader { get; set; }
         public List<ExtendedMod> ModpackMods { get; set; } = new List<ExtendedMod>();

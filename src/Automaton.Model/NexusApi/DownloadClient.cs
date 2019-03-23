@@ -82,13 +82,13 @@ namespace Automaton.Model.NexusApi
                         return;
                     }
 
-                    mod.FilePath = downloadPath;
                     mod.CurrentDownloadProgress = args.ProgressPercentage;
                     DownloadUpdate.Invoke(this, mod);
                 };
 
                 webClient.DownloadFileCompleted += (sender, args) =>
                 {
+                    mod.FilePath = downloadPath;
                     _currentDownloads--;
                 };
 

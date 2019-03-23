@@ -163,11 +163,6 @@ namespace Automaton.Model.Modpack
             streamReader = new StreamReader(archivesTxt.OpenEntryStream());
 
             _installBase.ArchivesTxt = streamReader.ReadToEnd();
-
-            var lockedorderTxt = modpackEntries.First(x => x.Key == _modpackStructure.LockedorderTxtOffset);
-            streamReader = new StreamReader(lockedorderTxt.OpenEntryStream());
-
-            _installBase.LockedorderTxt = streamReader.ReadToEnd();
         }
 
         private bool InjectBitmapImages()

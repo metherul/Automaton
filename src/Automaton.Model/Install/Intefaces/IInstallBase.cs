@@ -12,7 +12,6 @@ namespace Automaton.Model.Install.Intefaces
         string LoadorderTxt { get; set; }
         string ModlistTxt { get; set; }
         string ArchivesTxt { get; set; }
-        string LockedorderTxt { get; set; }
         Header ModpackHeader { get; set; }
         List<ExtendedMod> ModpackMods { get; set; }
     }
