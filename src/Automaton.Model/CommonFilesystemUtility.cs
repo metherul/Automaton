@@ -1,5 +1,6 @@
 ﻿using Automaton.Model.Interfaces;
 using Alphaleonis.Win32.Filesystem;
+using System.Diagnostics;
 
 namespace Automaton.Model
 {
@@ -7,21 +8,18 @@ namespace Automaton.Model
     {
         public void DeleteDirectory(string path)
         {
-            var files = Directory.GetFiles(path);
-            var dirs = Directory.GetDirectories(path);
-
-            foreach (var file in files)
+            var process = new Process();
+            var startInfo = new ProcessStartInfo()
             {
-                File.SetAttributes(file, System.IO.FileAttributes.Normal);
-                File.Delete(file);
-            }
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                FileName = "cmd.exe",
+                Arguments = $"/C rd /q /s \"{path}\""
+            };
 
-            foreach (var dir in dirs)
-            {
-                DeleteDirectory(dir);
-            }
-
-            Directory.Delete(path, false);
+            process.StartInfo = startInfo;
+            process.Start();
+            process.WaitForExit();
         }
     }
 }

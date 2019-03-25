@@ -1,4 +1,5 @@
 ﻿using Automaton.Model.Interfaces;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.IO;

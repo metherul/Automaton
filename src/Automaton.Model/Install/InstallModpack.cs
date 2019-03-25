@@ -39,6 +39,8 @@ namespace Automaton.Model.Install
 
                 _archiveContents.ExtractToDirectory(modOrganizerObject.FilePath, installPath);
                 _installBase.ModpackMods.Remove(modOrganizerObject);
+
+                File.Create(Path.Combine(installPath, "ModOrganizer.ini"));
             }
 
             DebugWrite("_CLEAR");
@@ -112,7 +114,7 @@ namespace Automaton.Model.Install
                     Directory.CreateDirectory(Path.GetDirectoryName(installFilePath));
                 }
 
-                File.Copy(matchingSourceFile.First(), installFilePath, true);
+                File.Copy(matchingSourceFile.First(), installFilePath, true, PathFormat.LongFullPath);
             }
 
             // Write the meta.ini
@@ -130,6 +132,11 @@ namespace Automaton.Model.Install
 
             DebugWrite("[!] Removing extracted files...");
             _commonFilesystemUtility.DeleteDirectory(extractionDirectory);
+
+            if (Directory.Exists(extractionDirectory))
+            {
+                _logger.WriteLine($"WARNING: Directory could not be deleted. {extractionDirectory}");
+            }
         }
 
         private void DebugWrite(string message)
