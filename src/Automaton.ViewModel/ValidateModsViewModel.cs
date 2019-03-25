@@ -42,9 +42,8 @@ namespace Automaton.ViewModel
 
         public RangeObservableCollection<ExtendedMod> MissingMods { get; set; } = new RangeObservableCollection<ExtendedMod>();
 
-        public int StartingMissingModCount { get; set; }
-        public int ValidatedModCount { get; set; }
-
+        public int RemainingMissingModCount { get; set; }
+        
         public ValidateModsViewModel(IComponentContext components)
         {
             _viewController = components.Resolve<IViewController>();
@@ -128,7 +127,7 @@ namespace Automaton.ViewModel
                         if (MissingMods.IndexOf(matchingMod) != -1)
                         {
                             MissingMods.RemoveAt(MissingMods.IndexOf(matchingMod));
-                            ValidatedModCount++;
+                            RemainingMissingModCount--;
                         }
 
                         _missingModsLocked = false;
@@ -167,8 +166,7 @@ namespace Automaton.ViewModel
                 MissingMods.AddRange(missingMods);
             });
 
-            StartingMissingModCount = _installBase.ModpackMods.Count;
-            ValidatedModCount = StartingMissingModCount - missingMods.Count;
+            RemainingMissingModCount = _installBase.ModpackMods.Count;
 
             Task.Factory.StartNew(ViewControllerController);
         }
@@ -192,7 +190,7 @@ namespace Automaton.ViewModel
                 _missingModsLocked = false;
             });
 
-            ValidatedModCount = StartingMissingModCount - MissingMods.Count;
+            RemainingMissingModCount =  MissingMods.Count;
         }
 
         private async void FindAndValidateMod(ExtendedMod mod)
@@ -207,7 +205,7 @@ namespace Automaton.ViewModel
 
             var filteredMissingMods = _validate.ValidateTargetModArchive(possibleArchiveMatch, MissingMods.ToList());
 
-            ValidatedModCount = StartingMissingModCount - filteredMissingMods.Count;
+            RemainingMissingModCount = filteredMissingMods.Count;
 
             await Application.Current.Dispatcher.BeginInvoke((Action)delegate
             {

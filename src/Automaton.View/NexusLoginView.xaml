@@ -95,7 +95,8 @@
                 Height="35"
                 Margin="5,0,0,0"
                 Command="{Binding LoginToNexusCommand}"
-                IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}">
+                IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}"
+                Template="{DynamicResource FloatingButtonTemplate}">
                 <TextBlock>
                     <TextBlock.Style>
                         <Style BasedOn="{StaticResource ButtonText}" TargetType="TextBlock">

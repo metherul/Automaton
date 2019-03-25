@@ -95,8 +95,9 @@ namespace Automaton.Model.Modpack
                 modFile.OpenEntryStream().CopyTo(modFileMemoryStream);
 
                 var mod = ConsumeModpackJsonFile<Mod>(modFileMemoryStream);
+                var extendedMod = _classExtensions.ToDerived<Mod, ExtendedMod>(mod);
 
-                _installBase.ModpackMods.Add(_classExtensions.ToDerived<Mod, ExtendedMod>(mod));
+                _installBase.ModpackMods.Add(extendedMod);
             }
 
             var test = Assembly.GetExecutingAssembly().GetManifestResourceNames();
