@@ -13,14 +13,14 @@ namespace Automaton.Model
     public class Logger : ILogger
     {
         private readonly string _logPath;
-        private List<string> _logQueue = new List<string>();
+        private Queue<string> _logQueue = new Queue<string>();
 
         public Logger()
         {
             _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
 
             Task.Factory.StartNew(LoggerController);
-            
+
             if (File.Exists(_logPath))
             {
                 File.Delete(_logPath);
@@ -36,17 +36,16 @@ namespace Automaton.Model
 
         public void WriteLine(string message, [CallerMemberName] string callerName = "")
         {
-            _logQueue.Add($"[{callerName}] {message}\n");
+            _logQueue.Enqueue($"[{callerName}] {message}\n");
         }
 
         private void LoggerController()
         {
             while (true)
             {
-                if (_logQueue.ToList().Any())
+                if (_logQueue.Any())
                 {
-                    File.AppendAllText(_logPath, _logQueue[0]);
-                    _logQueue.RemoveAt(0);
+                    File.AppendAllText(_logPath, _logQueue.Dequeue());
                 }
 
                 Thread.Sleep(10);
