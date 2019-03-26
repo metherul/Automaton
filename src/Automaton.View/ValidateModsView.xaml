@@ -113,7 +113,7 @@
                                     Background="{DynamicResource FontColor}" />
                                 <Label
                                     VerticalAlignment="Center"
-                                    Content="{Binding NexusFileName}"
+                                    Content="{Binding DisplayName}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     Foreground="{DynamicResource FontColor}"
                                     ToolTip="{Binding FileName}">
@@ -122,13 +122,6 @@
                                             <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
                                             <Setter Property="Background" Value="White" />
                                             <Setter Property="Foreground" Value="Black" />
-                                        </Style>
-                                        <Style BasedOn="{StaticResource MaterialDesignLabel}" TargetType="Label">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding NexusFileName}" Value="">
-                                                    <Setter Property="Content" Value="{Binding ModName}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
                                         </Style>
                                     </Label.Resources>
                                 </Label>

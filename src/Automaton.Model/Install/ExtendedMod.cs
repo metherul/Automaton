@@ -7,6 +7,7 @@ namespace Automaton.Model.Install
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public string DisplayName { get; set; }
         public string FilePath { get; set; }
 
         public int CurrentDownloadProgress { get; set; }

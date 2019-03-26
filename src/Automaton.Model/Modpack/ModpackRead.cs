@@ -97,6 +97,13 @@ namespace Automaton.Model.Modpack
                 var mod = ConsumeModpackJsonFile<Mod>(modFileMemoryStream);
                 var extendedMod = _classExtensions.ToDerived<Mod, ExtendedMod>(mod);
 
+                extendedMod.DisplayName = extendedMod.NexusFileName;
+
+                if (string.IsNullOrEmpty(extendedMod.NexusFileName))
+                {
+                    extendedMod.DisplayName = extendedMod.ModName;
+                }
+
                 _installBase.ModpackMods.Add(extendedMod);
             }
 
