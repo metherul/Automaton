@@ -2,6 +2,7 @@
 {
     public enum ViewIndex
     {
+        FixPath,
         MainWindow,
         InitialSetup,
         NexusLogin,

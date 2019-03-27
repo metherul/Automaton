@@ -35,7 +35,8 @@
                     FontSize="19"
                     Foreground="Black"
                     Style="{DynamicResource HeaderText}">
-                    <Run Text="{DynamicResource ModpackName}" />
+                    <Run Text="Remaining Mods: " />
+                    <Run Text="{Binding TotalModCount}" />
                 </TextBlock>
 
                 <materialDesign:ColorZone

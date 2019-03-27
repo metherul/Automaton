@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Install.Interfaces;
+using Automaton.ViewModel.Controllers;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
@@ -14,19 +16,33 @@ namespace Automaton.ViewModel
     {
         private readonly IViewController _viewController;
         private readonly IInstallModpack _installModpack;
+        private readonly IInstallBase _installBase;
 
         public ObservableCollection<string> DebugOutput { get; set; } = new ObservableCollection<string>();
 
         public RelayCommand InstallModpackCommand => new RelayCommand(InstallModpack);
 
         public bool IsInstalling { get; set; }
+        public int TotalModCount { get; set; }
 
         public InstallModpackViewModel(IComponentContext components)
         {
             _viewController = components.Resolve<IViewController>();
             _installModpack = components.Resolve<IInstallModpack>();
+            _installBase = components.Resolve<IInstallBase>();
 
+            _viewController.ViewIndexChangedEvent += _viewController_ViewIndexChangedEvent;
             _installModpack.DebugLogCallback += DebugLogCallback;
+        }
+
+        private void _viewController_ViewIndexChangedEvent(object sender, int e)
+        {
+            if (e != (int)ViewIndex.InstallModpack)
+            {
+                return;
+            }
+
+            TotalModCount = _installBase.ModpackMods.Count;
         }
 
         private void DebugLogCallback(object sender, string e)
@@ -34,6 +50,8 @@ namespace Automaton.ViewModel
             if (e == "_CLEAR")
             {
                 DebugOutput = new ObservableCollection<string>();
+                TotalModCount--;
+
                 return;
             }
 
