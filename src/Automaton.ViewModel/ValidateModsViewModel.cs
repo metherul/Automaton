@@ -43,6 +43,8 @@ namespace Automaton.ViewModel
         public RangeObservableCollection<ExtendedMod> MissingMods { get; set; } = new RangeObservableCollection<ExtendedMod>();
 
         public int RemainingMissingModCount { get; set; }
+
+        public bool IsInitialValidating { get; set; }
         
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -85,8 +87,12 @@ namespace Automaton.ViewModel
                 return;
             }
 
+            IsInitialValidating = true;
+
             await ValidateMods();
             _nxmHandle.StartServer();
+
+            IsInitialValidating = false;
         }
 
         private async void QueueDownload(object caller, PipedData pipedData)

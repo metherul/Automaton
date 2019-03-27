@@ -38,6 +38,7 @@
                         VerticalAlignment="Center"
                         ClipToBounds="True"
                         Command="{Binding ScanDirectoryCommand}"
+                        IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}"
                         Style="{DynamicResource MaterialDesignToolButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
@@ -138,6 +139,17 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <ProgressBar
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Width="50"
+                Height="Auto"
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource FontColor}"
+                IsIndeterminate="True"
+                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                Visibility="{Binding IsInitialValidating, Converter={StaticResource BoolToVisibilityConverter}}" />
         </Grid>
     </Grid>
 </UserControl>
