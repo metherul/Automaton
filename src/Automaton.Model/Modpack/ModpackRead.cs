@@ -104,6 +104,11 @@ namespace Automaton.Model.Modpack
                     extendedMod.DisplayName = extendedMod.ModName;
                 }
 
+                if (string.IsNullOrEmpty(extendedMod.Version))
+                {
+                    extendedMod.Version = "?";
+                }
+
                 _installBase.ModpackMods.Add(extendedMod);
             }
 
