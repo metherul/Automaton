@@ -63,7 +63,7 @@ namespace Automaton.Model.NexusApi
 
         public bool DownloadFile(string downloadUrl, ExtendedMod mod)
         {
-            _logger.WriteLine($"Downlading file: {mod.FileName}");
+            _logger.WriteLine($"Downloading file: {mod.FileName}");
 
             mod.CurrentDownloadProgress = 0;
             mod.IsIndeterminateProcess = false;
