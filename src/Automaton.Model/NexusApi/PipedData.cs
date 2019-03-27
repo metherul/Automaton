@@ -15,6 +15,11 @@ namespace Automaton.Model.NexusApi
             ModId = splitString[4];
             FileId = splitString[6].Split('?')[0];
 
+            if (Game == "FalloutNV")
+            {
+                Game = "newvegas";
+            }
+
             AuthenticationParams = "?" + splitString[6].Split('?')[1];
         }
 
