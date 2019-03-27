@@ -125,6 +125,8 @@ namespace Automaton.Model.Modpack
 
                 extendedModOrganizerObject.IsModOrganizer = true;
 
+                extendedModOrganizerObject.DisplayName = extendedModOrganizerObject.NexusFileName;
+
                 _installBase.ModpackMods.Add(extendedModOrganizerObject);
             }
 
