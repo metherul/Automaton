@@ -23,6 +23,7 @@ namespace Automaton.ViewModel
         private readonly ILifetimeScope _rootScope;
 
         public IViewModel MainWindow => Resolve<IMainWindowViewModel>();
+        public IViewModel FixPath => Resolve<IFixPathViewModel>();
         public IViewModel LoadModpack => Resolve<ILoadModpackViewModel>();
         public IViewModel InitialSetup => Resolve<IInitialSetupViewModel>();
         public IViewModel NexusLogin => Resolve<INexusLoginViewModel>();

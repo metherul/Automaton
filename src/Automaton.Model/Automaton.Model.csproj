@@ -33,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="AlphaFS, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
       <HintPath>..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll</HintPath>
@@ -119,6 +120,7 @@
     <Compile Include="Install\ExtendedMod.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Interfaces\IPathFix.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
     <Compile Include="Modpack\Base\InstallParameter.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PathFix.cs" />
     <Compile Include="ToDerived.cs" />
   </ItemGroup>
   <ItemGroup>

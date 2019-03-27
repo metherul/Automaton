@@ -114,7 +114,7 @@ namespace Automaton.Model.Install
                     Directory.CreateDirectory(Path.GetDirectoryName(installFilePath));
                 }
 
-                File.Copy(matchingSourceFile.First(), installFilePath, true, PathFormat.LongFullPath);
+                File.Copy(matchingSourceFile.First(), installFilePath, true);
             }
 
             // Write the meta.ini

@@ -15,6 +15,7 @@ namespace Automaton.ViewModel
         private readonly IModpackRead _modpackRead;
         private readonly IDialogController _dialogController;
         private readonly ILogger _logger;
+        private readonly IPathFix _pathFix;
 
         public RelayCommand ChooseModpackCommand { get => new RelayCommand(ChooseModpack); }
 
@@ -25,6 +26,8 @@ namespace Automaton.ViewModel
             _modpackRead = components.Resolve<IModpackRead>(); 
             _dialogController = components.Resolve<IDialogController>();
             _logger = components.Resolve<ILogger>();
+
+            _pathFix = components.Resolve<IPathFix>();
         }
 
         private async void ChooseModpack()

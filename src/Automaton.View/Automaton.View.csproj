@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
@@ -92,6 +95,9 @@
     <Compile Include="FinishedInstallView.xaml.cs">
       <DependentUpon>FinishedInstallView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FixPathView.xaml.cs">
+      <DependentUpon>FixPathView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InstallModpackView.xaml.cs">
       <DependentUpon>InstallModpackView.xaml</DependentUpon>
     </Compile>
@@ -115,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FinishedInstallView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FixPathView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -227,6 +237,7 @@
     <Resource Include="Resources\Fonts\Roboto\Roboto-Regular.ttf" />
     <Resource Include="Resources\Fonts\Roboto\Roboto-Thin.ttf" />
     <Resource Include="Resources\Fonts\Roboto\Roboto-ThinItalic.ttf" />
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

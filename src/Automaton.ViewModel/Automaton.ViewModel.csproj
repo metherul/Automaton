@@ -93,6 +93,8 @@
     <Compile Include="Dialogs\Interfaces\IDialog.cs" />
     <Compile Include="Dialogs\GenericErrorDialog.cs" />
     <Compile Include="FinishedInstallViewModel.cs" />
+    <Compile Include="FixPathViewModel.cs" />
+    <Compile Include="Interfaces\IFixPathViewModel.cs" />
     <Compile Include="InitialSetupViewModel.cs" />
     <Compile Include="InstallModpackViewModel.cs" />
     <Compile Include="Interfaces\IFinishedInstallViewModel.cs" />
