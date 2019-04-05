@@ -5,6 +5,6 @@
         string ErrorHeader { get; set; }
         string ErrorMessage { get; set; }
         bool IsFatal { get; set; }
-        void DisplayParams(params object[] optionalParams);
+        void DisplayParams(bool isFatal, string header, string message);
     }
 }

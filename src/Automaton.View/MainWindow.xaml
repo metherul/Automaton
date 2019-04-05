@@ -6,7 +6,6 @@
     xmlns:dialogInterfaces="clr-namespace:Automaton.ViewModel.Content.Dialogs.Interfaces;assembly=Automaton.ViewModel"
     xmlns:dialogs="clr-namespace:Automaton.View.Content.Dialogs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-    xmlns:local="clr-namespace:Automaton.View.Content"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:Automaton.View"

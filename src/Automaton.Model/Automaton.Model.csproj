@@ -109,7 +109,6 @@
     <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
     <Compile Include="CommonFilesystemUtility.cs" />
     <Compile Include="Interfaces\ICommonFilesystemUtility.cs" />
-    <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Install\Intefaces\IInstallModpack.cs" />
     <Compile Include="Install\InstallModpack.cs" />
     <Compile Include="Interfaces\IClassExtensions.cs" />
@@ -118,6 +117,7 @@
     <Compile Include="Install\Intefaces\IValidate.cs" />
     <Compile Include="Install\Validate.cs" />
     <Compile Include="Install\ExtendedMod.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Interfaces\IPathFix.cs" />

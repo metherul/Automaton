@@ -4,6 +4,6 @@
     {
         int CurrentIndex { get; set; }
         bool IsDialogOpen { get; set; }
-        void OpenDialog(DialogType dialogType, params object[] parameterObjects);
+        void OpenErrorDialog(bool isFatal, string header, string message);
     }
 }

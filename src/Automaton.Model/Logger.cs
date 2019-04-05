@@ -1,10 +1,11 @@
-﻿using Automaton.Model.Interfaces;
-using Sentry;
+﻿using Autofac;
+using Automaton.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,10 +13,12 @@ namespace Automaton.Model
 {
     public class Logger : ILogger
     {
+        public EventHandler<FirstChanceExceptionEventArgs> CapturedError { get; set; }
+
         private readonly string _logPath;
         private Queue<string> _logQueue = new Queue<string>();
 
-        public Logger()
+        public Logger(IComponentContext components)
         {
             _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
 
@@ -31,12 +34,14 @@ namespace Automaton.Model
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
                 WriteLine($"{eventArgs.Exception.StackTrace} {eventArgs.Exception.Message}");
+
+                CapturedError.Invoke(this, eventArgs);
             };
         }
 
         public void WriteLine(string message, [CallerMemberName] string callerName = "")
         {
-            _logQueue.Enqueue($"[{callerName}] {message}\n");
+            _logQueue.Enqueue($"[{DateTime.Now.TimeOfDay}] [{callerName}] {message}\n");
         }
 
         private void LoggerController()
