@@ -66,29 +66,6 @@ namespace Automaton.Model.Archive
             }
 
             return;
-
-            var sevenZipExe = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.exe");
-
-            if (Directory.Exists(directoryPath))
-            {
-                _logger.WriteLine($"Delete: {directoryPath}");
-                _commonFilesystemUtility.DeleteDirectory(directoryPath);
-            }
-
-            Directory.CreateDirectory(directoryPath);
-
-            var process = new Process();
-            var startInfo = new ProcessStartInfo()
-            {
-                FileName = sevenZipExe,
-                Arguments = $"x \"{archivePath}\" -o\"{directoryPath}\"",
-                CreateNoWindow = true,
-                UseShellExecute = false
-            };
-
-            process.StartInfo = startInfo;
-            process.Start();
-            process.WaitForExit();
         }
     }
 }
