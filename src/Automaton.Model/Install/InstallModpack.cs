@@ -31,7 +31,7 @@ namespace Automaton.Model.Install
         {
             // Install Mod Organizer
             var installPath = Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name);
-
+            
             if (_installBase.ModpackHeader.InstallModOrganizer)
             {
                 DebugWrite("[INSTALL] Installing Mod Organizer...");
@@ -42,7 +42,7 @@ namespace Automaton.Model.Install
 
                 File.Create(Path.Combine(installPath, "ModOrganizer.ini"));
             }
-
+            
             DebugWrite("_CLEAR");
 
 
@@ -81,40 +81,27 @@ namespace Automaton.Model.Install
             var archivePath = mod.FilePath;
             var installPath = System.IO.Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name, "mods", mod.ModName);
 
-            // Extract mod archive
-            DebugWrite("[!] Extracting files...");
-            _archiveContents.ExtractToDirectory(archivePath, extractionDirectory);
-
-            DebugWrite("[!] Enumerating files...");
-            var extractedArchiveFiles = Directory.GetFiles(extractionDirectory, "*.*", System.IO.SearchOption.AllDirectories);
-
-            if (!Directory.Exists(installPath))
+            if (mod.InstallParameters != null)
             {
-                Directory.CreateDirectory(installPath);
-            }
+                var selections = mod.InstallParameters
+                                    .GroupBy(e => e.SourceLocation)
+                                    .ToDictionary(e => e.Key);
 
-            DebugWrite("[!] Installing mod...");
-            foreach (var installParameter in mod.InstallParameters)
-            {
-                var matchingSourceFile = extractedArchiveFiles.Where(x => x.Replace(extractionDirectory, "") == installParameter.SourceLocation);
-                var installFilePath = Path.Combine(installPath, installParameter.TargetLocation.Remove(0, 1));
+                _archiveContents.ExtractAll(archivePath,
+                    e => selections.ContainsKey(e) ? Path.Combine(installPath, selections[e].First().TargetLocation.Substring(1)) : null);
 
-                if (matchingSourceFile == null || !matchingSourceFile.Any())
+                // Some mods write the same file to two locations and the extractor
+                // doesn't support this, so we'll copy the file around a bit.
+                foreach (var selection in selections.Where(s => s.Value.Count() > 1))
                 {
-                    continue;
+                    var from = Path.Combine(installPath, selection.Value.First().TargetLocation.Substring(1));
+                    foreach (var e in selection.Value.Skip(1))
+                    {
+                        var to = Path.Combine(installPath, selection.Value.First().TargetLocation.Substring(1));
+                        if (to != from)
+                            File.Copy(from, to, true);
+                    }
                 }
-
-                if (File.Exists(installFilePath))
-                {
-                    File.Delete(installFilePath);
-                }
-
-                if (!Directory.Exists(Path.GetDirectoryName(installFilePath)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(installFilePath));
-                }
-
-                File.Copy(matchingSourceFile.First(), installFilePath, true);
             }
 
             // Write the meta.ini
@@ -124,19 +111,13 @@ namespace Automaton.Model.Install
                 $"gameName={mod.TargetGame}\n" +
                 $"version={mod.Version}\n" +
                 $"installationFile={mod.FilePath}\n" +
-                $"repository={mod.Repository}\n" + 
+                $"repository={mod.Repository}\n" +
                 $"modId={mod.ModId}\n\n" +
                 "[installedFiles]\n" +
                 $"1\\modId={mod.ModId}\n" +
                 $"1\\fileId={mod.FileId}");
 
-            DebugWrite("[!] Removing extracted files...");
-            _commonFilesystemUtility.DeleteDirectory(extractionDirectory);
-
-            if (Directory.Exists(extractionDirectory))
-            {
-                _logger.WriteLine($"WARNING: Directory could not be deleted. {extractionDirectory}");
-            }
+            return;
         }
 
         private void DebugWrite(string message)
