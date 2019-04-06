@@ -32,6 +32,10 @@ namespace Automaton.ViewModel
         private readonly IApiBase _apiBase;
         private readonly IInstallBase _installBase;
 
+        private Stopwatch _queueTimer;
+
+        private int _readerIndex;
+
         private bool _missingModsLocked;
 
         public RelayCommand ScanDirectoryCommand => new RelayCommand(ScanDirectory);
@@ -45,6 +49,7 @@ namespace Automaton.ViewModel
         public int RemainingMissingModCount { get; set; }
 
         public bool IsInitialValidating { get; set; }
+        public bool QueueDownloads { get; set; }
         
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -62,7 +67,18 @@ namespace Automaton.ViewModel
             _downloadClient.DownloadUpdate += DownloadUpdate;
         }
 
-        private void ViewControllerController() 
+        private void InitializeAutoDownloader()
+        {
+            if (_apiBase.IsUserPremium() && _apiBase.IsUserLoggedIn())
+            {
+                foreach (var mod in MissingMods)
+                {
+                    QueueDownload(mod);
+                }
+            }
+        }
+
+        private void ValidateModsController() 
         {
             // Phin would be proud. This will be replaced when I have more time.
             // That never means anything though. This will be around for a while.
@@ -113,6 +129,14 @@ namespace Automaton.ViewModel
             }
 
             _downloadClient.QueueDownload(downloadUrl, matchingModObject);
+        }
+
+        private void QueueDownload(ExtendedMod mod)
+        {
+            var matchingModObject = MissingMods.First(x => x.FileId == mod.FileId && x.ModId == mod.ModId);
+            MissingMods.First(x => x == matchingModObject).IsIndeterminateProcess = true;
+
+            _downloadClient.QueueDownload("", mod);
         }
 
         private void DownloadUpdate(object sender, ExtendedMod e)
@@ -174,7 +198,7 @@ namespace Automaton.ViewModel
 
             RemainingMissingModCount = _installBase.ModpackMods.Count;
 
-            Task.Factory.StartNew(ViewControllerController);
+            Task.Factory.StartNew(ValidateModsController);
         }
 
         private async void ScanDirectory()

@@ -18,6 +18,7 @@ namespace Automaton.Model.NexusApi
     {
         private readonly IInstallBase _installBase;
         private readonly ILogger _logger;
+        private readonly IApiEndpoints _apiEndpoints;
 
         private int _currentDownloads;
         private readonly int _maxConcurrentDownloads = 1;
@@ -30,6 +31,7 @@ namespace Automaton.Model.NexusApi
         {
             _installBase = components.Resolve<IInstallBase>();
             _logger = components.Resolve<ILogger>();
+            _apiEndpoints = components.Resolve<IApiEndpoints>();
 
             Task.Factory.StartNew(QueueController);
         }
@@ -41,13 +43,19 @@ namespace Automaton.Model.NexusApi
                 if (_downloadQueue.Any() && _currentDownloads != _maxConcurrentDownloads)
                 {
                     var queueObject = _downloadQueue[0];
+
+                    if (string.IsNullOrEmpty(queueObject.Item1))
+                    {
+                        queueObject.Item1 = _apiEndpoints.GenerateModDownloadLinkAsync(queueObject.Item2).Result;
+                    }
+
                     Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
 
                     _currentDownloads++;
                     _downloadQueue.RemoveAt(0);
                 }
 
-                Thread.Sleep(10);
+                Thread.Sleep(300);
             }
         }
 

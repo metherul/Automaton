@@ -49,7 +49,11 @@ namespace Automaton.ViewModel
         {
             if (e == "_CLEAR")
             {
-                DebugOutput = new ObservableCollection<string>();
+                Application.Current.Dispatcher.BeginInvoke((Action)delegate
+                {
+                    DebugOutput = new ObservableCollection<string>();
+                });
+
                 TotalModCount--;
 
                 return;
@@ -64,7 +68,13 @@ namespace Automaton.ViewModel
 
             Application.Current.Dispatcher.BeginInvoke((Action)delegate
             {
-                DebugOutput.Add(e);
+                if ((_installBase.ModpackMods.Count - TotalModCount) % 30 == 0)
+                {
+                    DebugOutput = new ObservableCollection<string>();
+                }
+
+                DebugOutput.Insert(0, e);
+                TotalModCount--;
             });
         }
     

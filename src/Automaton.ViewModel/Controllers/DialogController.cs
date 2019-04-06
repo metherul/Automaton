@@ -17,7 +17,7 @@ namespace Automaton.ViewModel.Controllers
 
         public int CurrentIndex { get; set; }
         public bool IsDialogOpen { get; set; }
-
+        
         public DialogController(IComponentContext components)
         {
             _lifetimeScope = components.Resolve<ILifetimeScope>();

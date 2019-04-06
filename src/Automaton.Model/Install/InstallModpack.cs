@@ -6,6 +6,7 @@ using Automaton.Model.Interfaces;
 using System;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Automaton.Model.Install
 {
@@ -45,13 +46,14 @@ namespace Automaton.Model.Install
             
             DebugWrite("_CLEAR");
 
-
-            foreach (var mod in _installBase.ModpackMods)
+            Parallel.ForEach(_installBase.ModpackMods, new ParallelOptions()
+            {
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            }, 
+            (mod) =>
             {
                 InstallMod(mod);
-
-                DebugWrite("_CLEAR");
-            }
+            });
 
             // Write the needed profile information
             var profilePath = System.IO.Path.Combine(installPath, "profiles", _installBase.ModpackHeader.Name);
