@@ -198,7 +198,7 @@ namespace Automaton.ViewModel
                 MissingMods.AddRange(missingMods);
             });
 
-            RemainingMissingModCount = _installBase.ModpackMods.Count;
+            RemainingMissingModCount = MissingMods.Count;
 
             Task.Factory.StartNew(ValidateModsController);
         }
