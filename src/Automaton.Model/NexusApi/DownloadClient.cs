@@ -44,9 +44,11 @@ namespace Automaton.Model.NexusApi
                 {
                     var queueObject = _downloadQueue[0];
 
-                    Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
-
-                    _currentDownloads++;
+                    if (!string.IsNullOrEmpty(queueObject.Item2.NexusFileName))
+                    {
+                        Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
+                        _currentDownloads++;
+                    }
                     _downloadQueue.RemoveAt(0);
                 }
 
@@ -76,7 +78,7 @@ namespace Automaton.Model.NexusApi
             {
                 downloadUrl = _apiEndpoints.GenerateModDownloadLinkAsync(mod).Result;
             }
-
+            
             using (var webClient = new WebClient())
             {
                 var downloadPath = Path.Combine(_installBase.DownloadsDirectory, mod.FileName);
@@ -99,8 +101,8 @@ namespace Automaton.Model.NexusApi
                     mod.FilePath = downloadPath;
                     _currentDownloads--;
                 };
-
-                webClient.DownloadFileAsync(new Uri(downloadUrl), downloadPath);
+                
+                webClient.DownloadFileAsync(new Uri(downloadUrl), downloadPath);                
             }
 
             return false;
