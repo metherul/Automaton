@@ -102,6 +102,8 @@ namespace Automaton.Model.NexusApi
                     _logger.WriteLine("User is logged in");
 
                     HasLoggedInEvent.Invoke();
+
+                    websocket.Close();
                 };
 
                 websocket.Connect();

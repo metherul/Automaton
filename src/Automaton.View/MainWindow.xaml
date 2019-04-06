@@ -75,6 +75,18 @@
                 <!--  Minimize Window Button  -->
                 <Button
                     HorizontalAlignment="Right"
+                    Command="{Binding MaximizeWindowCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type view:MainWindowView}}}"
+                    Style="{DynamicResource MaterialDesignToolButton}">
+                    <materialDesign:PackIcon
+                        Width="18"
+                        Height="Auto"
+                        Kind="WindowMaximize" />
+                </Button>
+
+                <!--  Minimize Window Button  -->
+                <Button
+                    HorizontalAlignment="Right"
                     Command="{Binding MinimizeWindowCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type view:MainWindowView}}}"
                     Style="{DynamicResource MaterialDesignToolButton}">

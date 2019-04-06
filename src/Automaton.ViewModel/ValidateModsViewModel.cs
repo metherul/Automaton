@@ -32,6 +32,9 @@ namespace Automaton.ViewModel
         private readonly IApiBase _apiBase;
         private readonly IInstallBase _installBase;
         private readonly IDialogController _dialogController;
+
+        private List<ExtendedMod> _failedDownloads = new List<ExtendedMod>();
+
         private Stopwatch _queueTimer;
 
         private int _readerIndex;
@@ -125,7 +128,7 @@ namespace Automaton.ViewModel
                     _downloadClient.PurgeQueue();
                 }
 
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
 
@@ -135,7 +138,10 @@ namespace Automaton.ViewModel
             {
                 foreach (var mod in MissingMods)
                 {
-                    QueueDownload(mod);
+                    if (!_failedDownloads.Contains(mod))
+                    {
+                        QueueDownload(mod);
+                    }
                 }
             }
         }
@@ -168,14 +174,34 @@ namespace Automaton.ViewModel
             _downloadClient.QueueDownload(mod, string.Empty);
         }
 
-        private void DownloadUpdate(object sender, ExtendedMod e)
+        private void DownloadUpdate(object sender, (ExtendedMod, bool) e)
         {
-            if (e.CurrentDownloadProgress == 100)
-            {
-                _installBase.ModpackMods.Where(x => x.Md5 == e.Md5).ToList()
-                    .ForEach(x => x.FilePath = e.FilePath);
+            var mod = e.Item1;
+            var hasFailed = e.Item2;
 
-                var matchingMods = MissingMods.Where(x => x.Md5 == e.Md5).ToList();
+            if (hasFailed)
+            {
+                var invalidMods = MissingMods.Where(x => x == mod);
+
+                foreach (var invalidMod in invalidMods)
+                {
+                    var itemIndex = MissingMods.IndexOf(invalidMod);
+
+                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
+                    {
+                        MissingMods.Move(itemIndex, MissingMods.Count - 1);
+
+                        _failedDownloads.Add(mod);
+                    });
+                }
+            }
+
+            if (mod.CurrentDownloadProgress == 100)
+            {
+                _installBase.ModpackMods.Where(x => x.Md5 == mod.Md5).ToList()
+                    .ForEach(x => x.FilePath = mod.FilePath);
+
+                var matchingMods = MissingMods.Where(x => x.Md5 == mod.Md5).ToList();
 
                 foreach (var matchingMod in matchingMods)
                 {
@@ -197,7 +223,7 @@ namespace Automaton.ViewModel
             else
             {
                 var missingMods = MissingMods.ToList();
-                foreach (var matchingMissingMod in missingMods.Where(x => x.Md5 == e.Md5).ToList())
+                foreach (var matchingMissingMod in missingMods.Where(x => x.Md5 == mod.Md5).ToList())
                 {
                     Application.Current.Dispatcher.BeginInvoke((Action)delegate
                     {
@@ -209,7 +235,7 @@ namespace Automaton.ViewModel
                             return;
                         }
 
-                        MissingMods[MissingMods.IndexOf(matchingMissingMod)].CurrentDownloadProgress = e.CurrentDownloadProgress;
+                        MissingMods[MissingMods.IndexOf(matchingMissingMod)].CurrentDownloadProgress = mod.CurrentDownloadProgress;
                         _missingModsLocked = false;
                     });
                 }
@@ -275,6 +301,7 @@ namespace Automaton.ViewModel
             _downloadClient.PurgeQueue(mod);
 
             var filteredMissingMods = _validate.ValidateTargetModArchive(possibleArchiveMatch, MissingMods.ToList());
+
             RemainingMissingModCount = filteredMissingMods.Count;
 
             await Application.Current.Dispatcher.BeginInvoke((Action)delegate

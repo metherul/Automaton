@@ -6,7 +6,7 @@ namespace Automaton.Model.NexusApi.Interfaces
 {
     public interface IDownloadClient : IService
     {
-        EventHandler<ExtendedMod> DownloadUpdate { get; set; }
+        EventHandler<(ExtendedMod, bool)> DownloadUpdate { get; set; }
         
         void PurgeQueue();
         void PurgeQueue(ExtendedMod mod);

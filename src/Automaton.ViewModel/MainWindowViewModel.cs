@@ -18,6 +18,7 @@ namespace Automaton.ViewModel
 
         public RelayCommand<Window> CloseWindowCommand { get; set; }
         public RelayCommand<Window> MinimizeWindowCommand { get; set; }
+        public RelayCommand<Window> MaximizeWindowCommand { get; set; }
         public RelayCommand<Window> MoveWindowCommand { get; set; }
 
         public int CurrentTransitionerIndex { get; set; } = 0;
@@ -32,6 +33,8 @@ namespace Automaton.ViewModel
             // Initialize relaycommand bindings
             CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
             MinimizeWindowCommand = new RelayCommand<Window>(MinimizeWindow);
+            MaximizeWindowCommand = new RelayCommand<Window>(MaximizeWindow);
+
             MoveWindowCommand = new RelayCommand<Window>(MoveWindow);
         }
 
@@ -50,6 +53,19 @@ namespace Automaton.ViewModel
         private static void MinimizeWindow(Window window)
         {
             window.WindowState = WindowState.Minimized;
+        }
+
+        private static void MaximizeWindow(Window window)
+        {
+            if (window.WindowState == WindowState.Normal)
+            {
+                window.WindowState = WindowState.Maximized;
+            }
+
+            else
+            {
+                window.WindowState = WindowState.Normal;
+            }
         }
 
         private static void MoveWindow(Window window)

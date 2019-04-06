@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Automaton.Model.Interfaces;
 
 namespace Automaton.Model.Modpack.Interfaces

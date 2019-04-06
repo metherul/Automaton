@@ -25,7 +25,7 @@ namespace Automaton.Model.NexusApi
         private int _currentDownloads;
         private readonly int _maxConcurrentDownloads = 1;
 
-        public EventHandler<ExtendedMod> DownloadUpdate { get; set; }
+        public EventHandler<(ExtendedMod, bool)> DownloadUpdate { get; set; }
 
         public DownloadClient(IComponentContext components)
         {
@@ -78,7 +78,7 @@ namespace Automaton.Model.NexusApi
 
             mod.CurrentDownloadProgress = 0;
             mod.IsIndeterminateProcess = false;
-            DownloadUpdate.Invoke(this, mod);
+            DownloadUpdate.Invoke(this, (mod, false));
 
             if (string.IsNullOrEmpty(downloadUrl))
             {
@@ -89,6 +89,8 @@ namespace Automaton.Model.NexusApi
             {
                 _logger.WriteLine($"Failed to get downloadUrl for mod: {mod.ModName} | {mod.ModName} | {mod.FileName}");
                 _currentDownloads--;
+
+                DownloadUpdate.Invoke(this, (mod, true));
 
                 return false;
             }
@@ -107,7 +109,7 @@ namespace Automaton.Model.NexusApi
                     }
 
                     mod.CurrentDownloadProgress = args.ProgressPercentage;
-                    DownloadUpdate.Invoke(this, mod);
+                    DownloadUpdate.Invoke(this, (mod, false));
                 };
 
                 webClient.DownloadFileCompleted += (sender, args) =>
