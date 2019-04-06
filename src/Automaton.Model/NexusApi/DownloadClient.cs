@@ -44,11 +44,6 @@ namespace Automaton.Model.NexusApi
                 {
                     var queueObject = _downloadQueue[0];
 
-                    if (string.IsNullOrEmpty(queueObject.Item1))
-                    {
-                        queueObject.Item1 = _apiEndpoints.GenerateModDownloadLinkAsync(queueObject.Item2).Result;
-                    }
-
                     Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
 
                     _currentDownloads++;
@@ -76,6 +71,11 @@ namespace Automaton.Model.NexusApi
             mod.CurrentDownloadProgress = 0;
             mod.IsIndeterminateProcess = false;
             DownloadUpdate.Invoke(this, mod);
+
+            if (string.IsNullOrEmpty(downloadUrl))
+            {
+                downloadUrl = _apiEndpoints.GenerateModDownloadLinkAsync(mod).Result;
+            }
 
             using (var webClient = new WebClient())
             {

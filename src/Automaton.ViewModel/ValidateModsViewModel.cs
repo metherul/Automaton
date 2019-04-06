@@ -109,6 +109,8 @@ namespace Automaton.ViewModel
             _nxmHandle.StartServer();
 
             IsInitialValidating = false;
+
+            InitializeAutoDownloader();
         }
 
         private async void QueueDownload(object caller, PipedData pipedData)
