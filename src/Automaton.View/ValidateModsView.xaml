@@ -32,27 +32,64 @@
                 </TextBlock>
 
                 <Grid Grid.Column="2">
-                    <Button
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        ClipToBounds="True"
-                        Command="{Binding ScanDirectoryCommand}"
-                        IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}"
-                        Style="{DynamicResource MaterialDesignToolButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                Margin="0,0,10,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                Style="{DynamicResource HeaderText}"
-                                Text="Scan Folder" />
-                            <materialDesign:PackIcon
-                                VerticalAlignment="Center"
-                                Foreground="{DynamicResource FontColor}"
-                                Kind="FolderSearch" />
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="15"
+                            Foreground="{DynamicResource FontColor}"
+                            IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}"
+                            ToolTip="This is a Nexus Premium ONLY feature">
+                            <TextBlock.Style>
+                                <Style BasedOn="{StaticResource HeaderText}" TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Text" Value="Numidium Disabled" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AutodownloadsEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                            <Setter Property="Text" Value="Numidium Enabled" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding AutodownloadsEnabled, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                            <Setter Property="Text" Value="Numidium Disabled" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <ToggleButton
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource BackgroundColor}"
+                            Foreground="{DynamicResource FontColor}"
+                            IsChecked="{Binding AutodownloadsEnabled}"
+                            IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}" />
+
+                        <Grid
+                            Width="2"
+                            Margin="5"
+                            VerticalAlignment="Stretch"
+                            Background="{DynamicResource FontColor}" />
+
+                        <Button
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ClipToBounds="True"
+                            Command="{Binding ScanDirectoryCommand}"
+                            IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}"
+                            Style="{DynamicResource MaterialDesignToolButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="15"
+                                    Style="{DynamicResource HeaderText}"
+                                    Text="Scan Folder" />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource FontColor}"
+                                    Kind="FolderSearch" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </Grid>
 
@@ -77,19 +114,8 @@
                                     Command="{Binding FindAndValidateModCommand}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
                                     DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}">
-                                    <Button.Resources>
-                                        <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="Button">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="True">
-                                                    <Setter Property="Visibility" Value="Hidden" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="False">
-                                                    <Setter Property="ProgressBar.Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Resources>
+                                    Style="{DynamicResource MaterialDesignToolButton}"
+                                    Visibility="{Binding IsIndeterminateProcess, Converter={StaticResource BoolToInverseVisibilityConverter}}">
 
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
                                 </Button>
@@ -98,42 +124,11 @@
                                     Command="{Binding OpenNexusLinkCommand}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
                                     DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}">
-                                    <Button.Resources>
-                                        <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="Button">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="True">
-                                                    <Setter Property="Visibility" Value="Hidden" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="False">
-                                                    <Setter Property="ProgressBar.Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Resources>
+                                    Style="{DynamicResource MaterialDesignToolButton}"
+                                    Visibility="{Binding IsIndeterminateProcess, Converter={StaticResource BoolToInverseVisibilityConverter}}">
 
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
-
-                                <ProgressBar
-                                    Width="15"
-                                    Height="15"
-                                    VerticalAlignment="Center"
-                                    Foreground="White"
-                                    IsIndeterminate="True">
-                                    <ProgressBar.Resources>
-                                        <Style BasedOn="{StaticResource MaterialDesignCircularProgressBar}" TargetType="ProgressBar">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="True">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="False">
-                                                    <Setter Property="ProgressBar.Visibility" Value="Hidden" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ProgressBar.Resources>
-                                </ProgressBar>
 
                                 <Grid
                                     Width="1.5"

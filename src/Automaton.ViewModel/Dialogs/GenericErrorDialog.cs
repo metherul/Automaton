@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
-using Automaton.ViewModel.Content.Dialogs.Interfaces;
+using Automaton.ViewModel.Dialogs.Interfaces;
 using GalaSoft.MvvmLight.Command;
 
-namespace Automaton.ViewModel.Content.Dialogs
+namespace Automaton.ViewModel.Dialogs
 {
     public class GenericErrorDialog : IGenericErrorDialog, INotifyPropertyChanged
     {
@@ -17,14 +16,14 @@ namespace Automaton.ViewModel.Content.Dialogs
 
         public bool IsFatal { get; set; }
 
-        public async void DisplayParams(bool isFatal, string header, string message)
+        public void DisplayParams(bool isFatal, string header, string message)
         {
             IsFatal = isFatal;
             ErrorHeader = (IsFatal ? "Fatal: " : "Error: ") + header; 
             ErrorMessage = message;
         }
 
-        private static void CloseWindow(Window window)
+        private void CloseWindow(Window window)
         {
             window.Close();
         }

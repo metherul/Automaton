@@ -89,6 +89,8 @@
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Controllers\ViewIndex.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
+    <Compile Include="Dialogs\GenericLogDialog.cs" />
+    <Compile Include="Dialogs\Interfaces\IGenericLogDialog.cs" />
     <Compile Include="Dialogs\Interfaces\IGenericErrorDialog.cs" />
     <Compile Include="Dialogs\Interfaces\IDialog.cs" />
     <Compile Include="Dialogs\GenericErrorDialog.cs" />

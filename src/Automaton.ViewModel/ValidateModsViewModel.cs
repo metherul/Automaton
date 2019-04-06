@@ -31,7 +31,7 @@ namespace Automaton.ViewModel
         private readonly IDownloadClient _downloadClient;
         private readonly IApiBase _apiBase;
         private readonly IInstallBase _installBase;
-
+        private readonly IDialogController _dialogController;
         private Stopwatch _queueTimer;
 
         private int _readerIndex;
@@ -50,6 +50,8 @@ namespace Automaton.ViewModel
 
         public bool IsInitialValidating { get; set; }
         public bool QueueDownloads { get; set; }
+        public bool AutodownloadsEnabled { get; set; }
+        public bool IsUserPremium { get; set; }
         
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -61,39 +63,11 @@ namespace Automaton.ViewModel
             _downloadClient = components.Resolve<IDownloadClient>();
             _apiBase = components.Resolve<IApiBase>();
             _installBase = components.Resolve<IInstallBase>();
+            _dialogController = components.Resolve<IDialogController>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _nxmHandle.RecievedPipedDataEvent += QueueDownload;
             _downloadClient.DownloadUpdate += DownloadUpdate;
-        }
-
-        private void InitializeAutoDownloader()
-        {
-            if (_apiBase.IsUserPremium() && _apiBase.IsUserLoggedIn())
-            {
-                foreach (var mod in MissingMods)
-                {
-                    QueueDownload(mod);
-                }
-            }
-        }
-
-        private void ValidateModsController() 
-        {
-            // Phin would be proud. This will be replaced when I have more time.
-            // That never means anything though. This will be around for a while.
-
-            while (true)
-            {
-                if (MissingMods.Count() == 0 && _missingModsLocked == false)
-                {
-                    _viewController.IncrementCurrentViewIndex();
-
-                    return;
-                }
-
-                Thread.Sleep(10);
-            }
         }
 
         private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
@@ -110,7 +84,60 @@ namespace Automaton.ViewModel
 
             IsInitialValidating = false;
 
-            InitializeAutoDownloader();
+            IsUserPremium = _apiBase.IsUserLoggedIn() && _apiBase.IsUserPremium();
+        }
+
+        private void ValidateModsController() 
+        {
+            // Phin would be proud. This will be replaced when I have more time.
+            // That never means anything though. This will be around for a while.
+
+            var lastAutodownloadsStatus = AutodownloadsEnabled;
+
+            while (true)
+            {
+                if (MissingMods.Count() == 0 && _missingModsLocked == false)
+                {
+                    _viewController.IncrementCurrentViewIndex();
+
+                    return;
+                }
+
+                if (AutodownloadsEnabled && !lastAutodownloadsStatus)
+                {
+                    lastAutodownloadsStatus = AutodownloadsEnabled;
+
+                    if (_apiBase.IsUserLoggedIn() && _apiBase.IsUserPremium())
+                    {
+                        InitializeAutoDownloader();
+                    }
+
+                    else
+                    {
+                        _dialogController.OpenLogDialog("You must be a Nexus Premium member to use the auto-downloading feature of Automaton.");
+                        AutodownloadsEnabled = false;
+                    }
+                }
+
+                if (!AutodownloadsEnabled && lastAutodownloadsStatus)
+                {
+                    lastAutodownloadsStatus = AutodownloadsEnabled;
+                    _downloadClient.PurgeQueue();
+                }
+
+                Thread.Sleep(10);
+            }
+        }
+
+        private void InitializeAutoDownloader()
+        {
+            if (_apiBase.IsUserPremium() && _apiBase.IsUserLoggedIn())
+            {
+                foreach (var mod in MissingMods)
+                {
+                    QueueDownload(mod);
+                }
+            }
         }
 
         private async void QueueDownload(object caller, PipedData pipedData)
@@ -130,7 +157,7 @@ namespace Automaton.ViewModel
                 return;
             }
 
-            _downloadClient.QueueDownload(downloadUrl, matchingModObject);
+            _downloadClient.QueueDownload(matchingModObject, downloadUrl);
         }
 
         private void QueueDownload(ExtendedMod mod)
@@ -138,7 +165,7 @@ namespace Automaton.ViewModel
             var matchingModObject = MissingMods.First(x => x.FileId == mod.FileId && x.ModId == mod.ModId);
             MissingMods.First(x => x == matchingModObject).IsIndeterminateProcess = true;
 
-            _downloadClient.QueueDownload("", mod);
+            _downloadClient.QueueDownload(mod, string.Empty);
         }
 
         private void DownloadUpdate(object sender, ExtendedMod e)
@@ -213,6 +240,15 @@ namespace Automaton.ViewModel
             }
 
             var missingMods = await _validate.FilterMissingModsAsync(directoryToScan);
+            var removedMods = MissingMods.Where(x => !missingMods.Contains(x));
+
+            if (removedMods.Any())
+            {
+                foreach (var mod in removedMods)
+                {
+                    _downloadClient.PurgeQueue(mod);
+                }
+            }
 
             await Application.Current.Dispatcher.BeginInvoke((Action)delegate
             {
@@ -235,8 +271,10 @@ namespace Automaton.ViewModel
                 return;
             }
 
-            var filteredMissingMods = _validate.ValidateTargetModArchive(possibleArchiveMatch, MissingMods.ToList());
+            // Remove the mod from the queue
+            _downloadClient.PurgeQueue(mod);
 
+            var filteredMissingMods = _validate.ValidateTargetModArchive(possibleArchiveMatch, MissingMods.ToList());
             RemainingMissingModCount = filteredMissingMods.Count;
 
             await Application.Current.Dispatcher.BeginInvoke((Action)delegate

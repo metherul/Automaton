@@ -3,11 +3,11 @@
 namespace Automaton.View.Dialogs
 {
     /// <summary>
-    /// Interaction logic for GenericErrorDialog.xaml
+    /// Interaction logic for GenericLogDialog.xaml
     /// </summary>
-    public partial class GenericErrorDialog : UserControl
+    public partial class GenericLogDialog : UserControl
     {
-        public GenericErrorDialog()
+        public GenericLogDialog()
         {
             InitializeComponent();
         }

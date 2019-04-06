@@ -2,17 +2,14 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Windows;
 using Autofac;
 using Autofac.Core;
 using Automaton.Model.Interfaces;
 using Automaton.Model.NexusApi;
 using Automaton.Model.NexusApi.Interfaces;
-using Automaton.ViewModel.Content.Dialogs.Interfaces;
-using Automaton.ViewModel.Content.Interfaces;
-using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.ViewModel.Dialogs.Interfaces;
 using Automaton.ViewModel.Interfaces;
+using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
 using Application = System.Windows.Forms.Application;
 
@@ -31,6 +28,7 @@ namespace Automaton.ViewModel
         public IViewModel InstallModpack => Resolve<IInstallModpackViewModel>();
 
         public IDialog GenericErrorDialog => Resolve<IGenericErrorDialog>();
+        public IDialog GenericLogDialog => Resolve<IGenericLogDialog>();
 
         public IController DialogController => Resolve<IDialogController>();
 

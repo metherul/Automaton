@@ -58,6 +58,7 @@ namespace Automaton.ViewModel
             {
                 window.DragMove();
             }
+
             catch (Exception e)
             {
                 // ignored

@@ -7,8 +7,11 @@ namespace Automaton.Model.NexusApi.Interfaces
     public interface IDownloadClient : IService
     {
         EventHandler<ExtendedMod> DownloadUpdate { get; set; }
+        
+        void PurgeQueue();
+        void PurgeQueue(ExtendedMod mod);
 
-        bool DownloadFile(string downloadUrl, ExtendedMod mod);
-        void QueueDownload(string download, ExtendedMod mod);
+        bool DownloadFile(ExtendedMod mod, string downloadUrl = "");
+        void QueueDownload(ExtendedMod mod, string downloadUrl);
     }
 }

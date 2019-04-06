@@ -14,6 +14,7 @@ namespace Automaton.Model
     public class Logger : ILogger
     {
         public EventHandler<FirstChanceExceptionEventArgs> CapturedError { get; set; }
+        public EventHandler<string> CapturedLog { get; set; }
 
         private readonly string _logPath;
         private Queue<string> _logQueue = new Queue<string>();
@@ -39,9 +40,14 @@ namespace Automaton.Model
             };
         }
 
-        public void WriteLine(string message, [CallerMemberName] string callerName = "")
+        public void WriteLine(string message, bool requiresDisplay = false, [CallerMemberName] string callerName = "")
         {
             _logQueue.Enqueue($"[{DateTime.Now.TimeOfDay}] [{callerName}] {message}\n");
+
+            if (requiresDisplay)
+            {
+                CapturedLog.Invoke(this, message);
+            }
         }
 
         private void LoggerController()

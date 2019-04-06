@@ -1,4 +1,4 @@
-﻿namespace Automaton.ViewModel.Content.Dialogs.Interfaces
+﻿namespace Automaton.ViewModel.Dialogs.Interfaces
 {
     public interface IGenericErrorDialog : IDialog
     {
