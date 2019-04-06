@@ -35,7 +35,7 @@
                 HorizontalAlignment="Center"
                 FontSize="15"
                 Style="{DynamicResource BodyText}"
-                Text="A huge thanks to Phinocio, Connor, Nathan, Duende, Gatonegro, novocaine the Ultimate Skyrim team and the rest of our fantastic beta testers. Without them, none of this would have ever been possible."
+                Text="A huge thanks to Phinocio, Connor, Nathan, halgari, Duende, Gatonegro, novocaine the Ultimate Skyrim team and the rest of our fantastic beta testers. Without them, none of this would have ever been possible."
                 TextAlignment="Justify" />
 
             <TextBlock

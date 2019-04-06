@@ -74,20 +74,31 @@ namespace Automaton.ViewModel
 
             // Apply themes
             var modpackHeader = _installBase.ModpackHeader;
-            themeDictionary["BackgroundColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.BackgroundColor));
-            themeDictionary["TextColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.FontColor));
-            themeDictionary["ButtonColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.ButtonColor));
+            if (modpackHeader.BackgroundColor != null)
+            {
+                themeDictionary["BackgroundColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.BackgroundColor));
+            }
+
+            if (modpackHeader.FontColor != null)
+            {
+                themeDictionary["TextColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.FontColor ?? themeDictionary["TextColor"]));
+            }
+
+            if (modpackHeader.ButtonColor != null)
+            {
+                themeDictionary["ButtonColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.ButtonColor ?? themeDictionary["ButtonColor"]));
+            }
 
             // Apply textual elements
             var resourceDictionary = Application.Current.Resources;
-            resourceDictionary["ModpackName"] = modpackHeader.Name;
-            resourceDictionary["ModpackDescription"] = modpackHeader.Description;
+            resourceDictionary["ModpackName"] = modpackHeader.Name ?? resourceDictionary["ModpackName"];
+            resourceDictionary["ModpackDescription"] = modpackHeader.Description ?? resourceDictionary["ModpackDescription"];
 
             // Apply header image
             resourceIndex = mergedDictionaries.IndexOf(mergedDictionaries.First(x => x.Source.ToString() == "Resources/Images/ImageResources.xaml"));
             themeDictionary = mergedDictionaries[resourceIndex];
 
-            themeDictionary["HeaderImage"] = _installBase.HeaderImage;
+            themeDictionary["HeaderImage"] = _installBase.HeaderImage ?? themeDictionary["HeaderImage"];
         }
     }
 }

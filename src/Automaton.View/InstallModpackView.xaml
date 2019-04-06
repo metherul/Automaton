@@ -137,7 +137,7 @@
                         Width="Auto"
                         Height="40"
                         RenderOptions.BitmapScalingMode="Fant"
-                        Source="{DynamicResource AutomatonImage}" />
+                        Source="{DynamicResource AutomatonHeadFullWhite}" />
                 </Grid>
             </Button>
         </Grid>
