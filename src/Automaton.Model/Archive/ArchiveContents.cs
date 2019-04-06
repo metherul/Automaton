@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Autofac;
 using Automaton.Model.Archive.Interfaces;
 using Automaton.Model.Interfaces;
 using SharpCompress.Archives;
 using SharpCompress.Common;
-using Alphaleonis.Win32.Filesystem;
-
 
 namespace Automaton.Model.Archive
 {

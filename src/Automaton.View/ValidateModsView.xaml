@@ -78,6 +78,19 @@
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
                                     DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
                                     Style="{DynamicResource MaterialDesignToolButton}">
+                                    <Button.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="True">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="False">
+                                                    <Setter Property="ProgressBar.Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Resources>
+
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
                                 </Button>
                                 <Button
@@ -86,8 +99,42 @@
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
                                     DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
                                     Style="{DynamicResource MaterialDesignToolButton}">
+                                    <Button.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="True">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="False">
+                                                    <Setter Property="ProgressBar.Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Resources>
+
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
+
+                                <ProgressBar
+                                    Width="15"
+                                    Height="15"
+                                    VerticalAlignment="Center"
+                                    Foreground="White"
+                                    IsIndeterminate="True">
+                                    <ProgressBar.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignCircularProgressBar}" TargetType="ProgressBar">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsIndeterminateProcess}" Value="False">
+                                                    <Setter Property="ProgressBar.Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ProgressBar.Resources>
+                                </ProgressBar>
+
                                 <Grid
                                     Width="1.5"
                                     Height="Auto"
@@ -133,7 +180,6 @@
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 Foreground="{DynamicResource FontColor}"
-                                IsIndeterminate="{Binding IsIndeterminateProcess}"
                                 Value="{Binding CurrentDownloadProgress}" />
                         </VirtualizingStackPanel>
                     </DataTemplate>
