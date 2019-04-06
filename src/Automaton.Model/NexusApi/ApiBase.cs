@@ -107,7 +107,7 @@ namespace Automaton.Model.NexusApi
                 };
 
                 websocket.Connect();
-                websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
+                websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"AUTOMATON\"}");
 
                 Process.Start($"https://www.nexusmods.com/sso?id={guid}");
             }

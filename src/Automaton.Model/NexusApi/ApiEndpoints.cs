@@ -26,9 +26,10 @@ namespace Automaton.Model.NexusApi
             _baseHttpClient = new HttpClient()
             {
                 BaseAddress = new Uri("https://api.nexusmods.com"),
-                Timeout = TimeSpan.FromSeconds(10)
+                Timeout = TimeSpan.FromSeconds(10),
             };
 
+            _baseHttpClient.DefaultRequestHeaders.Add("User-Agent", $"Automaton/{Environment.OSVersion.VersionString}/CLI {Environment.Version.Build}");
             _baseHttpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
