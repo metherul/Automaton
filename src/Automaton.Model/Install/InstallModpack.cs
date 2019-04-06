@@ -46,14 +46,10 @@ namespace Automaton.Model.Install
             
             DebugWrite("_CLEAR");
 
-            Parallel.ForEach(_installBase.ModpackMods, new ParallelOptions()
-            {
-                MaxDegreeOfParallelism = Environment.ProcessorCount
-            }, 
-            (mod) =>
+            foreach (var mod in _installBase.ModpackMods)
             {
                 InstallMod(mod);
-            });
+            }
 
             // Write the needed profile information
             var profilePath = System.IO.Path.Combine(installPath, "profiles", _installBase.ModpackHeader.Name);
