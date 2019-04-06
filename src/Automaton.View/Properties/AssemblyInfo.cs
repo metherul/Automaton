@@ -6,11 +6,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Automaton")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The Automaton modpacking framework installer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("The Automaton Framework")]
 [assembly: AssemblyProduct("Automaton")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("GNU GENERAL PUBLIC LICENSE 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
