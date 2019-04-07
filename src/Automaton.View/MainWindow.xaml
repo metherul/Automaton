@@ -159,16 +159,6 @@
                     <Run Text="{DynamicResource AutomatonVersion}" />
                 </TextBlock>
             </Grid>
-
-            <!--<materialDesign:Snackbar
-            Grid.RowSpan="3"
-            VerticalAlignment="Bottom"
-            Background="White"
-            DataContext="{Binding SnackbarController, Source={StaticResource ViewModelLocator}}"
-            FontFamily="{DynamicResource ProductSans}"
-            Foreground="Black"
-            IsActive="true"
-            Message="{Binding Source={StaticResource Message}}" />-->
         </Grid>
     </materialDesign:DialogHost>
 

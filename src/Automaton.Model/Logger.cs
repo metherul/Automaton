@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +32,10 @@ namespace Automaton.Model
                 File.Delete(_logPath);
             }
 
+            var platformType = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+            var headerString = $"Automaton/{Assembly.GetEntryAssembly().GetName().Version} ({Environment.OSVersion.VersionString}; {platformType}) {RuntimeInformation.FrameworkDescription}";
+
+            WriteLine($"{DateTime.Now} {headerString}");
             WriteLine($"{DateTime.Now} Automaton Start");
 
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
