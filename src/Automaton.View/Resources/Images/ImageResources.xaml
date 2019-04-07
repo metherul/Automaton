@@ -9,4 +9,5 @@
     <BitmapImage x:Key="DownloadWithManager" UriSource="/Automaton;component/Resources/Images/DownloadWithManager.png" />
     <BitmapImage x:Key="NexusLogoColor" UriSource="/Automaton;component/Resources/Images/NexusModsColor.png" />
     <BitmapImage x:Key="AutomatonHeadFullWhite" UriSource="/Automaton;component/Resources/Images/AutomatonHeadFullWhite.png" />
+    <BitmapImage x:Key="PatreonLogo" UriSource="/Automaton;component/Resources/Images/Patreon_Mark_White.png" />
 </ResourceDictionary>

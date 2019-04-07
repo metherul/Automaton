@@ -281,6 +281,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\AutomatonHeadFullWhite.png" />
+    <Resource Include="Resources\Images\Patreon_Mark_Primary.png" />
+    <Resource Include="Resources\Images\Patreon_Mark_White.png" />
+    <Resource Include="Resources\Images\PatreonLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Automaton.Model\Automaton.Model.csproj">

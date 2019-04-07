@@ -38,13 +38,45 @@
                 Text="A huge thanks to Phinocio, Connor, Nathan, halgari, Duende, Gatonegro, novocaine the Ultimate Skyrim team and the rest of our fantastic beta testers. Without them, none of this would have ever been possible."
                 TextAlignment="Justify" />
 
+            <Button
+                Grid.Row="4"
+                Height="50"
+                Margin="0,40,0,30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Command="{Binding OpenPatreonCommand}"
+                Opacity="10"
+                Template="{DynamicResource FloatingButtonTemplate}">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="15"
+                        Style="{DynamicResource ButtonText}">
+                        <Run Text="Support Automaton on Patreon" />
+                    </TextBlock>
+
+                    <Image
+                        Grid.Column="1"
+                        Margin="3"
+                        RenderOptions.BitmapScalingMode="Fant"
+                        Source="{StaticResource PatreonLogo}" />
+                </Grid>
+            </Button>
+
             <TextBlock
-                Margin="5,30,5,0"
+                Margin="7,30,7,0"
                 HorizontalAlignment="Center"
                 FontSize="15"
                 Opacity=".4"
                 Style="{DynamicResource BodyText}"
-                Text="If you are confused to to what's next: Start the ModOrganizer.exe application and follow the steps. Then, install all other prerequisites by following the guides defined by the modpack you installed."
+                Text="If you are confused to to what' s next: Start the ModOrganizer.exe application and follow the steps. Then, install all other prerequisites by following the guides defined by the modpack you installed."
                 TextAlignment="Justify" />
         </StackPanel>
     </Grid>

@@ -6,9 +6,8 @@
 # What is Automaton?
 > Automaton is the foundation and installer for the similarly  named _automaton framework_, which allows for modpack installation and creation in a way which respects mod author's rights. 
 
-## How is this any different than ModDrop?
-> While ModDrop was a fantastic idea, it was received poorly because of its ability to upload the entirety of a users mods folder -- content and all. Doing so violated the content rights of mod authors, and essentially became a pseudo "piracy service".
-> Automaton on the other hand, combines an easy-to-use modpack framework with extremely simple utilities that allow for even the most tech illiterate modder to have an identical setup to the developer's. In doing so, it does not (and _cannot_) infringe on any kind of content rights. No files are hosted by the framework, just the instructions to install them. 
+## How does it work?
+> Automaton combines an easy-to-use modpack framework with extremely simple utilities that allow for even the most tech illiterate modder to have an identical setup to the developer's. In doing so, it does not (and _cannot_) infringe on any kind of content rights. No files are hosted by the framework, just the instructions to install them. 
 
 ## "Instructions to install them" -- what does this mean?
 > The Automaton Framework works via local modpack files which act much like a user's manual -- just for the application instead. These files provide an instruction set to find, install and validate mods. When chained, entire modpacks can be installed in an extremely safe, quick, and most importantly _legal_ way. Information about modpack files will be found in the future when I get around to adding/updating the wiki.
