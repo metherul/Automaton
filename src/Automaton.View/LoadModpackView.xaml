@@ -24,14 +24,16 @@
         <!--  Header  -->
         <StackPanel Grid.Row="0">
             <Image
-                Width="100"
-                Margin="0,10,0,0"
+                Width="190"
+                Margin="0,20,0,0"
                 RenderOptions.BitmapScalingMode="Fant"
-                RenderOptions.EdgeMode="Aliased"
-                Source="{DynamicResource HeaderImage}" />
+                Source="{DynamicResource AutomatonImage}" />
 
             <TextBlock
+                Margin="0,10,0,0"
                 HorizontalAlignment="Center"
+                FontSize="35"
+                FontWeight="Bold"
                 Style="{DynamicResource HeaderText}"
                 Text="Automaton" />
         </StackPanel>
@@ -39,10 +41,11 @@
         <!--  Description  -->
         <TextBlock
             Grid.Row="1"
-            MaxHeight="170"
             Margin="10,30,10,0"
+            FontSize="15"
             Style="{DynamicResource BodyText}"
-            Text="{DynamicResource ModpackDescription}" />
+            Text="{DynamicResource ModpackDescription}"
+            TextAlignment="Center" />
 
         <!--  Load Modpack button  -->
         <Button

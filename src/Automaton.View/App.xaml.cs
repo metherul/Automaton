@@ -1,4 +1,7 @@
 ﻿using Automaton.Model;
+using System;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 
 namespace Automaton.View
@@ -10,16 +13,27 @@ namespace Automaton.View
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (ProcessFinder.IsProcessAlreadyRunning())
-            {
-                //if (e.Args.Any() // Check if args contain any data
-                //    && e.Args[0].StartsWith("nxm", StringComparison.OrdinalIgnoreCase)) // Check to see if it contains correct data
-                //{
-                //    NamedPipes.SendMessage(e.Args[0]);
-                //}
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Automaton.View.Resources.Bin.7z-x86.dll";
 
-                //// We only want one instance of Automaton running at one time
-                //Environment.Exit(0);
+            if (Environment.Is64BitProcess)
+            {
+                resourceName = "Automaton.View.Resources.Bin.7z-x64.dll";
+            }
+
+            var stream = assembly.GetManifestResourceStream(resourceName);
+            var dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
+
+            if (!File.Exists(dllPath))
+            {
+                var fileStream = File.Open(dllPath, FileMode.CreateNew);
+
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.CopyTo(fileStream);
+                stream.Dispose();
+
+                fileStream.Close();
+                fileStream.Dispose();
             }
         }
     }

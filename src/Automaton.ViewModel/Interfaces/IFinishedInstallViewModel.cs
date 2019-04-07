@@ -1,4 +1,4 @@
-﻿using Automaton.ViewModel.Content.Interfaces;
+﻿using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel.Interfaces
 {

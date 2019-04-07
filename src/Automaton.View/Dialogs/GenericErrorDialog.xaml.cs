@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Automaton.View.Content.Dialogs
+namespace Automaton.View.Dialogs
 {
     /// <summary>
     /// Interaction logic for GenericErrorDialog.xaml

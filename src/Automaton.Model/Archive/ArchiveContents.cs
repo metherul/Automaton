@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Autofac;
 using Automaton.Model.Archive.Interfaces;
 using Automaton.Model.Interfaces;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using Automaton.Model.Install.Intefaces;
+using Alphaleonis.Win32.Filesystem;
 
 namespace Automaton.Model.Archive
 {
@@ -14,11 +15,17 @@ namespace Automaton.Model.Archive
     {
         private readonly ILogger _logger;
         private readonly ICommonFilesystemUtility _commonFilesystemUtility;
+        private readonly IInstallBase _installBase;
+
+        private string _libraryPath;
 
         public ArchiveContents(IComponentContext components)
         {
             _logger = components.Resolve<ILogger>();
             _commonFilesystemUtility = components.Resolve<ICommonFilesystemUtility>();
+            _installBase = components.Resolve<IInstallBase>();
+
+            _libraryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
         }
 
         public List<IArchiveEntry> GetArchiveEntries(string archivePath)
@@ -37,11 +44,11 @@ namespace Automaton.Model.Archive
         }
 
 
-        public void ExtractAll(string archivePath, Func<String, String> selector)
+        public void ExtractAll(string archivePath, Func<string, string> selector)
         {
             _logger.WriteLine($"Extracting: {archivePath}");
 
-            using (var archiveFile = new SevenZipExtractor.ArchiveFile(archivePath))
+            using (var archiveFile = new SevenZipExtractor.ArchiveFile(archivePath, _libraryPath))
             {
                 archiveFile.Extract(delegate(SevenZipExtractor.Entry entry) { return selector(FixupPath(entry.FileName)); });
             }
@@ -58,7 +65,7 @@ namespace Automaton.Model.Archive
         {
             _logger.WriteLine($"Extracting: {archivePath} to {directoryPath}");
 
-            using (var archiveFile = new SevenZipExtractor.ArchiveFile(archivePath))
+            using (var archiveFile = new SevenZipExtractor.ArchiveFile(archivePath, _libraryPath))
             {
                 archiveFile.Extract(directoryPath);
             }

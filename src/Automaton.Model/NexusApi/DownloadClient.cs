@@ -20,12 +20,12 @@ namespace Automaton.Model.NexusApi
         private readonly ILogger _logger;
         private readonly IApiEndpoints _apiEndpoints;
 
+        private Queue<(ExtendedMod, string)> _downloadQueue = new Queue<(ExtendedMod, string)>();
+
         private int _currentDownloads;
         private readonly int _maxConcurrentDownloads = 1;
 
-        private List<(string, ExtendedMod)> _downloadQueue = new List<(string, ExtendedMod)>();
-
-        public EventHandler<ExtendedMod> DownloadUpdate { get; set; }
+        public EventHandler<(ExtendedMod, bool)> DownloadUpdate { get; set; }
 
         public DownloadClient(IComponentContext components)
         {
@@ -36,47 +36,63 @@ namespace Automaton.Model.NexusApi
             Task.Factory.StartNew(QueueController);
         }
 
+        public void PurgeQueue()
+        {
+            _downloadQueue.Clear();
+        }
+
+        public void PurgeQueue(ExtendedMod mod)
+        {
+            _downloadQueue = new Queue<(ExtendedMod, string)>(_downloadQueue.Where(x => x.Item1 != mod).ToList());
+        }
+
         private void QueueController()
         {
             while (true)
             {
                 if (_downloadQueue.Any() && _currentDownloads != _maxConcurrentDownloads)
                 {
-                    var queueObject = _downloadQueue[0];
+                    var queueObject = _downloadQueue.Dequeue();
 
-                    if (!string.IsNullOrEmpty(queueObject.Item2.NexusFileName))
-                    {
-                        Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
-                        _currentDownloads++;
-                    }
-                    _downloadQueue.RemoveAt(0);
+                    Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
+                    _currentDownloads++;
                 }
 
                 Thread.Sleep(300);
             }
         }
 
-        public void QueueDownload(string download, ExtendedMod mod)
+        public void QueueDownload(ExtendedMod mod, string downloadUrl = "")
         {
-            if (_downloadQueue.ToList().Any(x => x.Item2.Md5 == mod.Md5))
+            if (_downloadQueue.ToList().Any(x => x.Item1.Md5 == mod.Md5))
             {
                 return;
             }
 
-            _downloadQueue.Add((download, mod));
+            _downloadQueue.Enqueue((mod, downloadUrl));
         }
 
-        public bool DownloadFile(string downloadUrl, ExtendedMod mod)
+        public bool DownloadFile(ExtendedMod mod, string downloadUrl)
         {
             _logger.WriteLine($"Downloading file: {mod.FileName}");
 
             mod.CurrentDownloadProgress = 0;
             mod.IsIndeterminateProcess = false;
-            DownloadUpdate.Invoke(this, mod);
+            DownloadUpdate.Invoke(this, (mod, false));
 
             if (string.IsNullOrEmpty(downloadUrl))
             {
                 downloadUrl = _apiEndpoints.GenerateModDownloadLinkAsync(mod).Result;
+            }
+
+            if (string.IsNullOrEmpty(downloadUrl))
+            {
+                _logger.WriteLine($"Failed to get downloadUrl for mod: {mod.ModName} | {mod.ModName} | {mod.FileName}");
+                _currentDownloads--;
+
+                DownloadUpdate.Invoke(this, (mod, true));
+
+                return false;
             }
             
             using (var webClient = new WebClient())
@@ -93,7 +109,7 @@ namespace Automaton.Model.NexusApi
                     }
 
                     mod.CurrentDownloadProgress = args.ProgressPercentage;
-                    DownloadUpdate.Invoke(this, mod);
+                    DownloadUpdate.Invoke(this, (mod, false));
                 };
 
                 webClient.DownloadFileCompleted += (sender, args) =>

@@ -19,6 +19,7 @@ using Automaton.Model.Modpack.Base.Interfaces;
 using System.Reflection;
 using System.Collections.Generic;
 using SharpCompress.Archives;
+using System.Windows.Media.Imaging;
 
 namespace Automaton.Model.Modpack
 {
@@ -135,6 +136,19 @@ namespace Automaton.Model.Modpack
                 _installBase.ModpackMods.Add(extendedModOrganizerObject);
             }
 
+            foreach (var entry in modpackEntries.Where(x => !x.IsDirectory))
+            {
+                if (!entry.IsDirectory && entry.Key.StartsWith("Resources/header."))
+                {
+                    var memoryStream = new MemoryStream();
+                    entry.WriteTo(memoryStream);
+
+                    var bitmapImage = InjectBitmapImages(memoryStream);
+
+                    _installBase.HeaderImage = bitmapImage;
+                }
+            }
+            
             _logger.WriteLine("Modpack loaded");
 
             return true;
@@ -180,9 +194,18 @@ namespace Automaton.Model.Modpack
             _installBase.ArchivesTxt = streamReader.ReadToEnd();
         }
 
-        private bool InjectBitmapImages()
+        private BitmapImage InjectBitmapImages(MemoryStream imageStream)
         {
-            return false;
+            var bitmap = new BitmapImage();
+            imageStream.Seek(0, SeekOrigin.Begin);
+
+            bitmap.BeginInit();
+            bitmap.StreamSource = imageStream;
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            return bitmap;
         }
     }
 }

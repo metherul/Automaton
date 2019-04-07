@@ -118,6 +118,8 @@ namespace Automaton.Model.Install
 
             if (!possibleMatchingMods.Any())
             {
+                _logger.WriteLine($"Mod archive with archiveSize {archiveSize} had no counterpart in a missingMods collection of size {missingMods.Count}", true);
+
                 return missingMods;
             }
 

@@ -26,9 +26,10 @@ namespace Automaton.Model.NexusApi
             _baseHttpClient = new HttpClient()
             {
                 BaseAddress = new Uri("https://api.nexusmods.com"),
-                Timeout = TimeSpan.FromSeconds(10)
+                Timeout = TimeSpan.FromSeconds(10),
             };
 
+            _baseHttpClient.DefaultRequestHeaders.Add("User-Agent", $"Automaton/{Environment.OSVersion.VersionString}/CLI {Environment.Version.Build}");
             _baseHttpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
@@ -79,6 +80,7 @@ namespace Automaton.Model.NexusApi
         {
             if (_apiBase.ApiKey == string.Empty)
             {
+                _logger.WriteLine("Invalid API key");
                 // Throw exception here.
                 return null;
             }
@@ -90,10 +92,18 @@ namespace Automaton.Model.NexusApi
                     _baseHttpClient.DefaultRequestHeaders.Add("APIKEY", _apiBase.ApiKey);
                 }
 
+                if (_apiBase.RemainingDailyRequests == 0)
+                {
+                    _logger.WriteLine("User is out of API requests. This is no bueno.");
+
+                    throw new Exception("You are out of API requests for today. This is not set by me, but the Nexus instead. You should never see this.");
+                }
+
                 var response = await _baseHttpClient.GetAsync(url);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
+                    _logger.WriteLine($"API call does not equal OK. {url}");
                     return null;
                 }
 
