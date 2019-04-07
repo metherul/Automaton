@@ -35,6 +35,9 @@ namespace Automaton.View
                 fileStream.Close();
                 fileStream.Dispose();
             }
+
+            var resourceDictionary = Application.Current.Resources;
+            resourceDictionary["AutomatonVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
     }
 }

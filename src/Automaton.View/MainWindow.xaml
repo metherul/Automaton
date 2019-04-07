@@ -148,15 +148,16 @@
                     &gt;__ Metherul
                 </Label>
 
-                <Label
+                <TextBlock
                     Grid.Column="1"
-                    Margin="5"
+                    Margin="8"
                     HorizontalAlignment="Right"
                     FontFamily="{StaticResource RobotoMono}"
-                    FontSize="11"
+                    FontSize="12"
                     Foreground="{DynamicResource FontColor}">
-                    Automaton v.1.3.0b
-                </Label>
+                    <Run Text="Automaton" />
+                    <Run Text="{DynamicResource AutomatonVersion}" />
+                </TextBlock>
             </Grid>
 
             <!--<materialDesign:Snackbar
