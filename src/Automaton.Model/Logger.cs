@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
+using System.Security.Principal;
 
 namespace Automaton.Model
 {
@@ -36,6 +37,7 @@ namespace Automaton.Model
             var headerString = $"Automaton/{Assembly.GetEntryAssembly().GetName().Version} ({Environment.OSVersion.VersionString}; {platformType}) {RuntimeInformation.FrameworkDescription}";
 
             WriteLine($"{DateTime.Now} {headerString}");
+            WriteLine($"{DateTime.Now} Is admin: {new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)}");
             WriteLine($"{DateTime.Now} Automaton Start");
 
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>

@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using Automaton.Model.Install.Intefaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
 using GalaSoft.MvvmLight.Command;
+using Alphaleonis.Win32.Filesystem;
 
 namespace Automaton.ViewModel
 {

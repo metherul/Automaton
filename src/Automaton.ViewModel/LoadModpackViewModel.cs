@@ -101,7 +101,7 @@ namespace Automaton.ViewModel
 
             themeDictionary["HeaderImage"] = _installBase.HeaderImage ?? themeDictionary["HeaderImage"];
 
-            resourceDictionary["AutomatonVersion"] = Assembly.GetEntryAssembly().GetName().Version;
+            resourceDictionary["AutomatonVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
     }
 }
