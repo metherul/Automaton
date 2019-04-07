@@ -24,7 +24,7 @@ namespace Automaton.Model
 
         public Logger(IComponentContext components)
         {
-            _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+            _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"automaton-{string.Join("-", DateTime.Now.ToString().Split(Path.GetInvalidFileNameChars()))}.log");
 
             Task.Factory.StartNew(LoggerController);
 
@@ -71,6 +71,11 @@ namespace Automaton.Model
                 {
                     if (_logQueue.Any())
                     {
+                        if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs")))
+                        {
+                            Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
+                        }
+
                         File.AppendAllText(_logPath, _logQueue.Dequeue());
                     }
                 }
