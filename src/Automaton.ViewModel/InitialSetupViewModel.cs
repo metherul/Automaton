@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using Autofac;
 using Automaton.Model.Install.Intefaces;

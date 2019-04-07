@@ -2,7 +2,6 @@
 using Automaton.Model.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,6 +9,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Alphaleonis.Win32.Filesystem;
 
 namespace Automaton.Model
 {
@@ -42,6 +42,11 @@ namespace Automaton.Model
             {
                 WriteLine($"{eventArgs.Exception.StackTrace} {eventArgs.Exception.Message}");
 
+                if (eventArgs.Exception.Message.Contains("materialDesign"))
+                {
+                    return;
+                }
+
                 CapturedError.Invoke(this, eventArgs);
             };
         }
@@ -60,9 +65,12 @@ namespace Automaton.Model
         {
             while (true)
             {
-                if (_logQueue.Any())
+                lock (_logQueue)
                 {
-                    File.AppendAllText(_logPath, _logQueue.Dequeue());
+                    if (_logQueue.Any())
+                    {
+                        File.AppendAllText(_logPath, _logQueue.Dequeue());
+                    }
                 }
 
                 Thread.Sleep(10);
