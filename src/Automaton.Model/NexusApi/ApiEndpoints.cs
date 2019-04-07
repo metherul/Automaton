@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Autofac;
 using Automaton.Model.Install;
@@ -29,7 +31,10 @@ namespace Automaton.Model.NexusApi
                 Timeout = TimeSpan.FromSeconds(10),
             };
 
-            _baseHttpClient.DefaultRequestHeaders.Add("User-Agent", $"Automaton/{Environment.OSVersion.VersionString}/CLI {Environment.Version.Build}");
+            var platformType = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+            var headerString = $"Automaton/{Assembly.GetEntryAssembly().GetName().Version} ({Environment.OSVersion.VersionString}; {platformType}) {RuntimeInformation.FrameworkDescription}";
+
+            _baseHttpClient.DefaultRequestHeaders.Add("User-Agent", headerString);
             _baseHttpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 

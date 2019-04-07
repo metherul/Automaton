@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Autofac;
+using Automaton.Model.Interfaces;
 using Automaton.Model.Modpack.Base.Interfaces;
 using Automaton.Model.Modpack.Interfaces;
 using SharpCompress.Archives;
@@ -9,10 +12,12 @@ namespace Automaton.Model.Modpack
     public class ModpackValidate : IModpackValidate
     {
         private readonly IModpackStructure _modpackStructure;
+        private readonly ILogger _logger;
 
-        public ModpackValidate(IModpackStructure modpackStructure)
+        public ModpackValidate(IComponentContext components)
         {
-            _modpackStructure = modpackStructure;
+            _modpackStructure = components.Resolve<IModpackStructure>();
+            _logger = components.Resolve<ILogger>();
         }
 
         /// <summary>
@@ -22,7 +27,14 @@ namespace Automaton.Model.Modpack
         /// <returns></returns>
         public bool ValidateCorrectModpackStructure(List<IArchiveEntry> modpackEntries)
         {
-            return true;
+            if (modpackEntries.Any(x => x.Key == "modpack.json"))
+            {
+                return true;
+            }
+
+            _logger.WriteLine("This archive is not a valid modpack. Missing 'modpack.json'.", true);
+
+            return false;
         }
     }
 }

@@ -24,17 +24,22 @@ namespace Automaton.View
             var stream = assembly.GetManifestResourceStream(resourceName);
             var dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
 
-            if (!File.Exists(dllPath))
+            if (File.Exists(dllPath))
             {
-                var fileStream = File.Open(dllPath, FileMode.CreateNew);
-
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(fileStream);
-                stream.Dispose();
-
-                fileStream.Close();
-                fileStream.Dispose();
+                File.Delete(dllPath);
             }
+
+            var fileStream = File.Open(dllPath, FileMode.CreateNew);
+
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(fileStream);
+            stream.Dispose();
+
+            fileStream.Close();
+            fileStream.Dispose();
+
+            var resourceDictionary = Application.Current.Resources;
+            resourceDictionary["AutomatonVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
     }
 }

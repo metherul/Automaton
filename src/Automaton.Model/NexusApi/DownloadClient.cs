@@ -117,8 +117,16 @@ namespace Automaton.Model.NexusApi
                     mod.FilePath = downloadPath;
                     _currentDownloads--;
                 };
-                
-                webClient.DownloadFileAsync(new Uri(downloadUrl), downloadPath);                
+
+                try
+                {
+                    webClient.DownloadFileAsync(new Uri(downloadUrl), downloadPath);
+                }
+
+                catch (Exception e)
+                {
+                    _logger.WriteLine($"{mod.ModName} could not be downloaded. Exception: {e.Message}", true);
+                }
             }
 
             return false;

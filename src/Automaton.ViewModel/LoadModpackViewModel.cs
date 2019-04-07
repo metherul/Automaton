@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 
@@ -99,6 +100,8 @@ namespace Automaton.ViewModel
             themeDictionary = mergedDictionaries[resourceIndex];
 
             themeDictionary["HeaderImage"] = _installBase.HeaderImage ?? themeDictionary["HeaderImage"];
+
+            resourceDictionary["AutomatonVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
     }
 }

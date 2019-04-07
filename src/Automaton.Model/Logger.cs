@@ -2,12 +2,15 @@
 using Automaton.Model.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Alphaleonis.Win32.Filesystem;
+using System.Security.Principal;
 
 namespace Automaton.Model
 {
@@ -21,7 +24,7 @@ namespace Automaton.Model
 
         public Logger(IComponentContext components)
         {
-            _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+            _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"automaton-{string.Join("-", DateTime.Now.ToString().Split(Path.GetInvalidFileNameChars()))}.log");
 
             Task.Factory.StartNew(LoggerController);
 
@@ -30,11 +33,21 @@ namespace Automaton.Model
                 File.Delete(_logPath);
             }
 
+            var platformType = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+            var headerString = $"Automaton/{Assembly.GetEntryAssembly().GetName().Version} ({Environment.OSVersion.VersionString}; {platformType}) {RuntimeInformation.FrameworkDescription}";
+
+            WriteLine($"{DateTime.Now} {headerString}");
+            WriteLine($"{DateTime.Now} Is admin: {new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)}");
             WriteLine($"{DateTime.Now} Automaton Start");
 
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
                 WriteLine($"{eventArgs.Exception.StackTrace} {eventArgs.Exception.Message}");
+
+                if (eventArgs.Exception.Message.Contains("materialDesign"))
+                {
+                    return;
+                }
 
                 CapturedError.Invoke(this, eventArgs);
             };
@@ -54,9 +67,17 @@ namespace Automaton.Model
         {
             while (true)
             {
-                if (_logQueue.Any())
+                lock (_logQueue)
                 {
-                    File.AppendAllText(_logPath, _logQueue.Dequeue());
+                    if (_logQueue.Any())
+                    {
+                        if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs")))
+                        {
+                            Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
+                        }
+
+                        File.AppendAllText(_logPath, _logQueue.Dequeue());
+                    }
                 }
 
                 Thread.Sleep(10);
