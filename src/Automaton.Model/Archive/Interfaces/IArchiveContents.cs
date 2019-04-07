@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Automaton.Model.Interfaces;
+using Automaton.Model.Modpack.Base;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 

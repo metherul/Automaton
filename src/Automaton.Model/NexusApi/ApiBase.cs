@@ -102,12 +102,14 @@ namespace Automaton.Model.NexusApi
                     _logger.WriteLine("User is logged in");
 
                     HasLoggedInEvent.Invoke();
+
+                    websocket.Close();
                 };
 
                 websocket.Connect();
                 websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
 
-                Process.Start($"https://www.nexusmods.com/sso?id={guid}");
+                Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=\"Automaton\"");
             }
 
             return false;

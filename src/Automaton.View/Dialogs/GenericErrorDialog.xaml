@@ -1,9 +1,9 @@
 ﻿<UserControl
-    x:Class="Automaton.View.Content.Dialogs.GenericErrorDialog"
+    x:Class="Automaton.View.Dialogs.GenericErrorDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Automaton.View.Content.Dialogs"
+    xmlns:local="clr-namespace:Automaton.View.Dialogs"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:Automaton.View"

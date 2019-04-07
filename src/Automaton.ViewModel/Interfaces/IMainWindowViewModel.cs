@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using Automaton.ViewModel.Content.Interfaces;
+using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
 
 namespace Automaton.ViewModel.Interfaces

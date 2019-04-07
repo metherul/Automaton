@@ -1,5 +1,5 @@
 ﻿using Automaton.Model.Interfaces;
-using Automaton.ViewModel.Content.Interfaces;
+using Automaton.ViewModel.Interfaces;
 
 namespace Automaton.ViewModel.Utilities.Interfaces
 {

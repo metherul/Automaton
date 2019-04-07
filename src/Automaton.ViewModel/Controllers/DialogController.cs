@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.ExceptionServices;
 using Autofac;
 using Automaton.Model.Interfaces;
-using Automaton.ViewModel.Content.Dialogs.Interfaces;
+using Automaton.ViewModel.Dialogs.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 
 namespace Automaton.ViewModel.Controllers
@@ -24,10 +23,21 @@ namespace Automaton.ViewModel.Controllers
             _logger = components.Resolve<ILogger>();
 
             _logger.CapturedError += Logger_CapturedError;
+            _logger.CapturedLog += Logger_CapturedLog;
+        }
+
+        public void CloseCurrentDialog()
+        {
+            IsDialogOpen = false;
         }
 
         private void Logger_CapturedError(object sender, FirstChanceExceptionEventArgs e)
         {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                return;
+            }
+
             if (e.Exception.Message.Contains("materialDesign")) // Annoying XAML binding error. Can't fix.
             {
                 return;
@@ -36,16 +46,31 @@ namespace Automaton.ViewModel.Controllers
             OpenErrorDialog(true, "Error", e.Exception.Message);
         }
 
+        private void Logger_CapturedLog(object sender, string e)
+        {
+            OpenLogDialog(e);
+        }
+
         public void OpenErrorDialog(bool isFatal, string header, string message)
         {
             IsDialogOpen = true;
+            CurrentIndex = (int)DialogType.GenericErrorDialog;
 
             _lifetimeScope.Resolve<IGenericErrorDialog>().DisplayParams(isFatal, header, message);
+        }
+
+        public void OpenLogDialog(string message)
+        {
+            IsDialogOpen = true;
+            CurrentIndex = (int)DialogType.GenericLogDialog;
+
+            _lifetimeScope.Resolve<IGenericLogDialog>().DisplayParams(message);
         }
     }
 
     public enum DialogType
     {
-        GenericErrorDialog
+        GenericErrorDialog,
+        GenericLogDialog
     }
 }

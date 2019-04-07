@@ -47,18 +47,6 @@ namespace Automaton.ViewModel
 
         private void DebugLogCallback(object sender, string e)
         {
-            if (e == "_CLEAR")
-            {
-                Application.Current.Dispatcher.BeginInvoke((Action)delegate
-                {
-                    DebugOutput = new ObservableCollection<string>();
-                });
-
-                TotalModCount--;
-
-                return;
-            }
-
             if (e == "_END")
             {
                 IsInstalling = false;

@@ -22,7 +22,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="50,10">
+        <StackPanel Grid.Row="0" Margin="60,10">
             <TextBlock
                 HorizontalAlignment="Center"
                 Style="{DynamicResource HeaderText}"
@@ -30,49 +30,45 @@
 
             <TextBlock
                 Margin="0,30,0,0"
-                HorizontalAlignment="Center"
-                Style="{DynamicResource BodyText}">
-                Automaton can speed up the install process by automatically downloading mods through its own client <Bold>for Nexus Premium users only.</Bold>.
+                HorizontalAlignment="Left"
+                Style="{DynamicResource BodyText}"
+                TextAlignment="Justify">
+                Automaton can speed up the install process by automatically downloading mods through its own client.
             </TextBlock>
 
             <TextBlock
                 Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                Style="{DynamicResource BodyText}">
-                <Bold>If you are not a premium user, you still need to visit each mod's page and click on the button shown below.</Bold>
+                HorizontalAlignment="Left"
+                FontWeight="Bold"
+                Style="{DynamicResource BodyText}"
+                TextAlignment="Justify">
+                This feature is only for Nexus Premium members. If you are not a premium user, you still need to visit each mod's page and click on the button shown below.
             </TextBlock>
 
             <Image
-                Margin="30,20,30,30"
+                Margin="40,20,40,30"
                 HorizontalAlignment="Center"
                 RenderOptions.BitmapScalingMode="Fant"
                 Source="{StaticResource DownloadWithManager}" />
 
             <TextBlock
                 Margin="0,5,0,0"
-                HorizontalAlignment="Center"
-                Style="{DynamicResource BodyText}">
+                HorizontalAlignment="Left"
+                Style="{DynamicResource BodyText}"
+                TextAlignment="Justify">
                 To continue with Automaton downloads, click the button on the right. This will take you to nexusmods.com to allow Automaton to use your account.<LineBreak />
             </TextBlock>
-
-            <Button
-                HorizontalAlignment="Center"
-                ClipToBounds="True"
-                FontFamily="{StaticResource ProductSans}"
-                Foreground="{DynamicResource FontColor}"
-                Style="{StaticResource MaterialDesignToolButton}">
-                More Info
-            </Button>
 
             <TextBlock
                 Margin="0,20,0,0"
                 HorizontalAlignment="Center"
-                Style="{DynamicResource BodyText}">
+                Style="{DynamicResource BodyText}"
+                TextAlignment="Justify">
                 To continue offline, click the button on the left.
             </TextBlock>
         </StackPanel>
 
-        <Grid Grid.Row="1" Margin="5">
+        <Grid Grid.Row="1" Margin="30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -80,8 +76,8 @@
 
             <Button
                 Grid.Column="0"
-                Height="35"
-                Margin="0,0,5,0"
+                Height="40"
+                Margin="10,0"
                 Command="{Binding ContinueOfflineCommand}"
                 IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}"
                 Template="{DynamicResource FloatingButtonTemplate}">
@@ -92,8 +88,8 @@
 
             <Button
                 Grid.Column="1"
-                Height="35"
-                Margin="5,0,0,0"
+                Height="40"
+                Margin="10,0"
                 Command="{Binding LoginToNexusCommand}"
                 IsEnabled="{Binding IsLoggingIn, Converter={StaticResource BoolToInverseConverter}}"
                 Template="{DynamicResource FloatingButtonTemplate}">

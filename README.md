@@ -6,16 +6,11 @@
 # What is Automaton?
 > Automaton is the foundation and installer for the similarly  named _automaton framework_, which allows for modpack installation and creation in a way which respects mod author's rights. 
 
-## How is this any different than ModDrop?
-> While ModDrop was a fantastic idea, it was received poorly because of its ability to upload the entirety of a users mods folder -- content and all. Doing so violated the content rights of mod authors, and essentially became a pseudo "piracy service".
-> Automaton on the other hand, combines an easy-to-use modpack framework with extremely simple utilities that allow for even the most tech illiterate modder to have an identical setup to the developer's. In doing so, it does not (and _cannot_) infringe on any kind of content rights. No files are hosted by the framework, just the instructions to install them. 
+## How does it work?
+> Automaton combines an easy-to-use modpack framework with extremely simple utilities that allow for even the most tech illiterate modder to have an identical setup to the developer's. In doing so, it does not (and _cannot_) infringe on any kind of content rights. No files are hosted by the framework, just the instructions to install them. 
 
 ## "Instructions to install them" -- what does this mean?
 > The Automaton Framework works via local modpack files which act much like a user's manual -- just for the application instead. These files provide an instruction set to find, install and validate mods. When chained, entire modpacks can be installed in an extremely safe, quick, and most importantly _legal_ way. Information about modpack files will be found in the future when I get around to adding/updating the wiki.
-
-## Alright, so it looks like you're not hosting any mods. Will Automaton download them for me?
-> To keep as far out of the "grey" area as possible, I will not be adding auto-downloader options to Automaton. The Nexus relies on ad revenue to function, and mod authors need to users to RTFM before they download their mods; and an auto-downloader would circumvent that.
-> Automaton however, does feature a utility for it to handle NXM link handling (in other words, the download with Nexus Mod Manager button on the Nexus) to directly download files into the application. Doing so should help reduce the time it takes to download your mods. 
 
 ## I'm a modpack author. Why should I invest my time into making a pack for Automaton?
 > Automaton Framework modpacks offer numerous advantages to traditional approaches.

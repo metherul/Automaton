@@ -42,9 +42,9 @@ namespace Automaton.Model.Install
                 _installBase.ModpackMods.Remove(modOrganizerObject);
 
                 File.Create(Path.Combine(installPath, "ModOrganizer.ini"));
+
+                Directory.CreateDirectory(Path.Combine(installPath), "mods");
             }
-            
-            DebugWrite("_CLEAR");
 
             foreach (var mod in _installBase.ModpackMods)
             {
@@ -66,14 +66,12 @@ namespace Automaton.Model.Install
             File.WriteAllText(Path.Combine(profilePath, "modlist.txt"), _installBase.ModlistTxt);
             File.WriteAllText(Path.Combine(profilePath, "archives.txt"), _installBase.ArchivesTxt);
 
-            DebugWrite("[DONE] Operation completed.");
             DebugWrite("_END");
         }
 
         private void InstallMod(ExtendedMod mod)
         {
             DebugWrite($"[INSTALL] {mod.ModName}");
-            DebugWrite($"[INSTALL] {mod.FileName}");
 
             var extractionDirectory = System.IO.Path.Combine(_installBase.DownloadsDirectory, Path.GetFileNameWithoutExtension(mod.FileName));
             var archivePath = mod.FilePath;
@@ -86,7 +84,7 @@ namespace Automaton.Model.Install
                                     .ToDictionary(e => e.Key);
 
                 _archiveContents.ExtractAll(archivePath,
-                    e => selections.ContainsKey(e) ? Path.Combine(installPath, selections[e].First().TargetLocation.Substring(1)) : null);
+                        e => selections.ContainsKey(e) ? Path.Combine(installPath, selections[e].First().TargetLocation.Substring(1)) : null);
 
                 // Some mods write the same file to two locations and the extractor
                 // doesn't support this, so we'll copy the file around a bit.

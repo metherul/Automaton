@@ -29,6 +29,15 @@ namespace Automaton.Model.Modpack.Base
         [JsonProperty("mod_organizer_version")]
         public ModOrganizerVersion ModOrganizerVersion { get; set; }
 
+        [JsonProperty("background_color")]
+        public string BackgroundColor { get; set; }
+
+        [JsonProperty("font_color")]
+        public string FontColor { get; set; }
+
+        [JsonProperty("button_color")]
+        public string ButtonColor { get; set; }
+
         [JsonProperty("mod_install_folders")]
         public List<string> ModInstallFolders { get; set; }
     }
