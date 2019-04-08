@@ -50,6 +50,9 @@ namespace Automaton.Model.Install
                 File.Create(Path.Combine(installPath, "ModOrganizer.ini")).Close();
 
                 Directory.CreateDirectory(Path.Combine(installPath), "mods");
+
+                // Clear the registry if applicable
+
             }
 
             foreach (var mod in _modList)

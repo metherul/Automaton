@@ -7,7 +7,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Automaton")]
-[assembly: AssemblyDescription("The Automaton modpacking framework installer")]
+[assembly: AssemblyDescription("The Automaton Installer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The Automaton Framework")]
 [assembly: AssemblyProduct("Automaton")]
