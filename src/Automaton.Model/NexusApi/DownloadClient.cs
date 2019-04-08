@@ -105,17 +105,16 @@ namespace Automaton.Model.NexusApi
                     {
                         _logger.WriteLine("Download complete");
 
+                        mod.FilePath = downloadPath;
+                        _currentDownloads--;
+
+                        DownloadUpdate.Invoke(this, (mod, false));
+
                         return;
                     }
 
                     mod.CurrentDownloadProgress = args.ProgressPercentage;
                     DownloadUpdate.Invoke(this, (mod, false));
-                };
-
-                webClient.DownloadFileCompleted += (sender, args) =>
-                {
-                    mod.FilePath = downloadPath;
-                    _currentDownloads--;
                 };
 
                 try

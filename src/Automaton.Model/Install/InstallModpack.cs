@@ -7,6 +7,7 @@ using System;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Automaton.Model.Install
 {
@@ -16,6 +17,9 @@ namespace Automaton.Model.Install
         private readonly IArchiveContents _archiveContents;
         private readonly ILogger _logger;
         private readonly ICommonFilesystemUtility _commonFilesystemUtility;
+
+        private List<ExtendedMod> _modList;
+
         private int _maxConcurrency = 3;
 
         public EventHandler<string> DebugLogCallback { get; set; }
@@ -30,23 +34,25 @@ namespace Automaton.Model.Install
 
         public void Install()
         {
+            _modList = _installBase.ModpackMods;
+
             // Install Mod Organizer
             var installPath = Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name);
             
             if (_installBase.ModpackHeader.InstallModOrganizer)
             {
                 DebugWrite("[INSTALL] Installing Mod Organizer...");
-                var modOrganizerObject = _installBase.ModpackMods.First(x => x.IsModOrganizer);
+                var modOrganizerObject = _modList.First(x => x.IsModOrganizer);
 
                 _archiveContents.ExtractToDirectory(modOrganizerObject.FilePath, installPath);
-                _installBase.ModpackMods.Remove(modOrganizerObject);
+                _modList.Remove(modOrganizerObject);
 
-                File.Create(Path.Combine(installPath, "ModOrganizer.ini"));
+                File.Create(Path.Combine(installPath, "ModOrganizer.ini")).Close();
 
                 Directory.CreateDirectory(Path.Combine(installPath), "mods");
             }
 
-            foreach (var mod in _installBase.ModpackMods)
+            foreach (var mod in _modList)
             {
                 InstallMod(mod);
             }

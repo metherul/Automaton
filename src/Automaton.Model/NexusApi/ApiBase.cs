@@ -113,7 +113,7 @@ namespace Automaton.Model.NexusApi
                 websocket.Connect();
                 websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
 
-                Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=\"Automaton\"");
+                Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=Automaton");
             }
 
             return false;
