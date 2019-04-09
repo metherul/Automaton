@@ -22,5 +22,10 @@ namespace Automaton.Model
 
             return key.GetValue("installed path").ToString();
         }
+
+        public void ClearMOCurrentInstance()
+        {
+            // Needs more exploration. 
+        }
     }
 }

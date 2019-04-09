@@ -62,6 +62,7 @@ namespace Automaton.Model.Install
                 Directory.CreateDirectory(Path.Combine(installPath), "mods");
 
                 // Clear the registry if applicable
+                _registryHandle.ClearMOCurrentInstance();
 
             }
 
