@@ -44,7 +44,7 @@ namespace Automaton.Model
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
                 var stackTrace = new StackTrace(eventArgs.Exception);
-                var frame = stackTrace.GetFrame(stackTrace.FrameCount - 1);
+                var frame = stackTrace.GetFrame(stackTrace.FrameCount - 1); //stackTrace.FrameCount - 1
 
                 WriteLine($"LineNumber: {frame.GetFileLineNumber()}, FilenName: {frame.GetFileName()}, MethodName: {frame.GetMethod().Name}\n{eventArgs.Exception.StackTrace} {eventArgs.Exception.Message}");
 

@@ -108,20 +108,41 @@ namespace Automaton.Model.NexusApi
 
                 webClient.DownloadProgressChanged += (sender, args) =>
                 {
-                    if (mod.CurrentDownloadProgress == 100)
-                    {
-                        _logger.WriteLine("Download complete");
+                    //if (args.ProgressPercentage == 100)
+                    //{
+                    //    _logger.WriteLine("Download complete");
 
-                        mod.FilePath = downloadPath;
-                        _currentDownloads--;
+                    //    mod.FilePath = downloadPath;
+                    //    _currentDownloads--;
 
-                        DownloadUpdate.Invoke(this, (mod, false));
+                    //    DownloadUpdate.Invoke(this, (mod, false));
 
-                        return;
-                    }
+                    //    return;
+                    //}
 
                     mod.CurrentDownloadProgress = args.ProgressPercentage;
+                    mod.IsDownloading = true;
+
                     DownloadUpdate.Invoke(this, (mod, false));
+                };
+
+                webClient.DownloadFileCompleted += (sender, args) =>
+                {
+                    if (args.Cancelled)
+                    {
+
+                    }
+
+                    _logger.WriteLine("Download complete");
+
+                    mod.FilePath = downloadPath;
+                    mod.CurrentDownloadProgress = 100;
+                    mod.IsDownloading = false;
+                    _currentDownloads--;
+
+                    DownloadUpdate.Invoke(this, (mod, false));
+
+                    return;
                 };
 
                 try
@@ -132,6 +153,9 @@ namespace Automaton.Model.NexusApi
                 catch (Exception e)
                 {
                     _logger.WriteLine($"{mod.ModName} could not be downloaded. Exception: {e.Message}", true);
+                    DownloadUpdate.Invoke(this, (mod, true));
+
+                    _currentDownloads--;
                 }
             }
 
