@@ -17,6 +17,7 @@ namespace Automaton.Model.Install
         private readonly IArchiveContents _archiveContents;
         private readonly ILogger _logger;
         private readonly ICommonFilesystemUtility _commonFilesystemUtility;
+        private readonly IRegistryHandle _registryHandle;
 
         private List<ExtendedMod> _modList;
 
@@ -30,6 +31,7 @@ namespace Automaton.Model.Install
             _archiveContents = components.Resolve<IArchiveContents>();
             _logger = components.Resolve<ILogger>();
             _commonFilesystemUtility = components.Resolve<ICommonFilesystemUtility>();
+            _registryHandle = components.Resolve<IRegistryHandle>();
         }
 
         public void Install()
@@ -47,7 +49,15 @@ namespace Automaton.Model.Install
                 _archiveContents.ExtractToDirectory(modOrganizerObject.FilePath, installPath);
                 _modList.Remove(modOrganizerObject);
 
+                var gamePath = _registryHandle.GetGamePath(_installBase.ModpackHeader.TargetGame ?? "Skyrim").Replace(@"\", @"\\");
+
                 File.Create(Path.Combine(installPath, "ModOrganizer.ini")).Close();
+                File.WriteAllText(Path.Combine(installPath, "ModOrganizer.ini"),
+                    "[General] \n" +
+                    $"gameName={_installBase.ModpackHeader.TargetGame ?? "Skyrim"} \n" +
+                    $"gamePath={gamePath} \n" +
+                    $"first_start=false"
+                );
 
                 Directory.CreateDirectory(Path.Combine(installPath), "mods");
 
