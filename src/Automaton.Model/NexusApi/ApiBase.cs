@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Autofac;
@@ -62,6 +63,8 @@ namespace Automaton.Model.NexusApi
 
                 HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
+                HttpClient.DefaultRequestHeaders.Add("application_name", "Automaton");
+                HttpClient.DefaultRequestHeaders.Add("application_version", $"{Assembly.GetEntryAssembly().GetName().Version}");
 
                 // Get the premium status of the account
                 var response = HttpClient.GetAsync("/v1/users/validate.json").Result;
@@ -94,6 +97,8 @@ namespace Automaton.Model.NexusApi
 
                     HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
+                    HttpClient.DefaultRequestHeaders.Add("application_name", "Automaton");
+                    HttpClient.DefaultRequestHeaders.Add("application_version", $"{Assembly.GetEntryAssembly().GetName().Version}");
 
                     // Get the premium status of the account
                     var response = HttpClient.GetAsync("/v1/users/validate.json").Result;
@@ -113,7 +118,7 @@ namespace Automaton.Model.NexusApi
                 websocket.Connect();
                 websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
 
-                Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=\"Automaton\"");
+                Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=Automaton");
             }
 
             return false;

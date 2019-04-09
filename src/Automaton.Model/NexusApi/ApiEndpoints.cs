@@ -36,6 +36,8 @@ namespace Automaton.Model.NexusApi
 
             _baseHttpClient.DefaultRequestHeaders.Add("User-Agent", headerString);
             _baseHttpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            _baseHttpClient.DefaultRequestHeaders.Add("application_name", "Automaton");
+            _baseHttpClient.DefaultRequestHeaders.Add("application_version", $"{Assembly.GetEntryAssembly().GetName().Version}");
         }
 
         public async Task<string> GenerateModDownloadLinkAsync(string gameName, string modId, string fileId)
@@ -66,6 +68,8 @@ namespace Automaton.Model.NexusApi
 
             if (mod.ModId == null || mod.FileId == null)
             {
+                _logger.WriteLine($"Generated modlist failed. Invalid modID and/or modID");
+
                 return null;
             }
 
@@ -120,7 +124,7 @@ namespace Automaton.Model.NexusApi
 
             catch (Exception e)
             {
-                Console.WriteLine(e);   
+                _logger.WriteLine($"Generic API request to URL: {url} has failed. {e.Message}");
                 throw;
             }
         }

@@ -8,9 +8,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using Autofac;
 using Automaton.Model.Install;
 using Automaton.Model.Install.Intefaces;
+using Automaton.Model.Interfaces;
 using Automaton.Model.NexusApi;
 using Automaton.Model.NexusApi.Interfaces;
 using Automaton.ViewModel.Controllers;
@@ -32,6 +34,7 @@ namespace Automaton.ViewModel
         private readonly IApiBase _apiBase;
         private readonly IInstallBase _installBase;
         private readonly IDialogController _dialogController;
+        private readonly ILogger _logger;
 
         private List<ExtendedMod> _failedDownloads = new List<ExtendedMod>();
 
@@ -67,10 +70,13 @@ namespace Automaton.ViewModel
             _apiBase = components.Resolve<IApiBase>();
             _installBase = components.Resolve<IInstallBase>();
             _dialogController = components.Resolve<IDialogController>();
+            _logger = components.Resolve<ILogger>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _nxmHandle.RecievedPipedDataEvent += QueueDownload;
             _downloadClient.DownloadUpdate += DownloadUpdate;
+
+            BindingOperations.EnableCollectionSynchronization(MissingMods, _missingModsLocked);
         }
 
         private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
@@ -136,7 +142,9 @@ namespace Automaton.ViewModel
         {
             if (_apiBase.IsUserPremium() && _apiBase.IsUserLoggedIn())
             {
-                foreach (var mod in MissingMods)
+                var missingMods = MissingMods.ToList();
+
+                foreach (var mod in missingMods)
                 {
                     if (!_failedDownloads.Contains(mod))
                     {
@@ -148,28 +156,34 @@ namespace Automaton.ViewModel
 
         private async void QueueDownload(object caller, PipedData pipedData)
         {
-            if (!MissingMods.Any(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
+            lock (MissingMods)
             {
-                return;
+                if (!MissingMods.ToList().Any(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId) || !_apiBase.IsUserLoggedIn())
+                {
+                    return;
+                }
+
+                var downloadUrl = _apiEndpoints.GenerateModDownloadLinkAsync(pipedData).Result;
+                var matchingModObject = MissingMods.ToList().First(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId);
+
+                MissingMods.ToList().First(x => x == matchingModObject).IsIndeterminateProcess = true;
+
+                if (matchingModObject == null)
+                {
+                    return;
+                }
+
+                _downloadClient.QueueDownload(matchingModObject, downloadUrl);
             }
-
-            var downloadUrl = await _apiEndpoints.GenerateModDownloadLinkAsync(pipedData);
-            var matchingModObject = MissingMods.First(x => x.FileId == pipedData.FileId && x.ModId == pipedData.ModId);
-
-            MissingMods.First(x => x == matchingModObject).IsIndeterminateProcess = true;
-
-            if (matchingModObject == null)
-            {
-                return;
-            }
-
-            _downloadClient.QueueDownload(matchingModObject, downloadUrl);
         }
 
         private void QueueDownload(ExtendedMod mod)
         {
-            var matchingModObject = MissingMods.First(x => x.FileId == mod.FileId && x.ModId == mod.ModId);
-            MissingMods.First(x => x == matchingModObject).IsIndeterminateProcess = true;
+            lock (MissingMods)
+            {
+                MissingMods.ToList().Where(x => x.Md5 == mod.Md5 && x.FileName == mod.FileName).ToList()
+                    .ForEach(x => x.IsIndeterminateProcess = true);
+            }
 
             _downloadClient.QueueDownload(mod, string.Empty);
         }
@@ -179,65 +193,45 @@ namespace Automaton.ViewModel
             var mod = e.Item1;
             var hasFailed = e.Item2;
 
-            if (hasFailed)
+            lock (MissingMods)
             {
-                var invalidMods = MissingMods.Where(x => x == mod);
-
-                foreach (var invalidMod in invalidMods)
+                if (hasFailed)
                 {
-                    var itemIndex = MissingMods.IndexOf(invalidMod);
+                    var invalidMods = MissingMods.ToList().Where(x => x == mod).ToList();
 
-                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
+                    foreach (var invalidMod in invalidMods)
                     {
+                        var itemIndex = MissingMods.IndexOf(invalidMod);
+
                         MissingMods.Move(itemIndex, MissingMods.Count - 1);
 
                         _failedDownloads.Add(mod);
-                    });
+                    }
                 }
-            }
 
-            if (mod.CurrentDownloadProgress == 100)
-            {
-                _installBase.ModpackMods.Where(x => x.Md5 == mod.Md5).ToList()
-                    .ForEach(x => x.FilePath = mod.FilePath);
-
-                var matchingMods = MissingMods.Where(x => x.Md5 == mod.Md5).ToList();
-
-                foreach (var matchingMod in matchingMods)
+                if (mod.CurrentDownloadProgress == 100)
                 {
-                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
-                    {
-                        _missingModsLocked = true;
+                    _installBase.ModpackMods.Where(x => x.Md5 == mod.Md5).ToList()
+                        .ForEach(x => x.FilePath = mod.FilePath);
 
-                        if (MissingMods.IndexOf(matchingMod) != -1)
+                    _installBase.ModpackMods.Where(x => x.Md5 == mod.Md5).ToList()
+                        .ForEach(x => x.IsDownloading = false);
+
+                    var matchingMods = MissingMods.ToList().Where(x => x.Md5 == mod.Md5).ToList(); // Error happens here. Maybe a multithreaded issue?
+
+                    foreach (var matchingMod in matchingMods)
+                    {
+                        if (MissingMods.ToList().IndexOf(matchingMod) != -1)
                         {
                             MissingMods.RemoveAt(MissingMods.IndexOf(matchingMod));
                             RemainingMissingModCount--;
                         }
-
-                        _missingModsLocked = false;
-                    });
+                    }
                 }
-            }
 
-            else
-            {
-                var missingMods = MissingMods.ToList();
-                foreach (var matchingMissingMod in missingMods.Where(x => x.Md5 == mod.Md5).ToList())
+                else
                 {
-                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
-                    {
-                        _missingModsLocked = true;
-
-                        var index = MissingMods.IndexOf(matchingMissingMod);
-                        if (index == -1)
-                        {
-                            return;
-                        }
-
-                        MissingMods[MissingMods.IndexOf(matchingMissingMod)].CurrentDownloadProgress = mod.CurrentDownloadProgress;
-                        _missingModsLocked = false;
-                    });
+                    MissingMods.Where(x => x.Md5 == mod.Md5).ToList().ForEach(x => x.CurrentDownloadProgress = mod.CurrentDownloadProgress);
                 }
             }
         }
@@ -246,10 +240,7 @@ namespace Automaton.ViewModel
         {
             var missingMods = await _validate.GetMissingModsAsync(new List<string>());
 
-            await Application.Current.Dispatcher.BeginInvoke((Action)delegate
-            {
-                MissingMods.AddRange(missingMods);
-            });
+            MissingMods.AddRange(missingMods);
 
             RemainingMissingModCount = MissingMods.Count;
 
@@ -258,6 +249,9 @@ namespace Automaton.ViewModel
 
         private async void ScanDirectory()
         {
+            _downloadClient.PurgeQueue();
+            AutodownloadsEnabled = false;
+
             var directoryToScan = await _fileSystemBrowser.OpenDirectoryBrowserAsync("Select a folder to scan for mods.");
 
             if (string.IsNullOrEmpty(directoryToScan))
@@ -289,28 +283,32 @@ namespace Automaton.ViewModel
 
         private async void FindAndValidateMod(ExtendedMod mod)
         {
+            // Remove the mod from the queue
+            _downloadClient.PurgeQueue(mod);
+
             var possibleArchiveMatch = await _fileSystemBrowser.OpenFileBrowserAsync($"{mod.ModName}|{mod.FileName}|All Matching Extensions|*{Path.GetExtension(mod.FileName)}|All Files|*.*",
                 $"Please select the matching mod archive: {mod.FileName}");
 
             if (string.IsNullOrEmpty(possibleArchiveMatch))
             {
+                lock (MissingMods)
+                {
+                    MissingMods.Move(MissingMods.IndexOf(mod), MissingMods.Count - 1);
+                }
+                QueueDownload(mod);
+
                 return;
             }
-
-            // Remove the mod from the queue
-            _downloadClient.PurgeQueue(mod);
 
             var filteredMissingMods = _validate.ValidateTargetModArchive(possibleArchiveMatch, MissingMods.ToList());
 
             RemainingMissingModCount = filteredMissingMods.Count;
 
-            await Application.Current.Dispatcher.BeginInvoke((Action)delegate
+            lock (MissingMods)
             {
-                _missingModsLocked = true;
                 MissingMods = new RangeObservableCollection<ExtendedMod>();
                 MissingMods.AddRange(filteredMissingMods);
-                _missingModsLocked = false;
-            });
+            }
         }
 
         private void OpenNexusLink(ExtendedMod mod)

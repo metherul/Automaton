@@ -14,5 +14,6 @@ namespace Automaton.Model.Install
 
         public bool IsIndeterminateProcess { get; set; }
         public bool IsModOrganizer { get; set; }
+        public bool IsDownloading { get; set; }
     }
 }

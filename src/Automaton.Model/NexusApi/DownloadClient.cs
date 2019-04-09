@@ -38,11 +38,15 @@ namespace Automaton.Model.NexusApi
 
         public void PurgeQueue()
         {
+            _logger.WriteLine("The entire downloadQueue has been purged");
+
             _downloadQueue.Clear();
         }
 
         public void PurgeQueue(ExtendedMod mod)
         {
+            _logger.WriteLine($"Queue purged of mod: {mod.ModName} with MD5 of {mod.Md5}");
+
             _downloadQueue = new Queue<(ExtendedMod, string)>(_downloadQueue.Where(x => x.Item1 != mod).ToList());
         }
 
@@ -53,6 +57,8 @@ namespace Automaton.Model.NexusApi
                 if (_downloadQueue.Any() && _currentDownloads != _maxConcurrentDownloads)
                 {
                     var queueObject = _downloadQueue.Dequeue();
+
+                    _logger.WriteLine($"Detected new item to add to queue modname {queueObject.Item1.ModName} MD5 of {queueObject.Item1.Md5}");
 
                     Task.Factory.StartNew(() => DownloadFile(queueObject.Item1, queueObject.Item2));
                     _currentDownloads++;
@@ -66,6 +72,7 @@ namespace Automaton.Model.NexusApi
         {
             if (_downloadQueue.ToList().Any(x => x.Item1.Md5 == mod.Md5))
             {
+                _logger.WriteLine($"Skipping queueing mod with modname {mod.ModName} and MD5 of {mod.Md5}");
                 return;
             }
 
@@ -101,21 +108,41 @@ namespace Automaton.Model.NexusApi
 
                 webClient.DownloadProgressChanged += (sender, args) =>
                 {
-                    if (mod.CurrentDownloadProgress == 100)
-                    {
-                        _logger.WriteLine("Download complete");
+                    //if (args.ProgressPercentage == 100)
+                    //{
+                    //    _logger.WriteLine("Download complete");
 
-                        return;
-                    }
+                    //    mod.FilePath = downloadPath;
+                    //    _currentDownloads--;
+
+                    //    DownloadUpdate.Invoke(this, (mod, false));
+
+                    //    return;
+                    //}
 
                     mod.CurrentDownloadProgress = args.ProgressPercentage;
+                    mod.IsDownloading = true;
+
                     DownloadUpdate.Invoke(this, (mod, false));
                 };
 
                 webClient.DownloadFileCompleted += (sender, args) =>
                 {
+                    if (args.Cancelled)
+                    {
+
+                    }
+
+                    _logger.WriteLine("Download complete");
+
                     mod.FilePath = downloadPath;
+                    mod.CurrentDownloadProgress = 100;
+                    mod.IsDownloading = false;
                     _currentDownloads--;
+
+                    DownloadUpdate.Invoke(this, (mod, false));
+
+                    return;
                 };
 
                 try
@@ -126,6 +153,9 @@ namespace Automaton.Model.NexusApi
                 catch (Exception e)
                 {
                     _logger.WriteLine($"{mod.ModName} could not be downloaded. Exception: {e.Message}", true);
+                    DownloadUpdate.Invoke(this, (mod, true));
+
+                    _currentDownloads--;
                 }
             }
 

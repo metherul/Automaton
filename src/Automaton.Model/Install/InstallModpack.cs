@@ -7,6 +7,7 @@ using System;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Automaton.Model.Install
 {
@@ -16,6 +17,10 @@ namespace Automaton.Model.Install
         private readonly IArchiveContents _archiveContents;
         private readonly ILogger _logger;
         private readonly ICommonFilesystemUtility _commonFilesystemUtility;
+        private readonly IRegistryHandle _registryHandle;
+
+        private List<ExtendedMod> _modList;
+
         private int _maxConcurrency = 3;
 
         public EventHandler<string> DebugLogCallback { get; set; }
@@ -26,27 +31,42 @@ namespace Automaton.Model.Install
             _archiveContents = components.Resolve<IArchiveContents>();
             _logger = components.Resolve<ILogger>();
             _commonFilesystemUtility = components.Resolve<ICommonFilesystemUtility>();
+            _registryHandle = components.Resolve<IRegistryHandle>();
         }
 
         public void Install()
         {
+            _modList = _installBase.ModpackMods;
+
             // Install Mod Organizer
             var installPath = Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name);
             
             if (_installBase.ModpackHeader.InstallModOrganizer)
             {
                 DebugWrite("[INSTALL] Installing Mod Organizer...");
-                var modOrganizerObject = _installBase.ModpackMods.First(x => x.IsModOrganizer);
+                var modOrganizerObject = _modList.First(x => x.IsModOrganizer);
 
                 _archiveContents.ExtractToDirectory(modOrganizerObject.FilePath, installPath);
-                _installBase.ModpackMods.Remove(modOrganizerObject);
+                _modList.Remove(modOrganizerObject);
 
-                File.Create(Path.Combine(installPath, "ModOrganizer.ini"));
+                var gamePath = _registryHandle.GetGamePath(_installBase.ModpackHeader.TargetGame ?? "Skyrim").Replace(@"\", @"\\");
+
+                File.Create(Path.Combine(installPath, "ModOrganizer.ini")).Close();
+                File.WriteAllText(Path.Combine(installPath, "ModOrganizer.ini"),
+                    "[General] \n" +
+                    $"gameName={_installBase.ModpackHeader.TargetGame ?? "Skyrim"} \n" +
+                    $"gamePath={gamePath} \n" +
+                    $"first_start=false"
+                );
 
                 Directory.CreateDirectory(Path.Combine(installPath), "mods");
+
+                // Clear the registry if applicable
+                _registryHandle.ClearMOCurrentInstance();
+
             }
 
-            foreach (var mod in _installBase.ModpackMods)
+            foreach (var mod in _modList)
             {
                 InstallMod(mod);
             }
@@ -106,7 +126,7 @@ namespace Automaton.Model.Install
                 "[General]\n" +
                 $"gameName={mod.TargetGame}\n" +
                 $"version={mod.Version}\n" +
-                $"installationFile={mod.FilePath}\n" +
+                $"installationFile={mod.FilePath.Replace(@"\", @"\\")}\n" +
                 $"repository={mod.Repository}\n" +
                 $"modId={mod.ModId}\n\n" +
                 "[installedFiles]\n" +

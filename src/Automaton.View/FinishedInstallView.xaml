@@ -23,25 +23,33 @@
                 RenderOptions.BitmapScalingMode="Fant"
                 RenderOptions.EdgeMode="Aliased"
                 Source="{DynamicResource HeaderImage}" />
+
             <TextBlock
                 Margin="0,20,0,0"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Stretch"
                 FontWeight="Bold"
                 Style="{DynamicResource HeaderText}"
                 Text="Your Modpack has been Installed"
-                TextAlignment="Justify" />
+                TextAlignment="Center" />
+
             <TextBlock
                 Margin="5,30,5,0"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Stretch"
                 FontSize="15"
                 Style="{DynamicResource BodyText}"
-                Text="A huge thanks to Phinocio, Connor, Nathan, halgari, Duende, Gatonegro, novocaine, the Ultimate Skyrim team and the rest of our fantastic beta testers. Without them, none of this would have ever been possible."
-                TextAlignment="Justify" />
+                TextAlignment="Justify">
+                <Run>A huge thanks goes out to</Run>
+                <Run FontWeight="Bold">Phinocio,</Run>
+                <Run FontWeight="Bold">bobtehbarbarian,</Run>
+                <Run>and</Run>
+                <Run FontWeight="Bold">Belmont Boy</Run>
+                <Run>for sponsoring this release on Patreon. Your watchful eye keeps this project going.</Run>
+            </TextBlock>
 
             <Button
                 Grid.Row="4"
                 Height="50"
-                Margin="0,40,0,30"
+                Margin="0,20,0,20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Command="{Binding OpenPatreonCommand}"
@@ -71,8 +79,16 @@
             </Button>
 
             <TextBlock
-                Margin="7,30,7,0"
-                HorizontalAlignment="Center"
+                Margin="5,20,5,0"
+                HorizontalAlignment="Stretch"
+                FontSize="15"
+                Style="{DynamicResource BodyText}"
+                Text="Shout out to those who contributed towards this release: Phinocio, Connor, Nathan, halgari and the rest of our fantastic testers."
+                TextAlignment="Justify" />
+
+            <TextBlock
+                Margin="5,30,5,0"
+                HorizontalAlignment="Stretch"
                 FontSize="15"
                 Opacity=".4"
                 Style="{DynamicResource BodyText}"

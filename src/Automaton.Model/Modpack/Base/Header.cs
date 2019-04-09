@@ -23,6 +23,9 @@ namespace Automaton.Model.Modpack.Base
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("target_game")]
+        public string TargetGame { get; set; }
+
         [JsonProperty("install_mod_organizer")]
         public bool InstallModOrganizer { get; set; }
 

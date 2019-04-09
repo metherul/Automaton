@@ -97,7 +97,7 @@
                 Grid.Row="1"
                 Margin="5,0,0,0"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{Binding MissingMods}"
+                ItemsSource="{Binding MissingMods, UpdateSourceTrigger=PropertyChanged}"
                 VirtualizingStackPanel.IsVirtualizing="True">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
@@ -114,8 +114,8 @@
                                     Command="{Binding FindAndValidateModCommand}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
                                     DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}"
-                                    Visibility="{Binding IsIndeterminateProcess, Converter={StaticResource BoolToInverseVisibilityConverter}}">
+                                    IsEnabled="{Binding IsDownloading, Converter={StaticResource BoolToInverseConverter}}"
+                                    Style="{DynamicResource MaterialDesignToolButton}">
 
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
                                 </Button>
@@ -124,8 +124,8 @@
                                     Command="{Binding OpenNexusLinkCommand}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
                                     DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}"
-                                    Visibility="{Binding IsIndeterminateProcess, Converter={StaticResource BoolToInverseVisibilityConverter}}">
+                                    IsEnabled="{Binding IsDownloading, Converter={StaticResource BoolToInverseConverter}}"
+                                    Style="{DynamicResource MaterialDesignToolButton}">
 
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
@@ -175,7 +175,7 @@
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 Foreground="{DynamicResource FontColor}"
-                                Value="{Binding CurrentDownloadProgress}" />
+                                Value="{Binding CurrentDownloadProgress, UpdateSourceTrigger=PropertyChanged}" />
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
