@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Alphaleonis.Win32.Filesystem;
 using System.Security.Principal;
+using System.Diagnostics;
 
 namespace Automaton.Model
 {
@@ -42,7 +43,10 @@ namespace Automaton.Model
 
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
-                WriteLine($"{eventArgs.Exception.StackTrace} {eventArgs.Exception.Message}");
+                var stackTrace = new StackTrace(eventArgs.Exception);
+                var frame = stackTrace.GetFrame(stackTrace.FrameCount - 1);
+
+                WriteLine($"LineNumber: {frame.GetFileLineNumber()}, FilenName: {frame.GetFileName()}, MethodName: {frame.GetMethod().Name}\n{eventArgs.Exception.StackTrace} {eventArgs.Exception.Message}");
 
                 if (eventArgs.Exception.Message.Contains("materialDesign"))
                 {

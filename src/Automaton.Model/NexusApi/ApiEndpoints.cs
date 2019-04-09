@@ -68,6 +68,8 @@ namespace Automaton.Model.NexusApi
 
             if (mod.ModId == null || mod.FileId == null)
             {
+                _logger.WriteLine($"Generated modlist failed. Invalid modID and/or modID");
+
                 return null;
             }
 
@@ -122,7 +124,7 @@ namespace Automaton.Model.NexusApi
 
             catch (Exception e)
             {
-                Console.WriteLine(e);   
+                _logger.WriteLine($"Generic API request to URL: {url} has failed. {e.Message}");
                 throw;
             }
         }
