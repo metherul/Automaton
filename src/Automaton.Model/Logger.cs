@@ -24,7 +24,7 @@ namespace Automaton.Model
 
         public Logger(IComponentContext components)
         {
-            _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"automaton-{string.Join("-", DateTime.Now.ToString().Split(Path.GetInvalidFileNameChars()))}.log");
+            _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"Automaton_{Assembly.GetEntryAssembly().GetName().Version}_{string.Join("-", DateTime.Now.ToString().Split(Path.GetInvalidFileNameChars()))}.log");
 
             Task.Factory.StartNew(LoggerController);
 

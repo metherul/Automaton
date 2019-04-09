@@ -136,7 +136,9 @@ namespace Automaton.ViewModel
         {
             if (_apiBase.IsUserPremium() && _apiBase.IsUserLoggedIn())
             {
-                foreach (var mod in MissingMods)
+                var missingMods = MissingMods;
+
+                foreach (var mod in missingMods)
                 {
                     if (!_failedDownloads.Contains(mod))
                     {
