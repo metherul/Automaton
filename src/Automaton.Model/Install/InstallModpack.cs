@@ -113,7 +113,7 @@ namespace Automaton.Model.Install
                     var from = Path.Combine(installPath, selection.Value.First().TargetLocation.Substring(1));
                     foreach (var e in selection.Value.Skip(1))
                     {
-                        var to = Path.Combine(installPath, selection.Value.First().TargetLocation.Substring(1));
+                        var to = Path.Combine(installPath, e.TargetLocation.Substring(1));
                         if (to != from)
                             File.Copy(from, to, true);
                     }

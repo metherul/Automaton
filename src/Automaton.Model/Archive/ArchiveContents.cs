@@ -67,7 +67,7 @@ namespace Automaton.Model.Archive
 
             using (var archiveFile = new SevenZipExtractor.ArchiveFile(archivePath, _libraryPath))
             {
-                archiveFile.Extract(directoryPath);
+                archiveFile.Extract(delegate (SevenZipExtractor.Entry entry) { return Path.Combine(directoryPath, entry.FileName);});
             }
 
             return;
