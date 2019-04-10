@@ -217,7 +217,7 @@ namespace Automaton.ViewModel
                     _installBase.ModpackMods.Where(x => x.Md5 == mod.Md5).ToList()
                         .ForEach(x => x.IsDownloading = false);
 
-                    var matchingMods = MissingMods.ToList().Where(x => x.Md5 == mod.Md5).ToList(); // Error happens here. Maybe a multithreaded issue?
+                    var matchingMods = MissingMods.ToList().Where(x => x.Md5 == mod.Md5).ToList(); 
 
                     foreach (var matchingMod in matchingMods)
                     {

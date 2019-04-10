@@ -114,8 +114,16 @@ namespace Automaton.Model.Install
                     foreach (var e in selection.Value.Skip(1))
                     {
                         var to = Path.Combine(installPath, e.TargetLocation.Substring(1));
+
+                        if (!Directory.Exists(Path.GetDirectoryName(to)))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(to));
+                        }
+
                         if (to != from)
+                        {
                             File.Copy(from, to, true);
+                        }
                     }
                 }
             }
