@@ -63,8 +63,8 @@ namespace Automaton.Model.NexusApi
 
                 HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
-                HttpClient.DefaultRequestHeaders.Add("application_name", "Automaton");
-                HttpClient.DefaultRequestHeaders.Add("application_version", $"{Assembly.GetEntryAssembly().GetName().Version}");
+                HttpClient.DefaultRequestHeaders.Add("Application-Name", "Automaton");
+                HttpClient.DefaultRequestHeaders.Add("Application-Version", $"{Assembly.GetEntryAssembly().GetName().Version}");
 
                 // Get the premium status of the account
                 var response = HttpClient.GetAsync("/v1/users/validate.json").Result;
@@ -97,8 +97,8 @@ namespace Automaton.Model.NexusApi
 
                     HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpClient.DefaultRequestHeaders.Add("APIKEY", ApiKey);
-                    HttpClient.DefaultRequestHeaders.Add("application_name", "Automaton");
-                    HttpClient.DefaultRequestHeaders.Add("application_version", $"{Assembly.GetEntryAssembly().GetName().Version}");
+                    HttpClient.DefaultRequestHeaders.Add("Application-Name", "Automaton");
+                    HttpClient.DefaultRequestHeaders.Add("Application-Version", $"{Assembly.GetEntryAssembly().GetName().Version}");
 
                     // Get the premium status of the account
                     var response = HttpClient.GetAsync("/v1/users/validate.json").Result;
