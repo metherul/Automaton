@@ -11,6 +11,8 @@ using Autofac;
 using System.Threading;
 using System.Collections.Generic;
 using Automaton.Model.Interfaces;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Automaton.Model.NexusApi
 {
@@ -104,6 +106,10 @@ namespace Automaton.Model.NexusApi
             
             using (var webClient = new WebClient())
             {
+                var platformType = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+                var headerString = $"Automaton/{Assembly.GetEntryAssembly().GetName().Version} ({Environment.OSVersion.VersionString}; {platformType}) {RuntimeInformation.FrameworkDescription}";
+                webClient.Headers.Add("User-Agent", headerString);
+
                 var downloadPath = Path.Combine(_installBase.DownloadsDirectory, mod.FileName);
 
                 webClient.DownloadProgressChanged += (sender, args) =>
