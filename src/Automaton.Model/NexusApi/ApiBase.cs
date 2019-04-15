@@ -45,8 +45,7 @@ namespace Automaton.Model.NexusApi
         public bool Initialize(string apiKey = "")
         {
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
+            
             _logger.WriteLine("Initializing API base");
 
             HttpClient = new HttpClient()
