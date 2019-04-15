@@ -13,6 +13,7 @@ namespace Automaton.View
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Ssl3 | System.Net.SecurityProtocolType.Tls11;
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = "Automaton.View.Resources.Bin.7z-x86.dll";
 
