@@ -128,6 +128,7 @@
     <Compile Include="Modpack\Base\Patcher.cs" />
     <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
     <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
+    <Compile Include="Modpack\Base\ModPackMasterDefinition.cs" />
     <Compile Include="Modpack\ModpackValidate.cs" />
     <Compile Include="Modpack\ModpackRead.cs" />
     <Compile Include="NexusApi\ApiBase.cs" />
