@@ -18,6 +18,7 @@ namespace Hephaestus
 
             pb.LoadInstalledMods();
             pb.FindArchives();
+            pb.CompileMods();
 
             
         }

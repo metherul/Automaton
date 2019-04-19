@@ -12,6 +12,7 @@ namespace Hephaestus.Model
     {
         private IniData _ini;
         public string ModName { get; set; }
+        public string FullPath { get; set; }
         public IniData Ini { get
             {
                 return _ini;
@@ -28,6 +29,7 @@ namespace Hephaestus.Model
         {
             var mod = new InstalledMod();
             mod.ModName = Path.GetFileName(path);
+            mod.FullPath = path;
             var parser = new FileIniDataParser();
             mod.Ini = parser.ReadFile(Path.Combine(path, "meta.ini"));
             return mod;

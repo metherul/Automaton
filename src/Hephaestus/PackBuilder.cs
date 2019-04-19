@@ -18,6 +18,7 @@ namespace Hephaestus
         public dynamic MO2Ini { get; set; }
         public string DefaultGame { get; set; }
         public List<string> ModListData { get; set; }
+        public List<CompiledMod> CompiledMods { get; private set; }
 
         public void LoadPrefs(string filepath)
         {
@@ -121,5 +122,90 @@ namespace Hephaestus
                            select line.Substring(1)).ToList();
         }
 
+        public void CompileMods()
+        {
+            var enabled_mods = ModListData.ToHashSet();
+
+            var indexed_files = (from archive in SourceArchives
+                                 from file in archive.ArchiveEntries
+                                 group (archive: archive, file: file) by file.SHA256 into grouped
+                                 select grouped).ToDictionary(k => k.Key);
+
+            var compiled_mods = (from mod in InstalledMods
+                                 where enabled_mods.Contains(mod.ModName)
+                                 select CompileMod(mod, indexed_files)).ToList();
+
+            CompiledMods = compiled_mods;
+            
+        }
+
+        private CompiledMod CompileMod(InstalledMod mod, IDictionary<string, IGrouping<string, (SourceArchive archive, ArchiveEntry file)>> indexed)
+        {
+            var compiled_mod = new CompiledMod();
+            compiled_mod.InstallPlans = new List<InstallPlan>();
+
+            Log.Info("Compiling {0}", mod.ModName);
+
+            var primary_source = (from archive in SourceArchives
+                                 where archive.ModId == mod.MetaData.General.modid
+                                 where archive.ArchiveName == mod.MetaData.General.installationFile
+                                 select archive).FirstOrDefault();
+
+            if (mod.ModName.EndsWith("_separator"))
+            {
+                compiled_mod.IsSeparator = true;
+
+            }
+            else
+            {
+
+                foreach (var file in Directory.EnumerateFiles(mod.FullPath, "*", SearchOption.AllDirectories))
+                {
+                    if (Path.GetFileName(file) == "meta.ini") continue;
+
+                    var sha = Utils.FileSHA256(file);
+
+                    ArchiveEntry match;
+
+
+                    if (indexed.TryGetValue(sha, out var entries))
+                    {
+                        var pair = (from entry in entries
+                                    where entry.archive == primary_source
+                                    select entry).FirstOrDefault();
+
+                        if (pair.archive == null)
+                        {
+                            pair = entries.First();
+                        }
+
+                        var install_plan = compiled_mod.InstallPlans.FirstOrDefault(v => v.SourceArchive.SHA256 == pair.archive.SHA256);
+                        if (install_plan == null)
+                        {
+                            install_plan = new InstallPlan();
+                            compiled_mod.InstallPlans.Add(install_plan);
+
+                            install_plan.SourceArchive = new InstallSourceArchive();
+                            install_plan.FilePairings = new List<FilePairing>();
+                            Utils.MemberwiseCopy(pair.archive, install_plan.SourceArchive);
+
+                        }
+                        install_plan.FilePairings.Add(new FilePairing()
+                        {
+                            From = pair.file.FileName,
+                            To = Utils.StripPrefix(mod.FullPath, file)
+                        });
+
+                    }
+                    else
+                    {
+                        Log.Warn("No match: {0}", file);
+                    }
+
+                }
+            }
+            Log.Info("Done Compiling {0}", mod.ModName);
+            return compiled_mod;
+        }
     }
 }

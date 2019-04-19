@@ -126,6 +126,7 @@
     <Compile Include="Modpack\Base\ModOrganizerVersion.cs" />
     <Compile Include="Modpack\Base\ModpackStructure.cs" />
     <Compile Include="Modpack\Base\Patcher.cs" />
+    <Compile Include="Modpack\CompiledMod.cs" />
     <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
     <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
     <Compile Include="Modpack\Base\ModPackMasterDefinition.cs" />

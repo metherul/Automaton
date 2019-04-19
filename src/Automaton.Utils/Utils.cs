@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Automaton.Utils
 {
@@ -57,6 +59,64 @@ namespace Automaton.Utils
         {
             var fi = new FileIniDataParser();
             return new DynamicIniData(fi.ReadFile(filename));
+        }
+
+        public static string FileSHA256(string filename)
+        {
+            using (var stream = File.OpenRead(filename))
+            {
+                var sha = new SHA256Managed();
+                return ToHex(sha.ComputeHash(stream));
+            }
+        }
+
+        public static string ToHex(byte[] bytes)
+        {
+            StringBuilder result = new StringBuilder(bytes.Length * 2);
+
+            for (int i = 0; i < bytes.Length; i++)
+                result.Append(bytes[i].ToString("x2"));
+
+            return result.ToString();
+        }
+
+        public static void MemberwiseCopy<T1, T2>(T1 src, T2 dest)
+        {
+            foreach (var property in typeof(T1).GetProperties())
+            {
+                if (property.CanRead) {
+                    var val = property.GetValue(src);
+                    var destprop = typeof(T2).GetProperty(property.Name);
+                    if (destprop != null && destprop.CanWrite)
+                    {
+                        destprop.SetValue(dest, val);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Strips prefix.Length charaters from the start of value
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string StripPrefix(string prefix, string value)
+        {
+            return value.Substring(prefix.Length);
+        }
+
+        /// <summary>
+        /// Reads in a complete text file and returns the contents as a strin
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static string Slurp(string file)
+        {
+            using (var rdr = new StreamReader(File.OpenRead(file)))
+            {
+                return rdr.ReadToEnd();
+            }
         }
     }
 }
