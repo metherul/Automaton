@@ -8,7 +8,7 @@ using IniParser;
 
 namespace Hephaestus.Model
 {
-    class InstalledMod
+    public class InstalledMod
     {
         private IniData _ini;
         public string ModName { get; set; }

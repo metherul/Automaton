@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hephaestus", "Hephaestus\He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.Utils", "Automaton.Utils\Automaton.Utils.csproj", "{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenZipExtractor", "..\..\Hephaestus\src\SevenZipExtractor\SevenZipExtractor.csproj", "{8AA97F58-5044-4BBA-B8D9-A74B6947A660}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

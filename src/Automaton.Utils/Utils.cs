@@ -26,5 +26,30 @@ namespace Automaton.Utils
         {
             return JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
         }
+
+        public static void WriteJson<T>(T inst, string filename)
+        {
+            using (var os = File.OpenWrite(filename))
+                WriteJson(inst, os);
+        }
+
+        private static void WriteJson<T>(T inst, Stream os)
+        {
+            using (var wtr = new StreamWriter(os))
+                WriteJson(inst, wtr);
+        }
+
+        private static JsonSerializerSettings JSON_SETTINGS = new JsonSerializerSettings() { Formatting = Formatting.Indented };
+
+        private static void WriteJson<T>(T inst, StreamWriter wtr)
+        {
+            wtr.Write(JsonConvert.SerializeObject(inst, JSON_SETTINGS));
+            wtr.Flush();
+        }
+
+        public static long FileSize(string fullPath)
+        {
+            return (new FileInfo(fullPath)).Length;
+        }
     }
 }

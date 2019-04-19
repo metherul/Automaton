@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Hephaestus
 {
@@ -8,7 +9,9 @@ namespace Hephaestus
         {
             PackBuilder pb = new PackBuilder();
             pb.LoadPackDefinition("C:\\Mod Organizer 2 - Lexys LOTD SE\\lexy.auto_definition");
-            Console.WriteLine("Loaded Definition for {0} by {1}", 
+            pb.LoadPrefs("C:\\Mod Organizer 2 - Lexys LOTD SE\\halgari.prefs");
+
+            Log.Info("Loaded Definition for {0} by {1}", 
                 pb.ModPackMasterDefinition.PackName, 
                 pb.ModPackMasterDefinition.AuthorName);
 

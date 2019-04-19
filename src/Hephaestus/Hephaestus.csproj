@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Hephaestus\src\SevenZipExtractor\SevenZipExtractor.csproj" />
     <ProjectReference Include="..\Automaton.Model\Automaton.Model.csproj" />
     <ProjectReference Include="..\Automaton.Utils\Automaton.Utils.csproj" />
   </ItemGroup>
@@ -18,6 +19,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
 </Project>
