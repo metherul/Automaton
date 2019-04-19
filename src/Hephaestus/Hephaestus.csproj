@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Hephaestus\src\SevenZipExtractor\SevenZipExtractor.csproj" />
     <ProjectReference Include="..\Automaton.Model\Automaton.Model.csproj" />
     <ProjectReference Include="..\Automaton.Utils\Automaton.Utils.csproj" />
+    <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj" />
   </ItemGroup>
 
   <ItemGroup>
