@@ -142,7 +142,7 @@ namespace Hephaestus
                                  group (archive: archive, file: file) by file.SHA256 into grouped
                                  select grouped).ToDictionary(k => k.Key);
 
-            var compiled_mods = (from mod in InstalledMods
+            var compiled_mods = (from mod in InstalledMods.AsParallel()
                                  where enabled_mods.Contains(mod.ModName)
                                  select CompileMod(mod, indexed_files)).ToList();
 
