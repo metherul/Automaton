@@ -26,6 +26,11 @@ namespace Automaton.Model.Modpack
         public List<string> AlternateArchiveLocations { get; set; }
 
 
+        public ModPackMasterDefinition Clone()
+        {
+            return (ModPackMasterDefinition)MemberwiseClone();
+        }
+
                 
                 
     }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -103,7 +104,9 @@ namespace Automaton.Utils
         /// <returns></returns>
         public static string StripPrefix(string prefix, string value)
         {
-            return value.Substring(prefix.Length);
+            if (prefix.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                return value.Substring(prefix.Length);
+            return value.Substring(prefix.Length + 1);
         }
 
         /// <summary>
@@ -116,6 +119,22 @@ namespace Automaton.Utils
             using (var rdr = new StreamReader(File.OpenRead(file)))
             {
                 return rdr.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Writes a object as JSON into a entry with the given name in the given zip file
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="zip"></param>
+        /// <param name="entry_name"></param>
+        /// <param name="json_data"></param>
+        public static void SpitJsonInto<T>(ZipArchive zip, string entry_name, T json_data)
+        {
+            var entry = zip.CreateEntry(entry_name);
+            using (var wtr = new StreamWriter(entry.Open()))
+            {
+                WriteJson(json_data, wtr);
             }
         }
     }

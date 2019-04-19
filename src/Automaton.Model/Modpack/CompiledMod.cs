@@ -9,6 +9,9 @@ namespace Automaton.Model.Modpack
 {
     public class CompiledMod
     {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
         [JsonProperty("archives")]
         public List<InstallPlan> InstallPlans { get; set; }
 
@@ -24,7 +27,7 @@ namespace Automaton.Model.Modpack
         [JsonProperty("source_archive")]
         public InstallSourceArchive SourceArchive { get; set; }
 
-        [JsonProperty("parings")]
+        [JsonProperty("pairings")]
         public List<FilePairing> FilePairings { get; set; }
     }
 

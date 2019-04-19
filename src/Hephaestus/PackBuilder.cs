@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using Hephaestus.Nexus;
+using System.IO.Compression;
 
 namespace Hephaestus
 {
@@ -19,6 +20,8 @@ namespace Hephaestus
         public string DefaultGame { get; set; }
         public List<string> ModListData { get; set; }
         public List<CompiledMod> CompiledMods { get; private set; }
+
+
 
         public void LoadPrefs(string filepath)
         {
@@ -39,6 +42,14 @@ namespace Hephaestus
             get
             {
                 return Path.Combine(ModPackMasterDefinition.MO2Directory, "mods");
+            }
+        }
+
+        public string PackFileName
+        {
+            get
+            {
+                return ModPackMasterDefinition.MO2Profile + ".auto";
             }
         }
 
@@ -142,7 +153,9 @@ namespace Hephaestus
         private CompiledMod CompileMod(InstalledMod mod, IDictionary<string, IGrouping<string, (SourceArchive archive, ArchiveEntry file)>> indexed)
         {
             var compiled_mod = new CompiledMod();
+            compiled_mod.Name = mod.ModName;
             compiled_mod.InstallPlans = new List<InstallPlan>();
+            compiled_mod.RawINI = Utils.Slurp(Path.Combine(mod.FullPath, "meta.ini"));
 
             Log.Info("Compiling {0}", mod.ModName);
 
@@ -207,5 +220,30 @@ namespace Hephaestus
             Log.Info("Done Compiling {0}", mod.ModName);
             return compiled_mod;
         }
+
+        public void ExportPack()
+        {
+
+            if (File.Exists(PackFileName))
+                File.Delete(PackFileName);
+
+            using (var zip = ZipFile.Open(PackFileName, ZipArchiveMode.Create))
+            {
+                Log.Info("Exporting Header");
+                var master = ModPackMasterDefinition.Clone();
+                master.MO2Directory = null;
+                master.AlternateArchiveLocations = new List<string>();
+                Utils.SpitJsonInto(zip, "pack.auto_definition", master);
+
+                foreach (var mod in CompiledMods)
+                {
+                    Log.Info("Exporting {0}", mod.Name);
+                    Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "compiled.json"), mod);
+                }
+                
+            }
+        }
+
+
     }
 }
