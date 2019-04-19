@@ -240,7 +240,18 @@ namespace Hephaestus
                     Log.Info("Exporting {0}", mod.Name);
                     Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "compiled.json"), mod);
                 }
-                
+
+                var extra_files = new List<string>{"modlist.txt", "lockedorder.txt", "plugins.txt",
+                                                   "Skyrim.ini", "SkyrimCustom.ini", "SkyrimPrefs.ini",
+                                                   "archives.txt"};
+                foreach (var file in extra_files)
+                {
+                    var full_path = Path.Combine(ProfileFolder, file);
+                    if (File.Exists(full_path))
+                        zip.CreateEntryFromFile(full_path, file);
+
+                }
+
             }
         }
 
