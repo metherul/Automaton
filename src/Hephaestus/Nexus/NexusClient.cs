@@ -76,6 +76,7 @@ namespace Hephaestus.Nexus
         {
             game = game.ToLower();
             if (game == "skyrimse") return "skyrimspecialedition";
+            if (game == "skyrim special edition") return "skyrimspecialedition";
             return game;
         }
 

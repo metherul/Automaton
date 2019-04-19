@@ -60,6 +60,9 @@ namespace Hephaestus.Model
         [JsonProperty("archive_entries")]
         public List<ArchiveEntry> ArchiveEntries { get; set; }
 
+        [JsonProperty("direct_url", NullValueHandling = NullValueHandling.Include)]
+        public string DirectURL { get; set; }
+
         
         public static string META_CACHE_EXTENTION = ".source_archive";
 
@@ -137,7 +140,7 @@ namespace Hephaestus.Model
                 
                 if (FileId == null || ModId == null)
                 {
-                    var results = pack_builder.NexusClient.MD5SearchWithFallback("Skyrim", MD5);
+                    var results = pack_builder.NexusClient.MD5SearchWithFallback(pack_builder.DefaultGame, MD5);
                     
                     if (results == null)
                     {

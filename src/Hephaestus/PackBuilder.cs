@@ -15,6 +15,9 @@ namespace Hephaestus
         public ModPackMasterDefinition ModPackMasterDefinition { get; private set; }
         public Preferences Preferences { get; private set; }
         public NexusClient NexusClient { get; private set; }
+        public dynamic MO2Ini { get; set; }
+        public string DefaultGame { get; set; }
+        public List<string> ModListData { get; set; }
 
         public void LoadPrefs(string filepath)
         {
@@ -46,6 +49,20 @@ namespace Hephaestus
             }
         }
 
+        public string ProfileFolder
+        {
+            get
+            {
+                return Path.Combine(ModPackMasterDefinition.MO2Directory, "profiles", ModPackMasterDefinition.MO2Profile);
+            }
+        }
+
+        public string ModListFileName
+        {
+            get {
+                return Path.Combine(ProfileFolder, "modlist.txt");
+            }
+        }
 
         public IEnumerable<string> ArchiveLocations
         {
@@ -71,8 +88,10 @@ namespace Hephaestus
             var archives = from_mods.AsParallel()
                                     .Select(file => SourceArchive.FromFileName(this, file))
                                     .ToList();
+            SourceArchives = archives;
 
-            //SourceArchives = from_mods.ToList();
+            Log.Info("Found {0} archives", SourceArchives.Count);
+
 
         }
 
@@ -81,7 +100,7 @@ namespace Hephaestus
             ModPackMasterDefinition = Utils.LoadJson<ModPackMasterDefinition>(path);
         }
 
-        internal void LoadInstalledMods()
+        public void LoadInstalledMods()
         {
             InstalledMods = Directory.EnumerateDirectories(ModsFolder)
                             .AsParallel()
@@ -89,5 +108,18 @@ namespace Hephaestus
                             .ToList();
                             
         }
+
+        public void LoadMO2Data()
+        {
+            MO2Ini = Utils.LoadIni(Path.Combine(ModPackMasterDefinition.MO2Directory, "ModOrganizer.ini"));
+            DefaultGame = MO2Ini.General.gameName;
+            if (string.IsNullOrEmpty(DefaultGame))
+                Log.HardError("No Default game found");
+
+            ModListData = (from line in File.ReadAllLines(ModListFileName)
+                           where line.StartsWith("+") || (line.StartsWith("-") && line.EndsWith("_separator"))
+                           select line.Substring(1)).ToList();
+        }
+
     }
 }

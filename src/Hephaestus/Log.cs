@@ -35,5 +35,16 @@ namespace Hephaestus
             Info(fmt, args);
             Console.ForegroundColor = old;
         }
+
+        public static void HardError(string fmt, params object[] args)
+        {
+            var old = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Info(fmt, args);
+            Console.ForegroundColor = old;
+            Environment.Exit(1);
+        }
+
+
     }
 }

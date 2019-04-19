@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using IniParser;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -50,6 +51,12 @@ namespace Automaton.Utils
         public static long FileSize(string fullPath)
         {
             return (new FileInfo(fullPath)).Length;
+        }
+
+        public static dynamic LoadIni(string filename)
+        {
+            var fi = new FileIniDataParser();
+            return new DynamicIniData(fi.ReadFile(filename));
         }
     }
 }
