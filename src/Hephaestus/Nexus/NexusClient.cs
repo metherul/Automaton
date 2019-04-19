@@ -40,6 +40,8 @@ namespace Hephaestus.Nexus
 
         public List<MD5SearchResult> MD5Search(string game, string md5)
         {
+            game = FixGameName(game);
+
             while (true)
             {
                 var uri = string.Format("/v1/games/{0}/mods/md5_search/{1}.json", game, md5);
@@ -58,7 +60,7 @@ namespace Hephaestus.Nexus
                 catch (Exception e)
                 {
                     Log.Warn("Failed to find MD5 {0}", md5);
-                    return null;
+                    return new List<MD5SearchResult>();
                 }
 
                 var result = http_request.Result;
@@ -68,6 +70,30 @@ namespace Hephaestus.Nexus
                 return json;
             }
 
+        }
+
+        private string FixGameName(string game)
+        {
+            game = game.ToLower();
+            if (game == "skyrimse") return "skyrimspecialedition";
+            return game;
+        }
+
+        public static List<string> FALLBACK_GAMES = new List<string>() { "skyrimse", "skyrim", "fallout4", "newvegas", "fallout3" };
+
+        public List<MD5SearchResult> MD5SearchWithFallback(string preferredGame, string md5)
+        {
+            var results = MD5Search(preferredGame, md5);
+            if (results.Count == 0)
+            {
+                Log.Info("Performing Fallback search for {0}", md5);
+                var multi_results = from game in FALLBACK_GAMES
+                                    where game != preferredGame
+                                    from result in MD5Search(game, md5)
+                                    select result;
+                return multi_results.ToList();
+            }
+            return results;
         }
     }
 }

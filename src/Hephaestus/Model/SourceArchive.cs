@@ -137,8 +137,8 @@ namespace Hephaestus.Model
                 
                 if (FileId == null || ModId == null)
                 {
-                    var results = pack_builder.NexusClient.MD5Search("Skyrim", MD5);
-
+                    var results = pack_builder.NexusClient.MD5SearchWithFallback("Skyrim", MD5);
+                    
                     if (results == null)
                     {
                         Log.Warn("Failed to find archive {0} on the nexus please manually update the metadata cache", FullPath);
