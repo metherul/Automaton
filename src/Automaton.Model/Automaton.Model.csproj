@@ -135,6 +135,7 @@
     <Compile Include="NexusApi\ApiBase.cs" />
     <Compile Include="NexusApi\ApiEndpoints.cs" />
     <Compile Include="NexusApi\DownloadClient.cs" />
+    <Compile Include="NexusApi\DownloadResponse.cs" />
     <Compile Include="NexusApi\Interfaces\IDownloadClient.cs" />
     <Compile Include="NexusApi\Interfaces\IApiEndpoints.cs" />
     <Compile Include="NexusApi\Interfaces\IApiBase.cs" />

@@ -21,8 +21,6 @@ namespace Automaton.Model.Install
 
         private List<ExtendedMod> _modList;
 
-        private int _maxConcurrency = 3;
-
         public EventHandler<string> DebugLogCallback { get; set; }
 
         public InstallModpack(IComponentContext components)
@@ -89,7 +87,7 @@ namespace Automaton.Model.Install
             DebugWrite("_END");
         }
 
-        private void InstallMod(ExtendedMod mod)
+        public void InstallMod(ExtendedMod mod)
         {
             DebugWrite($"[INSTALL] {mod.ModName}");
 

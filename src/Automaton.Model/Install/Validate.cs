@@ -16,141 +16,56 @@ namespace Automaton.Model.Install
         private readonly IInstallBase _installBase;
         private readonly ILogger _logger;
 
+        private List<FileInfo> _downloadDirectoryEntries;
+
         public Validate(IComponentContext components)
         {
             _installBase = components.Resolve<IInstallBase>();
             _logger = components.Resolve<ILogger>();
         }
 
-        public async Task<List<ExtendedMod>> GetMissingModsAsync(List<string> directoriesToScan)
+        public string BatchFileMatch(ExtendedMod mod, List<string> directoryFiles)
         {
-            return await Task.Factory.StartNew(() => GetMissingMods(directoriesToScan));
-        }
+            var matchingFileSize = directoryFiles.Where(x => File.GetSize(x).ToString() == mod.FileSize).ToList();
 
-        public List<ExtendedMod> GetMissingMods(List<string> directoriesToScan)
-        {
-            directoriesToScan.Add(_installBase.DownloadsDirectory);
-
-            var missingMods = new List<ExtendedMod>();
-            var directoryContents = directoriesToScan
-                .SelectMany(x => Directory.GetFiles(x, "*.*", System.IO.SearchOption.TopDirectoryOnly)).ToList();
-
-            foreach (var mod in _installBase.ModpackMods)
+            if (!matchingFileSize.Any())
             {
-                var possibleArchiveMatches =
-                    directoryContents.Where(x => new FileInfo(x).Length.ToString() == mod.FileSize).ToList();
+                return string.Empty;
+            }
 
-                if (!possibleArchiveMatches.Any())
+            if (matchingFileSize.Count == 1)
+            {
+                return matchingFileSize.First();
+            }
+
+            if (matchingFileSize.Count > 1)
+            {
+                foreach (var matchingFile in matchingFileSize)
                 {
-                    missingMods.Add(mod);
-                    continue;
-                }
-
-                if (possibleArchiveMatches.Count() == 1)
-                {
-                    mod.FilePath = possibleArchiveMatches.First();
-                    continue;
-                }
-
-                if (possibleArchiveMatches.Count() > 1)
-                {
-                    var matchingArchive = GetMatchingArchive(mod, possibleArchiveMatches);
-
-                    if (matchingArchive != null)
+                    if (GetFileMd5(matchingFile) == mod.Md5)
                     {
-                        mod.FilePath = matchingArchive;
+                        return matchingFile;
                     }
                 }
             }
 
-            _logger.WriteLine($"Missing mod count: {missingMods.Count()}");
-
-            return missingMods;
+            return string.Empty;
         }
 
-        public List<ExtendedMod> FilterMissingMods(string directoryPath)
+        public bool IsArchiveMatch(ExtendedMod mod, string archivePath)
         {
-            var missingMods = new List<ExtendedMod>();
-            var directoryContents = Directory.GetFiles(directoryPath, "*.*", System.IO.SearchOption.TopDirectoryOnly).ToList();
-
-            foreach (var mod in _installBase.ModpackMods.Where(x => !File.Exists(x.FilePath)))
-            {
-                var possibleArchiveMatches =
-                    directoryContents.Where(x => new FileInfo(x).Length.ToString() == mod.FileSize).ToList();
-
-                if (!possibleArchiveMatches.Any())
-                {
-                    missingMods.Add(mod);
-                    continue;
-                }
-
-                if (possibleArchiveMatches.Count() == 1)
-                {
-                    mod.FilePath = possibleArchiveMatches.First();
-                    continue;
-                }
-
-                if (possibleArchiveMatches.Count() > 1)
-                {
-                    var matchingArchive = GetMatchingArchive(mod, possibleArchiveMatches);
-
-                    if (matchingArchive != null)
-                    {
-                        mod.FilePath = matchingArchive;
-                    }
-                }
-            }
-
-            _logger.WriteLine($"Missing mod count: {missingMods.Count()}");
-
-            return missingMods;
+            return GetFileMd5(archivePath) == mod.Md5.ToLowerInvariant();
         }
 
-        public async Task<List<ExtendedMod>> FilterMissingModsAsync(string directoryPath)
+        private string GetFileMd5(string archivePath)
         {
-            return await Task.Factory.StartNew(() => FilterMissingMods(directoryPath));
-        }
-
-        public List<ExtendedMod> ValidateTargetModArchive(string archivePath, List<ExtendedMod> missingMods)
-        {
-            var archiveSize = new FileInfo(archivePath).Length.ToString();
-            var possibleMatchingMods = missingMods.Where(x => x.FileSize == archiveSize).ToList();
-
-            if (!possibleMatchingMods.Any())
+            using (var stream = new System.IO.BufferedStream(File.OpenRead(archivePath), 1200000))
             {
-                _logger.WriteLine($"Mod archive with archiveSize {archiveSize} had no counterpart in a missingMods collection of size {missingMods.Count}", true);
+                var md5 = MD5.Create();
+                var hash = md5.ComputeHash(stream);
 
-                return missingMods;
+                return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
             }
-
-            foreach (var possibleMatchingMod in possibleMatchingMods)
-            {
-                _installBase.ModpackMods.Where(x => x.FileId == possibleMatchingMod.FileId && x.FileSize == archiveSize).ToList().ForEach(x => x.FilePath = archivePath);
-
-                missingMods.Remove(possibleMatchingMod);
-            }
-
-            _logger.WriteLine($"Missing mod count: {missingMods.Count()}");
-
-            return missingMods;
-        }
-
-        private string GetMatchingArchive(Mod mod, List<string> possibleArchiveMatches)
-        {
-            foreach (var possibleMatch in possibleArchiveMatches)
-            {
-                using (var md5 = MD5.Create())
-                using (var fileStream = File.OpenRead(possibleMatch))
-                {
-                    if (BitConverter.ToString(md5.ComputeHash(fileStream)).Replace("-", "").ToLowerInvariant() ==
-                        mod.Md5)
-                    {
-                        return possibleMatch;
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }

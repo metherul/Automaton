@@ -8,5 +8,6 @@ namespace Automaton.Model.Install.Interfaces
         EventHandler<string> DebugLogCallback { get; set; }
 
         void Install();
+        void InstallMod(ExtendedMod mod);
     }
 }

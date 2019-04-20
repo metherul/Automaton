@@ -110,7 +110,7 @@ namespace Automaton.Utils
         }
 
         /// <summary>
-        /// Reads in a complete text file and returns the contents as a strin
+        /// Reads in a complete text file and returns the contents as a string
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
