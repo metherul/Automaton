@@ -317,8 +317,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Bin\7z-x64.dll" />
-    <EmbeddedResource Include="Resources\Bin\7z-x86.dll" />
+    <EmbeddedResource Include="Resources\DLL\7z-x64.dll" />
+    <EmbeddedResource Include="Resources\DLL\7z-x86.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\AutomatonHead.png" />

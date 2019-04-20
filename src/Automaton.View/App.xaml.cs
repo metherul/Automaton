@@ -15,11 +15,11 @@ namespace Automaton.View
         {
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Ssl3 | System.Net.SecurityProtocolType.Tls11;
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "Automaton.View.Resources.Bin.7z-x86.dll";
+            var resourceName = "Automaton.View.Resources.DLL.7z-x86.dll";
 
             if (Environment.Is64BitProcess)
             {
-                resourceName = "Automaton.View.Resources.Bin.7z-x64.dll";
+                resourceName = "Automaton.View.Resources.DLL.7z-x64.dll";
             }
 
             var stream = assembly.GetManifestResourceStream(resourceName);
