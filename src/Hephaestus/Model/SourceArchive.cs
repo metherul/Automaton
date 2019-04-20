@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Hephaestus.Model
@@ -62,6 +63,15 @@ namespace Hephaestus.Model
 
         [JsonProperty("direct_url", NullValueHandling = NullValueHandling.Include)]
         public string DirectURL { get; set; }
+
+        [JsonProperty("author_id")]
+        public long AuthorId { get; set; }
+
+        [JsonProperty("donate_urls")]
+        public List<string> DonateURLs { get; set; }
+
+        [JsonProperty("author")]
+        public string Author { get; set; }
 
         
         public static string META_CACHE_EXTENTION = ".source_archive";
@@ -138,45 +148,71 @@ namespace Hephaestus.Model
                     Repository = general.Repository;
                 }
                 
-                if (FileId == null || ModId == null)
-                {
-                    var results = pack_builder.NexusClient.MD5SearchWithFallback(pack_builder.DefaultGame, MD5);
+                var results = pack_builder.NexusClient.MD5SearchWithFallback(pack_builder.DefaultGame, MD5);
                     
-                    if (results == null)
-                    {
-                        Log.Warn("Failed to find archive {0} on the nexus please manually update the metadata cache", FullPath);
-                        return;
-                    }
-
-                    var matches = results.Where(result => result.FileDetails.FileName == ArchiveName)
-                                         .ToList();
-
-                    if (matches.Count > 1) {
-                        Log.Warn("Found Multiple Matches for {0} please manually update the metadata cache", FullPath);
-                        return;
-                    }
-
-                    if (matches.Count == 0) {
-                        Log.Warn("No matches found for {0} please manually update the metadata cache", FullPath);
-                        return;
-                    }
-
-                    var match = matches.First();
-
-                    GameName = match.ModDescription.DomainName;
-                    ModId = match.ModDescription.ModId.ToString();
-                    FileId = match.FileDetails.FileId.ToString();
-                    Name = match.FileDetails.Name;
-                    ModName = match.ModDescription.Name;
-                    Description = match.ModDescription.Description;
-                    Category = match.ModDescription.CategoryId.ToString();
-                    Version = match.FileDetails.Version;
-                    Repository = "Nexus";
-                       
+                if (results == null)
+                {
+                    Log.Warn("Failed to find archive {0} on the nexus please manually update the metadata cache", FullPath);
+                    return;
                 }
+
+                var matches = results.Where(result => result.FileDetails.FileName == ArchiveName)
+                                        .ToList();
+
+                if (matches.Count > 1) {
+                    Log.Warn("Found Multiple Matches for {0} please manually update the metadata cache", FullPath);
+                    return;
+                }
+
+                if (matches.Count == 0) {
+                    Log.Warn("No matches found for {0} please manually update the metadata cache", FullPath);
+                    return;
+                }
+
+                var match = matches.First();
+
+                GameName = match.ModDescription.DomainName;
+                ModId = match.ModDescription.ModId.ToString();
+                FileId = match.FileDetails.FileId.ToString();
+                Name = match.FileDetails.Name;
+                ModName = match.ModDescription.Name;
+                Description = match.ModDescription.Description;
+                Category = match.ModDescription.CategoryId.ToString();
+                Version = match.FileDetails.Version;
+                Repository = "Nexus";
+                AuthorId = match.ModDescription.User.MemberID;
+                Author = match.ModDescription.Author;
+
+                ParseDonationURLs();
 
             }
             Log.Info("Finished Analyzing {0}", ArchiveName);
+
+        }
+
+
+        private static Regex PatreonRegex = new Regex("(?<=\\[url ?=)https?\\://www\\.patreon\\.com/.+?(?=\\])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static Regex PayPalRegex = new Regex("(?<=\\[url ?=)https?\\://www\\.patreon\\.com/.+?(?=\\])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private void ParseDonationURLs()
+        {
+            if (Description == null || AuthorId == 0) return;
+           
+            DonateURLs = new List<string>();
+            DonateURLs.Add(String.Format("https://www.nexusmods.com/Core/Libs/Common/Widgets/DonatePopUp?user={0}", AuthorId));
+            DonateURLs.Add(String.Format("https://www.nexusmods.com/Core/Libs/Common/Widgets/PayPalPopUp?user={0}", AuthorId));
+
+            foreach (Match match in PatreonRegex.Matches(Description))
+            {
+                    DonateURLs.Add(match.Value);
+            }
+
+            foreach (Match match in PayPalRegex.Matches(Description))
+            {
+                DonateURLs.Add(match.Value);
+            }
+
+            DonateURLs = DonateURLs.Distinct().ToList();
 
         }
     }

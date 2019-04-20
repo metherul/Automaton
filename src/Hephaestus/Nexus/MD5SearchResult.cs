@@ -47,6 +47,21 @@ namespace Hephaestus.Nexus
 
         [JsonProperty("author")]
         public string Author { get; set; }
+
+        [JsonProperty("user")]
+        public UserInfo User { get; set; }
+    }
+
+    public class UserInfo
+    {
+        [JsonProperty("member_id")]
+        public long MemberID { get; set; }
+   
+        [JsonProperty("member_group_id")]
+        public long MemberGroupID { get; set; }
+
+        [JsonProperty("name")]
+        public string Name;
     }
 
     public class FileDetails
