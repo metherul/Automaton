@@ -12,14 +12,21 @@ namespace Automaton.ViewModel.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var modsList = value as List<ExtendedMod>;
+            var modsList = value as RangeObservableCollection<ExtendedMod>;
 
             if (modsList == null || !modsList.Any())
             {
                 return modsList;
             }
 
-            return modsList.Where(x => !x.IsValidationComplete).ToList();
+            var itemsToRemove = modsList.Where(x => x.IsValidationComplete).ToList();
+
+            foreach (var itemToRemove in itemsToRemove)
+            {
+                modsList.Remove(itemToRemove);
+            }
+
+            return modsList;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

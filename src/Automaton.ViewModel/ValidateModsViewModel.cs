@@ -34,7 +34,7 @@ namespace Automaton.ViewModel
         public RelayCommand<ExtendedMod> FindAndValidateModCommand => new RelayCommand<ExtendedMod>(FindAndValidateMod);
         public RelayCommand<ExtendedMod> OpenNexusLinkCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
 
-        public RangeObservableCollection<ExtendedMod> ModsList { get; set; } = new RangeObservableCollection<ExtendedMod>();
+        public ObservableCollection<ExtendedMod> ModsList { get; set; } = new ObservableCollection<ExtendedMod>();
 
         public int RemainingMissingModCount { get; set; }
 
@@ -63,7 +63,7 @@ namespace Automaton.ViewModel
                 return;
             }
 
-            ModsList.AddRange(_installBase.ModpackMods);
+            ModsList = new ObservableCollection<ExtendedMod>(_installBase.ModpackMods);
 
             ValidateMods();
             _nxmHandle.StartServer();
