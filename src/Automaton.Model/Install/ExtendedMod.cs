@@ -4,6 +4,7 @@ using Automaton.Model.Install.Interfaces;
 using Automaton.Model.Modpack.Base;
 using Automaton.Model.NexusApi;
 using Automaton.Model.NexusApi.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace Automaton.Model.Install
 
         public async Task InstallModAsync()
         {
-            await Task.Run(InstallMod);
+            await Task.Run((Action)InstallMod);
         }
 
         public void DownloadMod()
@@ -77,7 +78,7 @@ namespace Automaton.Model.Install
 
         public async Task DownloadModAsync()
         {
-            await Task.Run(DownloadMod);
+            await Task.Run((Action)DownloadMod);
         }
 
 
