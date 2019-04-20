@@ -57,6 +57,15 @@ namespace Automaton.Model.Modpack
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("author_id")]
+        public long AuthorId { get; set; }
+
+        [JsonProperty("donate_urls")]
+        public List<string> DonateURLs { get; set; }
+
+        [JsonProperty("author")]
+        public string Author { get; set; }
+
         [JsonProperty("description")]
         public string Description { get; set; }
 
@@ -86,5 +95,6 @@ namespace Automaton.Model.Modpack
 
         [JsonProperty("direct_url")]
         public string DirectURL { get; set; }
+
     }
 }
