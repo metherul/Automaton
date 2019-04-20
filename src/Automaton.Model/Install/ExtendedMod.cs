@@ -89,6 +89,7 @@ namespace Automaton.Model.Install
             if (isArchiveMatch)
             {
                 FilePath = archivePath;
+                IsValidationComplete = true;
             }
 
             return isArchiveMatch;

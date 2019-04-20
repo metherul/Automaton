@@ -34,7 +34,7 @@ namespace Automaton.ViewModel
         public RelayCommand<ExtendedMod> FindAndValidateModCommand => new RelayCommand<ExtendedMod>(FindAndValidateMod);
         public RelayCommand<ExtendedMod> OpenNexusLinkCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
 
-        public RangeObservableCollection<ExtendedMod> MissingMods { get; set; } = new RangeObservableCollection<ExtendedMod>();
+        public RangeObservableCollection<ExtendedMod> ModsList { get; set; } = new RangeObservableCollection<ExtendedMod>();
 
         public int RemainingMissingModCount { get; set; }
 
@@ -62,6 +62,8 @@ namespace Automaton.ViewModel
             {
                 return;
             }
+
+            ModsList.AddRange(_installBase.ModpackMods);
 
             ValidateMods();
             _nxmHandle.StartServer();
@@ -92,13 +94,10 @@ namespace Automaton.ViewModel
 
             var directoryContents = Directory.GetFiles(directoryTarget, "*.*", SearchOption.TopDirectoryOnly).ToList();
 
-            foreach (var mod in _installBase.ModpackMods.Where(x => !x.IsValidationComplete))
+            foreach (var mod in ModsList.Where(x => !x.IsValidationComplete))
             {
                 await mod.FindValidDirectoryArchiveAsync(directoryContents);
             }
-
-            var test = _installBase.ModpackMods;
-
         }
 
 

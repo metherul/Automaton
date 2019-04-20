@@ -10,7 +10,6 @@
     d:DesignWidth="300"
     DataContext="{Binding ValidateMods, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-
     <Grid>
         <!--  Main Content  -->
         <Grid>
@@ -97,7 +96,7 @@
                 Grid.Row="1"
                 Margin="5,0,0,0"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{Binding MissingMods, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding ModsList, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ModsListToMissingConverter}}"
                 VirtualizingStackPanel.IsVirtualizing="True">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
