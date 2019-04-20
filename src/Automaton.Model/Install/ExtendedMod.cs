@@ -29,6 +29,7 @@ namespace Automaton.Model.Install
         public bool IsIndeterminateProcess { get; set; }
         public bool IsModOrganizer { get; set; }
         public bool IsDownloading { get; set; }
+        public bool IsValidationComplete { get; set; }
 
         public void Initialize(IComponentContext components)
         {

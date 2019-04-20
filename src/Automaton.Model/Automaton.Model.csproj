@@ -139,6 +139,7 @@
     <Compile Include="NexusApi\Interfaces\IDownloadClient.cs" />
     <Compile Include="NexusApi\Interfaces\IApiEndpoints.cs" />
     <Compile Include="NexusApi\Interfaces\IApiBase.cs" />
+    <Compile Include="NexusApi\Interfaces\IDownloadResponse.cs" />
     <Compile Include="NexusApi\Interfaces\INxmHandle.cs" />
     <Compile Include="NexusApi\NxmHandle.cs" />
     <Compile Include="NexusApi\PipedData.cs" />

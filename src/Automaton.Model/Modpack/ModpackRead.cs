@@ -25,6 +25,8 @@ namespace Automaton.Model.Modpack
 {
     public class ModpackRead : IModpackRead
     {
+        private readonly IComponentContext _components;
+
         private readonly IArchiveContents _archiveContents;
         private readonly IModpackValidate _modpackValidate;
         private readonly IModpackStructure _modpackStructure;
@@ -34,6 +36,8 @@ namespace Automaton.Model.Modpack
 
         public ModpackRead(IComponentContext components)
         {
+            _components = components;
+
             _archiveContents = components.Resolve<IArchiveContents>(); 
             _modpackValidate = components.Resolve<IModpackValidate>(); 
             _modpackStructure = components.Resolve<IModpackStructure>(); 
@@ -110,6 +114,8 @@ namespace Automaton.Model.Modpack
                     extendedMod.Version = "?";
                 }
 
+                extendedMod.Initialize(_components);
+
                 _installBase.ModpackMods.Add(extendedMod);
             }
 
@@ -130,8 +136,8 @@ namespace Automaton.Model.Modpack
                 var extendedModOrganizerObject = _classExtensions.ToDerived<Mod, ExtendedMod>(modOrganizerObject);
 
                 extendedModOrganizerObject.IsModOrganizer = true;
-
                 extendedModOrganizerObject.DisplayName = extendedModOrganizerObject.NexusFileName;
+                extendedModOrganizerObject.Initialize(_components);
 
                 _installBase.ModpackMods.Add(extendedModOrganizerObject);
             }
