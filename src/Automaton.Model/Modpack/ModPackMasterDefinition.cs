@@ -16,6 +16,12 @@ namespace Automaton.Model.Modpack
         [JsonProperty("author")]
         public string AuthorName { get; set; }
 
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("source_url")]
+        public string SourceUrl { get; set; }
+
         [JsonProperty("mo2_path")]
         public string MO2Directory { get; set; }
 
@@ -30,8 +36,5 @@ namespace Automaton.Model.Modpack
         {
             return (ModPackMasterDefinition)MemberwiseClone();
         }
-
-                
-                
     }
 }
