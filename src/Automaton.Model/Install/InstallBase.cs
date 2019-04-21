@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using Automaton.Model.Install.Intefaces;
+using Automaton.Model.Modpack;
 using Automaton.Model.Modpack.Base;
 
 namespace Automaton.Model.Install
@@ -17,7 +18,7 @@ namespace Automaton.Model.Install
         public string ModlistTxt { get; set; }
         public string ArchivesTxt { get; set; }
 
-        public Header ModpackHeader { get; set; }
+        public ModPackMasterDefinition ModPackMasterDefinition { get; set; }
         public List<ExtendedMod> ModpackMods { get; set; } = new List<ExtendedMod>();
     }
 }

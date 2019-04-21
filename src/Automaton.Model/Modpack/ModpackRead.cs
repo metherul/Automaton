@@ -63,9 +63,9 @@ namespace Automaton.Model.Modpack
                 return false;
             }
 
-            var header = modpackEntries.First(x => x.Key == ConfigPathOffsets.PackDefinitionConfig);
+            var masterDefinition = modpackEntries.First(x => x.Key == ConfigPathOffsets.PackDefinitionConfig);
 
-            if (header == null)
+            if (masterDefinition == null)
             {
                 _logger.WriteLine("Header is null");
 
@@ -73,19 +73,19 @@ namespace Automaton.Model.Modpack
             }
 
             // Load modpack header
-            var headerMemoryStream = new MemoryStream();
-            header.OpenEntryStream().CopyTo(headerMemoryStream);
+            var masterDefinitionStream = new MemoryStream();
+            masterDefinition.OpenEntryStream().CopyTo(masterDefinitionStream);
 
-            var headerObject = ConsumeModpackJsonFile<ModPackMasterDefinition>(headerMemoryStream);
+            var masterDefinitionObject = ConsumeModpackJsonFile<ModPackMasterDefinition>(masterDefinitionStream);
 
-            if (headerObject.ModpackVersion != "1.0b")
+            if (masterDefinitionObject.StandardTarget != "2.0b")
             {
                 _logger.WriteLine("ModpackVersion mismatch");
 
                 return false;
             }
 
-            _installBase.ModpackHeader = headerObject;
+            _installBase.ModpackHeader = masterDefinitionObject;
 
             // Load in load order config files
             LoadLoadOrderFiles(modpackEntries.ToList());

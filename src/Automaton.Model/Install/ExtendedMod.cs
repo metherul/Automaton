@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Install.Interfaces;
+using Automaton.Model.Modpack;
 using Automaton.Model.Modpack.Base;
 using Automaton.Model.NexusApi;
 using Automaton.Model.NexusApi.Interfaces;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Automaton.Model.Install
 {
-    public class ExtendedMod : Mod, INotifyPropertyChanged
+    public class ExtendedCompiledMod : CompiledMod, INotifyPropertyChanged
     {
         private IComponentContext _components;
 
@@ -24,6 +25,7 @@ namespace Automaton.Model.Install
         public string DisplayName { get; set; }
         public string FilePath { get; set; }
         public string DownloadParameters { get; set; }
+        public string MetaIni { get; set; }
 
         public int CurrentDownloadProgress { get; set; }
 

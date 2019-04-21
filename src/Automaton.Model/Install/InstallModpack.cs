@@ -19,7 +19,7 @@ namespace Automaton.Model.Install
         private readonly ICommonFilesystemUtility _commonFilesystemUtility;
         private readonly IRegistryHandle _registryHandle;
 
-        private List<ExtendedMod> _modList;
+        private List<ExtendedCompiledMod> _modList;
 
         public EventHandler<string> DebugLogCallback { get; set; }
 
@@ -87,11 +87,11 @@ namespace Automaton.Model.Install
             DebugWrite("_END");
         }
 
-        public void InstallMod(ExtendedMod mod)
+        public void InstallMod(ExtendedCompiledMod mod)
         {
-            DebugWrite($"[INSTALL] {mod.ModName}");
+            DebugWrite($"[INSTALL] {mod.Name}");
 
-            var extractionDirectory = System.IO.Path.Combine(_installBase.DownloadsDirectory, Path.GetFileNameWithoutExtension(mod.FileName));
+            var extractionDirectory = System.IO.Path.Combine(_installBase.DownloadsDirectory, Path.GetFileNameWithoutExtension(mod.));
             var archivePath = mod.FilePath;
             var installPath = System.IO.Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name, "mods", mod.ModName);
 
@@ -128,16 +128,7 @@ namespace Automaton.Model.Install
 
             // Write the meta.ini
             var metaPath = Path.Combine(installPath, "meta.ini");
-            File.WriteAllText(metaPath,
-                "[General]\n" +
-                $"gameName={mod.TargetGame}\n" +
-                $"version={mod.Version}\n" +
-                $"installationFile={mod.FilePath.Replace(@"\", @"\\")}\n" +
-                $"repository={mod.Repository}\n" +
-                $"modId={mod.ModId}\n\n" +
-                "[installedFiles]\n" +
-                $"1\\modId={mod.ModId}\n" +
-                $"1\\fileId={mod.FileId}");
+            File.WriteAllText(metaPath, mod.MetaIni);
 
             return;
         }

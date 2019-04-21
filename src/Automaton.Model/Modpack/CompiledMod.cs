@@ -12,9 +12,6 @@ namespace Automaton.Model.Modpack
         [JsonProperty("archives")]
         public List<InstallPlan> InstallPlans { get; set; }
 
-        [JsonIgnore]
-        public string RawINI { get; set; }
-
         [JsonProperty("mod_type")]
         [JsonConverter(typeof(StringEnumConverter))]
         public ModType ModType { get; set; }
