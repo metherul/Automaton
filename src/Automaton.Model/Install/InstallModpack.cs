@@ -8,6 +8,7 @@ using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Automaton.Model.Modpack;
 
 namespace Automaton.Model.Install
 {
@@ -34,7 +35,7 @@ namespace Automaton.Model.Install
 
         public void Install()
         {
-            _modList = _installBase.ModpackMods;
+            _modList = _installBase.ModPackMasterDefinition.
 
             // Install Mod Organizer
             var installPath = Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name);
@@ -70,7 +71,7 @@ namespace Automaton.Model.Install
             }
 
             // Write the needed profile information
-            var profilePath = System.IO.Path.Combine(installPath, "profiles", _installBase.ModpackHeader.Name);
+            var profilePath = System.IO.Path.Combine(installPath, "profiles", _installBase.ModPackMasterDefinition.PackName);
 
             if (Directory.Exists(profilePath))
             {
@@ -91,36 +92,41 @@ namespace Automaton.Model.Install
         {
             DebugWrite($"[INSTALL] {mod.Name}");
 
-            var extractionDirectory = System.IO.Path.Combine(_installBase.DownloadsDirectory, Path.GetFileNameWithoutExtension(mod.));
             var archivePath = mod.FilePath;
-            var installPath = System.IO.Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name, "mods", mod.ModName);
+            var installPath = System.IO.Path.Combine(_installBase.InstallDirectory, _installBase.InstallDirectory, "mods", mod.Name);
 
-            if (mod.InstallParameters != null)
+            if (mod.ModType == ModType.InstalledArchive)
             {
-                var selections = mod.InstallParameters
-                                    .GroupBy(e => e.SourceLocation)
-                                    .ToDictionary(e => e.Key);
-
-                _archiveContents.ExtractAll(archivePath,
-                        e => selections.ContainsKey(e) ? Path.Combine(installPath, selections[e].First().TargetLocation.Substring(1)) : null);
-
-                // Some mods write the same file to two locations and the extractor
-                // doesn't support this, so we'll copy the file around a bit.
-                foreach (var selection in selections.Where(s => s.Value.Count() > 1))
+                foreach (var plan in mod.InstallPlans)
                 {
-                    var from = Path.Combine(installPath, selection.Value.First().TargetLocation.Substring(1));
-                    foreach (var e in selection.Value.Skip(1))
+                    if (plan.FilePairings != null)
                     {
-                        var to = Path.Combine(installPath, e.TargetLocation.Substring(1));
+                        var selections = plan.FilePairings
+                                             .GroupBy(e => e.From)
+                                             .ToDictionary(e => e.Key);
 
-                        if (!Directory.Exists(Path.GetDirectoryName(to)))
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(to));
-                        }
+                        _archiveContents.ExtractAll(archivePath,
+                                e => selections.ContainsKey(e) ? Path.Combine(installPath, selections[e].First().To) : null);
 
-                        if (to != from)
+                        // Some mods write the same file to two locations and the extractor
+                        // doesn't support this, so we'll copy the file around a bit.
+                        foreach (var selection in selections.Where(s => s.Value.Count() > 1))
                         {
-                            File.Copy(from, to, true);
+                            var from = Path.Combine(installPath, selection.Value.First().To);
+                            foreach (var e in selection.Value.Skip(1))
+                            {
+                                var to = Path.Combine(installPath, e.To);
+
+                                if (!Directory.Exists(Path.GetDirectoryName(to)))
+                                {
+                                    Directory.CreateDirectory(Path.GetDirectoryName(to));
+                                }
+
+                                if (to != from)
+                                {
+                                    File.Copy(from, to, true);
+                                }
+                            }
                         }
                     }
                 }

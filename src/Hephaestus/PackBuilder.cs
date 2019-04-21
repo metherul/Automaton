@@ -244,7 +244,6 @@ namespace Hephaestus
                 }
 
                 var extra_files = new List<string>{"modlist.txt", "lockedorder.txt", "plugins.txt",
-                                                   "Skyrim.ini", "SkyrimCustom.ini", "SkyrimPrefs.ini",
                                                    "archives.txt"};
                 foreach (var file in extra_files)
                 {
@@ -252,6 +251,11 @@ namespace Hephaestus
                     if (File.Exists(full_path))
                         zip.CreateEntryFromFile(full_path, file);
 
+                }
+
+                foreach (var file in Directory.EnumerateFiles(ProfileFolder, "*.meta"))
+                {
+                    zip.CreateEntryFromFile(file, Path.GetFileName(file));
                 }
 
             }
