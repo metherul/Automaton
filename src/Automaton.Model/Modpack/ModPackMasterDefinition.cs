@@ -11,7 +11,7 @@ namespace Automaton.Model.Modpack
     public class ModPackMasterDefinition
     {
         [JsonProperty("pack_name")]
-        public string PackName {get; set;}
+        public string PackName { get; set;}
 
         [JsonProperty("author")]
         public string AuthorName { get; set; }
