@@ -40,9 +40,12 @@ namespace Hephaestus
         public static void Warn(string fmt, params object[] args)
         {
             var old = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Info(fmt, args);
-            Console.ForegroundColor = old;
+            lock (_time)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Info(fmt, args);
+                Console.ForegroundColor = old;
+            }
         }
 
         public static void HardError(string fmt, params object[] args)

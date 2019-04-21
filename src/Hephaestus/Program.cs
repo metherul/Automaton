@@ -12,6 +12,10 @@ namespace Hephaestus
         {
             var ofd = new OpenFileDialog();
             ofd.Filter = "*.auto_definition|*.auto_definition";
+
+            Log.Info("Please Select a definition file");
+            ofd.Title = "Select a Definition File";
+
             if (ofd.ShowDialog() != DialogResult.OK)
             {
                 Log.Warn("Well okay then, keep your secrets.");
