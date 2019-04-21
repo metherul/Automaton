@@ -1,17 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Automaton.Model.Modpack
 {
     public class ModPackMasterDefinition
     {
+        [JsonProperty("standard_target")]
+        public string StandardTarget { get; set; }
+
         [JsonProperty("pack_name")]
         public string PackName { get; set;}
+
+        [JsonProperty("pack_version")]
+        public string PackVersion { get; set; }
 
         [JsonProperty("author")]
         public string AuthorName { get; set; }

@@ -27,12 +27,12 @@ namespace Automaton.Model.Modpack
         /// <returns></returns>
         public bool ValidateCorrectModpackStructure(List<IArchiveEntry> modpackEntries)
         {
-            if (modpackEntries.Any(x => x.Key == "modpack.json"))
+            if (modpackEntries.Any(x => x.Key == ConfigPathOffsets.PackDefinitionConfig))
             {
                 return true;
             }
 
-            _logger.WriteLine("This archive is not a valid modpack. Missing 'modpack.json'.", true);
+            _logger.WriteLine($"This archive is not a valid modpack. Missing '{ConfigPathOffsets.PackDefinitionConfig}'.", true);
 
             return false;
         }

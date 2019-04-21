@@ -63,9 +63,9 @@ namespace Automaton.Model.Modpack
                 return false;
             }
 
-            var header = modpackEntries.First(x => x.Key == _modpackStructure.HeaderOffset);
+            var header = modpackEntries.First(x => x.Key == ConfigPathOffsets.PackDefinitionConfig);
 
-            if (header is null)
+            if (header == null)
             {
                 _logger.WriteLine("Header is null");
 
@@ -76,7 +76,7 @@ namespace Automaton.Model.Modpack
             var headerMemoryStream = new MemoryStream();
             header.OpenEntryStream().CopyTo(headerMemoryStream);
 
-            var headerObject = ConsumeModpackJsonFile<Header>(headerMemoryStream);
+            var headerObject = ConsumeModpackJsonFile<ModPackMasterDefinition>(headerMemoryStream);
 
             if (headerObject.ModpackVersion != "1.0b")
             {
