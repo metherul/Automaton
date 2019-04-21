@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,18 @@ namespace Automaton.Model.Modpack
         [JsonProperty("archives")]
         public List<InstallPlan> InstallPlans { get; set; }
 
-        [JsonProperty("raw_ini")]
+        [JsonIgnore]
         public string RawINI { get; set; }
 
-        [JsonProperty("is_separator")]
-        public bool IsSeparator { get; set; }
+        [JsonProperty("mod_type")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ModType ModType { get; set; }
+    }
+    
+    public enum ModType
+    {
+        InstalledArchive,
+        Separator
     }
 
     public class InstallPlan

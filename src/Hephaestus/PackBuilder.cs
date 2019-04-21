@@ -92,6 +92,7 @@ namespace Hephaestus
 
         public void FindArchives()
         {
+            Log.Info("Finding archives");
             var from_mods = (from location in ArchiveLocations
                              from file in Directory.EnumerateFiles(location)
                              where SupportedArchives.Contains(Path.GetExtension(file))
@@ -166,12 +167,12 @@ namespace Hephaestus
 
             if (mod.ModName.EndsWith("_separator"))
             {
-                compiled_mod.IsSeparator = true;
+                compiled_mod.ModType = ModType.Separator;
 
             }
             else
             {
-
+                compiled_mod.ModType = ModType.InstalledArchive;
                 foreach (var file in Directory.EnumerateFiles(mod.FullPath, "*", SearchOption.AllDirectories))
                 {
                     if (Path.GetFileName(file) == "meta.ini") continue;
@@ -238,7 +239,8 @@ namespace Hephaestus
                 foreach (var mod in CompiledMods)
                 {
                     Log.Info("Exporting {0}", mod.Name);
-                    Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "compiled.json"), mod);
+                    Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "install.json"), mod);
+                    Utils.SpitInto(zip, Path.Combine("mods", mod.Name, "meta.ini"), mod.RawINI);
                 }
 
                 var extra_files = new List<string>{"modlist.txt", "lockedorder.txt", "plugins.txt",

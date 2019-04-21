@@ -137,5 +137,14 @@ namespace Automaton.Utils
                 WriteJson(json_data, wtr);
             }
         }
+
+        public static void SpitInto(ZipArchive zip, string entry_name, string data)
+        {
+            var entry = zip.CreateEntry(entry_name);
+            using (var wtr = new StreamWriter(entry.Open()))
+            {
+                wtr.Write(data);
+            }
+        }
     }
 }

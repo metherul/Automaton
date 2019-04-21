@@ -16,6 +16,14 @@ namespace Hephaestus
         { 
             _time = new Stopwatch();
             _time.Start();
+            try
+            {
+                File.Delete("Hephaestus.log");
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
    
         public static void Info(string fmt, params object[] args)
@@ -25,6 +33,7 @@ namespace Hephaestus
                           String.Format(fmt, args.Select(arg => arg.ToString()).ToArray()) + "\n";
                 File.AppendAllText("Hephaestus.log", str);
                 Console.Write(str);
+                Console.Out.Flush();
             }
         }
 
