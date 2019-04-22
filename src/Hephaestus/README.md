@@ -33,7 +33,6 @@ in a text editor (Notepad++ is highly recommended), and copy-paste-and modify th
   "author" : "halgari",
   "mo2_path" : "C:\\Mod Organizer 2",
   "mo2_profile" : "Automaton Test 2",
-  "alternate_archive_locations" : ["C:\\Skyrim\\mods"],
   "scan_game_directory": true
 }
 ```
