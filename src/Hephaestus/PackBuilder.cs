@@ -34,7 +34,6 @@ namespace Hephaestus
 
         public readonly ISet<string> SupportedArchives = new HashSet<string>() { ".7z", ".7zip", ".rar", ".zip" };
 
-
         public PackBuilder() { }
 
         public string ModsFolder
@@ -90,6 +89,8 @@ namespace Hephaestus
             }
         }
 
+        public Dictionary<string, IGrouping<string, (SourceArchive archive, ArchiveEntry file)>> IndexedArchives { get; private set; }
+
         public void FindArchives()
         {
             Log.Info("Finding archives");
@@ -138,25 +139,24 @@ namespace Hephaestus
         {
             var enabled_mods = ModListData.ToHashSet();
 
-            var indexed_files = (from archive in SourceArchives
-                                 from file in archive.ArchiveEntries
-                                 group (archive: archive, file: file) by file.SHA256 into grouped
-                                 select grouped).ToDictionary(k => k.Key);
+            IndexedArchives = (from archive in SourceArchives
+                                from file in archive.ArchiveEntries
+                                group (archive: archive, file: file) by file.SHA256 into grouped
+                                select grouped).ToDictionary(k => k.Key);
 
             var compiled_mods = (from mod in InstalledMods.AsParallel()
                                  where enabled_mods.Contains(mod.ModName)
-                                 select CompileMod(mod, indexed_files)).ToList();
+                                 select CompileMod(mod)).ToList();
 
             CompiledMods = compiled_mods;
             
         }
 
-        private CompiledMod CompileMod(InstalledMod mod, IDictionary<string, IGrouping<string, (SourceArchive archive, ArchiveEntry file)>> indexed)
+        private CompiledMod CompileMod(InstalledMod mod)
         {
             var compiled_mod = new CompiledMod();
             compiled_mod.Name = mod.ModName;
             compiled_mod.InstallPlans = new List<InstallPlan>();
-            compiled_mod.RawINI = Utils.Slurp(Path.Combine(mod.FullPath, "meta.ini"));
 
             Log.Info("Compiling {0}", mod.ModName);
 
@@ -173,53 +173,65 @@ namespace Hephaestus
             else
             {
                 compiled_mod.ModType = ModType.InstalledArchive;
-                foreach (var file in Directory.EnumerateFiles(mod.FullPath, "*", SearchOption.AllDirectories))
-                {
-                    if (Path.GetFileName(file) == "meta.ini") continue;
-
-                    var sha = Utils.FileSHA256(file);
-
-                    ArchiveEntry match;
-
-
-                    if (indexed.TryGetValue(sha, out var entries))
-                    {
-                        var pair = (from entry in entries
-                                    where entry.archive == primary_source
-                                    select entry).FirstOrDefault();
-
-                        if (pair.archive == null)
-                        {
-                            pair = entries.First();
-                        }
-
-                        var install_plan = compiled_mod.InstallPlans.FirstOrDefault(v => v.SourceArchive.SHA256 == pair.archive.SHA256);
-                        if (install_plan == null)
-                        {
-                            install_plan = new InstallPlan();
-                            compiled_mod.InstallPlans.Add(install_plan);
-
-                            install_plan.SourceArchive = new InstallSourceArchive();
-                            install_plan.FilePairings = new List<FilePairing>();
-                            Utils.MemberwiseCopy(pair.archive, install_plan.SourceArchive);
-
-                        }
-                        install_plan.FilePairings.Add(new FilePairing()
-                        {
-                            From = pair.file.FileName,
-                            To = Utils.StripPrefix(mod.FullPath, file)
-                        });
-
-                    }
-                    else
-                    {
-                        Log.Warn("No match: {0}", file);
-                    }
-
-                }
+                ScanDirectory(mod.FullPath, compiled_mod, primary_source, null);
             }
             Log.Info("Done Compiling {0}", mod.ModName);
             return compiled_mod;
+        }
+
+        private void ScanDirectory(string full_path, CompiledMod compiled_mod, SourceArchive primary_source, ISet<string> ignore)
+        {
+            foreach (var file in Directory.EnumerateFiles(full_path, "*", SearchOption.AllDirectories))
+            {
+                if (Path.GetFileName(file) == "meta.ini") continue;
+                if (ignore != null && ignore.Contains(Path.GetExtension(file))) continue;
+
+                var sha = Utils.FileSHA256(file);
+
+                if (IndexedArchives.TryGetValue(sha, out var entries))
+                {
+                    var pair = (from entry in entries
+                                where entry.archive == primary_source
+                                select entry).FirstOrDefault();
+
+                    if (pair.archive == null)
+                    {
+                        pair = entries.First();
+                    }
+
+                    var install_plan = compiled_mod.InstallPlans.FirstOrDefault(v => v.SourceArchive.SHA256 == pair.archive.SHA256);
+                    if (install_plan == null)
+                    {
+                        install_plan = new InstallPlan();
+                        compiled_mod.InstallPlans.Add(install_plan);
+
+                        install_plan.SourceArchive = new InstallSourceArchive();
+                        install_plan.FilePairings = new List<FilePairing>();
+                        Utils.MemberwiseCopy(pair.archive, install_plan.SourceArchive);
+
+                    }
+                    install_plan.FilePairings.Add(new FilePairing()
+                    {
+                        From = pair.file.FileName,
+                        To = Utils.StripPrefix(full_path, file)
+                    });
+
+                }
+                else
+                {
+                    Log.Warn("No match: {0}", file);
+                }
+
+            }
+        }
+
+        public void CompileGameDirectory()
+        {
+            if (!ModPackMasterDefinition.ScanGameDirectory) return;
+            var game_dir_mod = new CompiledMod();
+            CompiledMods.Add(game_dir_mod);
+            game_dir_mod.ModType = ModType.GameDirectoryMod;
+            ScanDirectory(MO2Ini.General.gamePath, game_dir_mod, null, new HashSet<string>() { ".bsa", ".psc", ".bak" });
         }
 
         public void ExportPack()
@@ -240,7 +252,7 @@ namespace Hephaestus
                 {
                     Log.Info("Exporting {0}", mod.Name);
                     Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "install.json"), mod);
-                    Utils.SpitInto(zip, Path.Combine("mods", mod.Name, "meta.ini"), mod.RawINI);
+                    zip.CreateEntryFromFile(Path.Combine(ModsFolder, mod.Name, "meta.ini"), Path.Combine("mods", mod.Name, "meta.ini"));
                 }
 
                 var extra_files = new List<string>{"modlist.txt", "lockedorder.txt", "plugins.txt",

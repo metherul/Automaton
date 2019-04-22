@@ -10,7 +10,7 @@ namespace Automaton.Model.Modpack
         public string Name { get; set; }
 
         [JsonProperty("archives")]
-        public List<InstallPlan> InstallPlans { get; set; }
+        public List<InstallPlan> InstallPlans { get; set; } = new List<InstallPlan>();
 
         [JsonProperty("mod_type")]
         [JsonConverter(typeof(StringEnumConverter))]
@@ -20,7 +20,8 @@ namespace Automaton.Model.Modpack
     public enum ModType
     {
         InstalledArchive,
-        Separator
+        Separator,
+        GameDirectoryMod
     }
 
     public class InstallPlan

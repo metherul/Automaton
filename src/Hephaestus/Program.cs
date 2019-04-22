@@ -34,6 +34,7 @@ namespace Hephaestus
             pb.LoadInstalledMods();
             pb.FindArchives();
             pb.CompileMods();
+            pb.CompileGameDirectory();
             pb.ExportPack();
             Log.Info("Mod pack created");
         }

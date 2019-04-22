@@ -8,7 +8,7 @@ using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Automaton.Model.Modpack;
+
 
 namespace Automaton.Model.Install
 {
@@ -86,6 +86,7 @@ namespace Automaton.Model.Install
             File.WriteAllText(Path.Combine(profilePath, "archives.txt"), _installBase.ArchivesTxt);
 
             DebugWrite("_END");
+            
         }
 
         public void InstallMod(ExtendedCompiledMod mod)

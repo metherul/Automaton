@@ -31,7 +31,9 @@ namespace Automaton.Model.Modpack
         [JsonProperty("alternate_archive_locations")]
         public List<string> AlternateArchiveLocations { get; set; }
 
-
+        [JsonProperty("scan_game_directory")]
+        public bool ScanGameDirectory { get; set; }
+        
         public ModPackMasterDefinition Clone()
         {
             return (ModPackMasterDefinition)MemberwiseClone();

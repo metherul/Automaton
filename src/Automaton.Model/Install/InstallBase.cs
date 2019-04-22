@@ -19,6 +19,6 @@ namespace Automaton.Model.Install
         public string ArchivesTxt { get; set; }
 
         public ModPackMasterDefinition ModPackMasterDefinition { get; set; }
-        public List<ExtendedMod> ModpackMods { get; set; } = new List<ExtendedMod>();
+        public List<ExtendedCompiledMod> ModpackMods { get; set; } = new List<ExtendedCompiledMod>();
     }
 }

@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.Model", "Automato
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.ViewModel", "Automaton.ViewModel\Automaton.ViewModel.csproj", "{87DB5F71-0FAB-46AF-B549-5F2179258164}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hephaestus", "Hephaestus\Hephaestus.csproj", "{9F183CC3-3277-45CF-B2C5-37B3137A29D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hephaestus", "Hephaestus\Hephaestus.csproj", "{9F183CC3-3277-45CF-B2C5-37B3137A29D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.Utils", "Automaton.Utils\Automaton.Utils.csproj", "{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Automaton.Common", "Automaton.Utils\Automaton.Common.csproj", "{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenZipExtractor", "SevenZipExtractor\SevenZipExtractor.csproj", "{8AA97F58-5044-4BBA-B8D9-A74B6947A660}"
 EndProject

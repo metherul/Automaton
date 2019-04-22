@@ -123,11 +123,9 @@
     <Compile Include="Modpack\Base\ModOrganizerVersion.cs" />
     <Compile Include="Modpack\Base\ModpackStructure.cs" />
     <Compile Include="Modpack\Base\Patcher.cs" />
-    <Compile Include="Modpack\CompiledMod.cs" />
     <Compile Include="Modpack\ConfigPathOffsets.cs" />
     <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
     <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
-    <Compile Include="Modpack\ModPackMasterDefinition.cs" />
     <Compile Include="Modpack\ModpackValidate.cs" />
     <Compile Include="Modpack\ModpackRead.cs" />
     <Compile Include="NexusApi\ApiBase.cs" />
@@ -154,6 +152,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Automaton.Utils\Automaton.Common.csproj">
+      <Project>{4394ad41-7b9f-43fd-8a81-04d5ffb1a385}</Project>
+      <Name>Automaton.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj">
       <Project>{8aa97f58-5044-4bba-b8d9-a74b6947a660}</Project>
       <Name>SevenZipExtractor</Name>
