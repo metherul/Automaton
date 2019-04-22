@@ -23,6 +23,9 @@ namespace Automaton.Model.Modpack
         [JsonProperty("source_url")]
         public string SourceUrl { get; set; }
 
+        [JsonProperty("install_profile_registry")]
+        public List<string> InstallProfileRegistry { get; set; }
+
         [JsonProperty("mo2_path")]
         public string MO2Directory { get; set; }
         [JsonProperty("mo2_profile")]

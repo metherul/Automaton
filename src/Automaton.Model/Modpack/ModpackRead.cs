@@ -85,14 +85,13 @@ namespace Automaton.Model.Modpack
                 return false;
             }
 
-            _installBase.ModpackHeader = masterDefinitionObject;
+            _installBase.ModPackMasterDefinition = masterDefinitionObject;
 
             // Load in load order config files
             LoadLoadOrderFiles(modpackEntries.ToList());
 
             // Load each modpack config file
-            var modDirectory = _installBase.ModpackHeader.ModInstallFolders.First();
-            var modFileEntries = modpackEntries.Where(x => x.Key.StartsWith(modDirectory) && !x.IsDirectory).ToList();
+            var modDirectory = _installBase.ModPackMasterDefinition.InstallProfileRegistry;
 
             foreach (var modFile in modFileEntries)
             {
@@ -158,6 +157,31 @@ namespace Automaton.Model.Modpack
             _logger.WriteLine("Modpack loaded");
 
             return true;
+        }
+
+        private CompiledMod LoadCompiledModEntry(IArchiveEntry entry)
+        {
+            var modFileMemoryStream = new MemoryStream();
+            entry.OpenEntryStream().CopyTo(modFileMemoryStream);
+
+            var mod = ConsumeModpackJsonFile<CompiledMod>(modFileMemoryStream);
+            var extendedMod = _classExtensions.ToDerived<CompiledMod, ExtendedCompiledMod>(mod);
+
+            extendedMod.DisplayName = extendedMod.;
+
+            if (string.IsNullOrEmpty(extendedMod.NexusFileName))
+            {
+                extendedMod.DisplayName = extendedMod.ModName;
+            }
+
+            if (string.IsNullOrEmpty(extendedMod.Version))
+            {
+                extendedMod.Version = "?";
+            }
+
+            extendedMod.Initialize(_components);
+
+            return extendedMod;
         }
 
         private T ConsumeModpackJsonFile<T>(MemoryStream memoryStream) where T : class
