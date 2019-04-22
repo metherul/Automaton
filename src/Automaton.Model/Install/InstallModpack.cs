@@ -18,7 +18,7 @@ namespace Automaton.Model.Install
         private readonly IArchiveContents _archiveContents;
         private readonly ILogger _logger;
         private readonly ICommonFilesystemUtility _commonFilesystemUtility;
-        private readonly IRegistryHandle _registryHandle;
+        private readonly IRegistryHandle _registryHandle; //
 
         private List<ExtendedCompiledMod> _modList;
 
