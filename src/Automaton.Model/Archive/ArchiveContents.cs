@@ -28,11 +28,13 @@ namespace Automaton.Model.Archive
             _libraryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
         }
 
-        public List<IArchiveEntry> GetArchiveEntries(string archivePath)
+        public IArchive GetArchive(string archivePath)
         {
-            var archive = ArchiveFactory.Open(archivePath);
-            var test = archive.Entries.ToList();
+            return ArchiveFactory.Open(archivePath);
+        }
 
+        public List<IArchiveEntry> GetArchiveEntries(IArchive archive)
+        {
             return archive.Entries.ToList();
         }
 

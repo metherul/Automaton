@@ -18,5 +18,6 @@ namespace Automaton.Model.Install.Intefaces
         string ArchivesTxt { get; set; }
         ModPackMasterDefinition ModPackMasterDefinition { get; set; }
         List<ExtendedMod> ModpackMods { get; set; }
+        List<SharpCompress.Archives.IArchiveEntry> ModpackContents { get; set; }
     }
 }

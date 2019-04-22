@@ -116,13 +116,6 @@
     <Compile Include="Interfaces\IPathFix.cs" />
     <Compile Include="Interfaces\IRegistryHandle.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
-    <Compile Include="Modpack\Base\InstallParameter.cs" />
-    <Compile Include="Modpack\Base\Header.cs" />
-    <Compile Include="Modpack\Base\Mod.cs" />
-    <Compile Include="Modpack\Base\ModOrganizerVersion.cs" />
-    <Compile Include="Modpack\Base\ModpackStructure.cs" />
-    <Compile Include="Modpack\Base\Patcher.cs" />
     <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
     <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
     <Compile Include="Modpack\ModpackValidate.cs" />
