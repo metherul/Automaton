@@ -35,7 +35,7 @@ namespace Automaton.Model.Install
 
         public void Install()
         {
-            _modList = _installBase.ModPackMasterDefinition.
+            _modList = _installBase.ModPackMasterDefinition
 
             // Install Mod Organizer
             var installPath = Path.Combine(_installBase.InstallDirectory, _installBase.ModpackHeader.Name);
