@@ -2,7 +2,7 @@
 using System.Windows.Media.Imaging;
 using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Modpack;
-using SharpCompress.Archives;
+using Automaton.Model.Modpack.Base;
 
 namespace Automaton.Model.Install
 {
@@ -13,7 +13,10 @@ namespace Automaton.Model.Install
         public string InstallDirectory { get; set; }
         public string DownloadsDirectory { get; set; }
 
-        public List<IArchiveEntry> ModpackContents { get; set; }
+        public string PluginsTxt { get; set; }
+        public string LoadorderTxt { get; set; }
+        public string ModlistTxt { get; set; }
+        public string ArchivesTxt { get; set; }
 
         public ModPackMasterDefinition ModPackMasterDefinition { get; set; }
         public List<ExtendedCompiledMod> ModpackMods { get; set; } = new List<ExtendedCompiledMod>();

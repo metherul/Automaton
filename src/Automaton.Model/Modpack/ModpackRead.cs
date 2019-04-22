@@ -1,14 +1,21 @@
-﻿using Autofac;
+﻿using System;
+using System.Diagnostics;
+using Autofac;
 using Automaton.Model.Archive.Interfaces;
 using Automaton.Model.Modpack.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 using System.Linq;
+using System.Runtime;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Automaton.Model.Install;
 using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Interfaces;
+using Automaton.Model.Modpack.Base;
+using Automaton.Model.Modpack.Base.Interfaces;
 using System.Reflection;
 using System.Collections.Generic;
 using SharpCompress.Archives;
@@ -22,6 +29,7 @@ namespace Automaton.Model.Modpack
 
         private readonly IArchiveContents _archiveContents;
         private readonly IModpackValidate _modpackValidate;
+        private readonly IModpackStructure _modpackStructure;
         private readonly IInstallBase _installBase;
         private readonly IClassExtensions _classExtensions;
         private readonly ILogger _logger;
@@ -32,6 +40,7 @@ namespace Automaton.Model.Modpack
 
             _archiveContents = components.Resolve<IArchiveContents>(); 
             _modpackValidate = components.Resolve<IModpackValidate>(); 
+            _modpackStructure = components.Resolve<IModpackStructure>(); 
             _installBase = components.Resolve<IInstallBase>();
             _classExtensions = components.Resolve<IClassExtensions>();
             _logger = components.Resolve<ILogger>();
@@ -44,8 +53,7 @@ namespace Automaton.Model.Modpack
 
         public bool LoadModpack(string modpackPath)
         {
-            var archive = _archiveContents.GetArchive(modpackPath);
-            var modpackEntries = _archiveContents.GetArchiveEntries(archive);
+            var modpackEntries = _archiveContents.GetArchiveEntries(modpackPath);
             var isValidateSuccessful = _modpackValidate.ValidateCorrectModpackStructure(modpackEntries);
 
             if (!isValidateSuccessful)
@@ -55,9 +63,8 @@ namespace Automaton.Model.Modpack
                 return false;
             }
 
-            _installBase.ModpackContents = modpackEntries;
-
             var masterDefinition = modpackEntries.First(x => x.Key == ConfigPathOffsets.PackDefinitionConfig);
+
             if (masterDefinition == null)
             {
                 _logger.WriteLine("Header is null");
@@ -78,9 +85,13 @@ namespace Automaton.Model.Modpack
                 return false;
             }
 
-            _installBase.ModPackMasterDefinition = masterDefinitionObject;
+            _installBase.ModpackHeader = masterDefinitionObject;
+
+            // Load in load order config files
+            LoadLoadOrderFiles(modpackEntries.ToList());
 
             // Load each modpack config file
+            var modDirectory = _installBase.ModpackHeader.ModInstallFolders.First();
             var modFileEntries = modpackEntries.Where(x => x.Key.StartsWith(modDirectory) && !x.IsDirectory).ToList();
 
             foreach (var modFile in modFileEntries)
