@@ -8,7 +8,7 @@ the modpack will include instructions on how to build a copy of the MO2 profile 
 ### One-time config settings
 First of all, you must configure a JSON file that tells MO2 how to access the Nexus. Head to https://www.nexusmods.com/users/myaccount?tab=api%20access
 and generate a personal API key (the section at the bottom of the page in that link). This key will allow Hephaestus
-to make Nexus requests on your behaf. Now head to your Mod Organizer 2 folder and create a file called `automaton.perf`. 
+to make Nexus requests on your behaf. Now head to your Mod Organizer 2 folder and create a file called `automaton.perfs`. 
 Open this `.perf` file and add the following JSON information, including the personal API key you got from the link above.
 
 ```json
@@ -42,7 +42,7 @@ in a text editor (Notepad++ is highly recommended), and copy-paste-and modify th
 * author - Your handle, user-name, or superhero alter-ego alias
 * mo2_path - The full path to your MO2 folder, *notice the double backslashes, these are required because this is JSON*
 * mo2_profile - The name of the MO2 profile you want to use to generate the pack
-* alternative_archive_locations - An optional list of folders that can be scanned for downloaded folders. By default only the `<mo2_path>/downloads` folder is scanned.
+* alternative_archive_locations - An optional list of folders that can be scanned for downloaded folders. By default only the `<mo2_path>/downloads` folder is scanned. If you don't have additional search locations, remove this line from the config, or use the empty list `[]`.
 * scan_game_directory - If true, Hephaestus will attempt to find files in the downloaded archives that match files in your base game folder. This should 
 detect SKSE base files, ENB configurations, or anything else that is copied from a downloaded archive directly into the game folder.
 
