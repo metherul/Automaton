@@ -11,7 +11,7 @@ namespace Automaton.Utils
     {
         private IniData value;
 
-        public DynamicIniData(IniData value)
+        public DynamicIniData(IniData value) //
         {
             this.value = value;
         }
