@@ -6,11 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Autofac;
-using Automaton.Model.Install;
-using Automaton.Model.Install.Intefaces;
 using Automaton.Model.Interfaces;
-using Automaton.Model.NexusApi;
-using Automaton.Model.NexusApi.Interfaces;
 using Automaton.ViewModel.Controllers;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
@@ -23,18 +19,15 @@ namespace Automaton.ViewModel
     {
         private readonly IViewController _viewController;
         private readonly IFileSystemBrowser _fileSystemBrowser;
-        private readonly INxmHandle _nxmHandle;
-        private readonly IApiBase _apiBase;
-        private readonly IInstallBase _installBase;
         private readonly IDialogController _dialogController;
         private readonly ILogger _logger;
 
         public RelayCommand ScanDirectoryCommand => new RelayCommand(ScanDirectory);
-        public RelayCommand<ExtendedMod> OpenModSourceUrlCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
-        public RelayCommand<ExtendedMod> FindAndValidateModCommand => new RelayCommand<ExtendedMod>(FindAndValidateMod);
-        public RelayCommand<ExtendedMod> OpenNexusLinkCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
+        //public RelayCommand<ExtendedMod> OpenModSourceUrlCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
+        //public RelayCommand<ExtendedMod> FindAndValidateModCommand => new RelayCommand<ExtendedMod>(FindAndValidateMod);
+        //public RelayCommand<ExtendedMod> OpenNexusLinkCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
 
-        public ObservableCollection<ExtendedMod> ModsList { get; set; } = new ObservableCollection<ExtendedMod>();
+        //public ObservableCollection<ExtendedMod> ModsList { get; set; } = new ObservableCollection<ExtendedMod>();
 
         public int RemainingMissingModCount { get; set; }
 
@@ -46,36 +39,23 @@ namespace Automaton.ViewModel
         {
             _viewController = components.Resolve<IViewController>();
             _fileSystemBrowser = components.Resolve<IFileSystemBrowser>();
-            _nxmHandle = components.Resolve<INxmHandle>();
-            _apiBase = components.Resolve<IApiBase>();
-            _installBase = components.Resolve<IInstallBase>();
             _dialogController = components.Resolve<IDialogController>();
             _logger = components.Resolve<ILogger>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
-            _nxmHandle.RecievedPipedDataEvent += NxmHandle_RecievedPipedDataEvent;
+            //_nxmHandle.RecievedPipedDataEvent += NxmHandle_RecievedPipedDataEvent;
         }
 
-        private void ViewControllerOnViewIndexChangedEvent(object sender, int e)
+        private void ViewControllerOnViewIndexChangedEvent(object sender, int e) // Event occurs upon load of this view
         {
             if (e != (int)ViewIndex.ValidateMods)
             {
                 return;
             }
 
-            ModsList = new ObservableCollection<ExtendedMod>(_installBase.ModpackMods);
-
-            ValidateMods();
-            _nxmHandle.StartServer();
-
-            IsUserPremium = _apiBase.IsUserLoggedIn() && _apiBase.IsUserPremium();
-
-            IsInitialValidating = false;
-        }
-
-        private void NxmHandle_RecievedPipedDataEvent(object sender, PipedData e)
-        {
-            
+            // Here we need to 
+            // 1. Initialize the NXM router to start handling protocol requests
+            // 2. Initialize any automatic-downloader functionality
         }
 
 

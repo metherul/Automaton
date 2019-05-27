@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.View", "Automaton.View\Automaton.View.csproj", "{2D15C75F-1244-4A71-A1C3-14C99941BB88}"
 EndProject
@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automaton.ViewModel", "Auto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hephaestus", "Hephaestus\Hephaestus.csproj", "{9F183CC3-3277-45CF-B2C5-37B3137A29D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Automaton.Common", "Automaton.Utils\Automaton.Common.csproj", "{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenZipExtractor", "SevenZipExtractor\SevenZipExtractor.csproj", "{8AA97F58-5044-4BBA-B8D9-A74B6947A660}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Automaton.Common", "Automaton.Common\Automaton.Common.csproj", "{8DDEAFD5-2124-4D6D-ABBF-69531DFCBD7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +37,14 @@ Global
 		{9F183CC3-3277-45CF-B2C5-37B3137A29D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F183CC3-3277-45CF-B2C5-37B3137A29D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F183CC3-3277-45CF-B2C5-37B3137A29D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4394AD41-7B9F-43FD-8A81-04D5FFB1A385}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AA97F58-5044-4BBA-B8D9-A74B6947A660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDEAFD5-2124-4D6D-ABBF-69531DFCBD7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDEAFD5-2124-4D6D-ABBF-69531DFCBD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDEAFD5-2124-4D6D-ABBF-69531DFCBD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDEAFD5-2124-4D6D-ABBF-69531DFCBD7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

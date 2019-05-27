@@ -1,8 +1,10 @@
 ﻿namespace Automaton.Model.Interfaces
 {
-    public interface IRegistryHandle : IService
+    public interface IRegistryHandle
     {
-        string GetGamePath(string gameName);
-        void ClearMOCurrentInstance();
+        IRegistryHandle New(string key);
+        void SetValue(object value);
+        void ClearValue();
+        void DeleteKey();
     }
 }

@@ -1,15 +1,10 @@
-﻿using Automaton.Model.Interfaces;
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace Automaton.Model.Interfaces
 {
-    public interface ILogger : IService
+    public interface ILogger
     {
-        EventHandler<FirstChanceExceptionEventArgs> CapturedError { get; set; }
-        EventHandler<string> CapturedLog { get; set; }
-
-        void WriteLine(string message, bool requiresDisplay = false, [CallerMemberName] string callerName = "");
+        void Write(string message, [CallerMemberName] string callerName = "");
+        void Write(string message, bool writeLine, [CallerMemberName] string callerName = "");
     }
 }

@@ -48,12 +48,18 @@
     <Reference Include="Costura, Version=3.3.3.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.3.3\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="FluentNexus, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pathoschild.FluentNexus.0.7.1\lib\net471\FluentNexus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NamedPipeWrapper, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NamedPipeWrapper.1.5.0\lib\net40\NamedPipeWrapper.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Pathoschild.Http.Client, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pathoschild.Http.FluentClient.3.3.0\lib\net45\Pathoschild.Http.Client.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PropertyChanged, Version=2.6.1.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
@@ -62,9 +68,6 @@
     <Reference Include="SevenZipSharp, Version=0.64.3890.29348, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
       <HintPath>..\packages\SevenZipSharp.0.64\lib\SevenZipSharp.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
@@ -72,6 +75,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -98,61 +104,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Archive\ArchiveContents.cs" />
-    <Compile Include="Archive\Interfaces\IArchiveContents.cs" />
-    <Compile Include="CommonFilesystemUtility.cs" />
-    <Compile Include="Interfaces\ICommonFilesystemUtility.cs" />
-    <Compile Include="Install\Intefaces\IInstallModpack.cs" />
-    <Compile Include="Install\InstallModpack.cs" />
-    <Compile Include="Interfaces\IClassExtensions.cs" />
-    <Compile Include="Install\Intefaces\IInstallBase.cs" />
-    <Compile Include="Install\InstallBase.cs" />
-    <Compile Include="Install\Intefaces\IValidate.cs" />
-    <Compile Include="Install\Validate.cs" />
-    <Compile Include="Install\ExtendedMod.cs" />
+    <Compile Include="ArchiveHandle.cs" />
+    <Compile Include="ExtendedArchive.cs" />
+    <Compile Include="FileDownload.cs" />
+    <Compile Include="HandyUtils.cs" />
+    <Compile Include="Interfaces\IArchiveHandle.cs" />
+    <Compile Include="Interfaces\IFileDownload.cs" />
+    <Compile Include="Interfaces\IHandyUtils.cs" />
+    <Compile Include="Interfaces\ILifetimeData.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
-    <Compile Include="Interfaces\IModel.cs" />
-    <Compile Include="Interfaces\IService.cs" />
-    <Compile Include="Interfaces\IPathFix.cs" />
+    <Compile Include="Interfaces\INexusApiHandle.cs" />
     <Compile Include="Interfaces\IRegistryHandle.cs" />
+    <Compile Include="LifetimeData.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Modpack\Base\Interfaces\IModpackStructure.cs" />
-    <Compile Include="Modpack\Base\InstallParameter.cs" />
-    <Compile Include="Modpack\Base\Header.cs" />
-    <Compile Include="Modpack\Base\Mod.cs" />
-    <Compile Include="Modpack\Base\ModOrganizerVersion.cs" />
-    <Compile Include="Modpack\Base\ModpackStructure.cs" />
-    <Compile Include="Modpack\Base\Patcher.cs" />
-    <Compile Include="Modpack\Interfaces\IModpackValidate.cs" />
-    <Compile Include="Modpack\Interfaces\IModpackRead.cs" />
-    <Compile Include="Modpack\ModpackValidate.cs" />
-    <Compile Include="Modpack\ModpackRead.cs" />
-    <Compile Include="NexusApi\ApiBase.cs" />
-    <Compile Include="NexusApi\ApiEndpoints.cs" />
-    <Compile Include="NexusApi\DownloadClient.cs" />
-    <Compile Include="NexusApi\DownloadResponse.cs" />
-    <Compile Include="NexusApi\Interfaces\IDownloadClient.cs" />
-    <Compile Include="NexusApi\Interfaces\IApiEndpoints.cs" />
-    <Compile Include="NexusApi\Interfaces\IApiBase.cs" />
-    <Compile Include="NexusApi\Interfaces\IDownloadResponse.cs" />
-    <Compile Include="NexusApi\Interfaces\INxmHandle.cs" />
-    <Compile Include="NexusApi\NxmHandle.cs" />
-    <Compile Include="NexusApi\PipedData.cs" />
-    <Compile Include="ProcessFinder.cs" />
+    <Compile Include="NexusApiHandle.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PathFix.cs" />
     <Compile Include="RegistryHandle.cs" />
-    <Compile Include="ToDerived.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <EmbeddedResource Include="ModOrganizer\ModOrganizerv2_1_6.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Automaton.Utils\Automaton.Common.csproj">
-      <Project>{4394ad41-7b9f-43fd-8a81-04d5ffb1a385}</Project>
+    <ProjectReference Include="..\Automaton.Common\Automaton.Common.csproj">
+      <Project>{8ddeafd5-2124-4d6d-abbf-69531dfcbd7a}</Project>
       <Name>Automaton.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj">

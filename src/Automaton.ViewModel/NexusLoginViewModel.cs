@@ -1,6 +1,4 @@
 ﻿using Autofac;
-using Automaton.Model.Install.Intefaces;
-using Automaton.Model.NexusApi.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using GalaSoft.MvvmLight.Command;
@@ -9,8 +7,6 @@ namespace Automaton.ViewModel
 {
     public class NexusLoginViewModel : ViewModelBase, INexusLoginViewModel
     {
-        private readonly IApiBase _apiBase;
-        private readonly IInstallBase _installBase;
         private readonly IViewController _viewController;
 
         public RelayCommand LoginToNexusCommand => new RelayCommand(LoginToNexus);
@@ -20,8 +16,6 @@ namespace Automaton.ViewModel
 
         public NexusLoginViewModel(IComponentContext components)
         {
-            _apiBase = components.Resolve<IApiBase>();
-            _installBase = components.Resolve<IInstallBase>();
             _viewController = components.Resolve<IViewController>();
         }
 
@@ -29,12 +23,7 @@ namespace Automaton.ViewModel
         {
             IsLoggingIn = true;
 
-            _apiBase.HasLoggedInEvent += () =>
-            {
-                _viewController.IncrementCurrentViewIndex();
-            };
-
-            await _apiBase.InitializeAsync();
+            // Log into the nexus here
         }
 
         public void ContinueOffline()

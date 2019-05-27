@@ -1,0 +1,711 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FluentNexus</name>
+    </assembly>
+    <members>
+        <member name="T:Pathoschild.FluentNexus.Endpoints.NexusColorSchemesClient">
+            <summary>A wrapper for the Nexus color schemes endpoints.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Endpoints.NexusColorSchemesClient.Client">
+            <summary>The Nexus API client.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusColorSchemesClient.#ctor(Pathoschild.Http.Client.IClient)">
+            <summary>Construct an instance.</summary>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusColorSchemesClient.GetColorSchemes">
+            <summary>Get a list of color schemes on the Nexus Mods website.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Endpoints.NexusGamesClient">
+            <summary>A wrapper for the Nexus games endpoints.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Endpoints.NexusGamesClient.Client">
+            <summary>The Nexus API client.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Endpoints.NexusGamesClient.UnixEpochTicks">
+            <summary>The <see cref="T:System.DateTimeOffset"/> ticks which match Unix epoch.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusGamesClient.#ctor(Pathoschild.Http.Client.IClient)">
+            <summary>Construct an instance.</summary>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusGamesClient.GetGames(System.Boolean)">
+            <summary>Get a list of games on Nexus Mods.</summary>
+            <param name="includeUnapproved">Whether to include unapproved mods.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusGamesClient.GetGame(System.String)">
+            <summary>Get a game on Nexus Mods.</summary>
+            <param name="domainName">The game key.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusGamesClient.NormaliseGameData(Pathoschild.FluentNexus.Models.Game[])">
+            <summary>Normalise the data returned by the Nexus API.</summary>
+            <param name="games">The game records to normalise.</param>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient">
+            <summary>A wrapper for the Nexus mod files endpoints.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.Client">
+            <summary>The Nexus API client.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.#ctor(Pathoschild.Http.Client.IClient)">
+            <summary>Construct an instance.</summary>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.GetModFiles(System.String,System.Int32,Pathoschild.FluentNexus.Models.FileCategory[])">
+            <summary>Get all files a specific mod.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+            <param name="categories">The categories for which to fetch files, or empty to fetch all.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.GetModFile(System.String,System.Int32,System.Int32)">
+            <summary>Get a specific mod file.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+            <param name="fileID">The unique file ID.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.GetDownloadLinks(System.String,System.Int32,System.Int32)">
+            <summary>Get the download links for a mod file. This may return multiple results if the file is available from different CDNs. This overload is only available when authenticated as a premium Nexus account.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+            <param name="fileID">The unique file ID.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.GetDownloadLinks(System.String,System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>Get the download links for a mod file. This may return multiple results if the file is available from different CDNs.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+            <param name="fileID">The unique file ID.</param>
+            <param name="nxmKey">The <c>key</c> argument extracted from the nxm:// link on the Nexus website.</param>
+            <param name="nxmExpiry">The <c>expires</c> argument extracted from the nxm:// link on the Nexus website.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModFilesClient.GetCategoryFilter(Pathoschild.FluentNexus.Models.FileCategory)">
+            <summary>Get the filter name for a category.</summary>
+            <param name="category">The file category.</param>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Endpoints.NexusModsClient">
+            <summary>A wrapper for the Nexus mods endpoints.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Endpoints.NexusModsClient.Client">
+            <summary>The Nexus API client.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.#ctor(Pathoschild.Http.Client.IClient)">
+            <summary>Construct an instance.</summary>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.GetUpdated(System.String,System.String)">
+            <summary>Get the mods which were updated within a given period. Cached for 5 minutes.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="period">The period to check. The only supported values are <c>1d</c> (one day), <c>1w</c> (one week), and <c>1m</c> (one month).</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.GetLatestAdded(System.String)">
+            <summary>Get the ten latest mods added for a specified game.</summary>
+            <param name="domainName">The game key.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.GetTrending(System.String)">
+            <summary>Get the ten all-time top trending mods for a specified game.</summary>
+            <param name="domainName">The game key.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.GetModsByFileHash(System.String,System.String)">
+            <summary>Get the mods which has a file matching the given MDF hash.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="hash">The MDF file hash.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.GetMod(System.String,System.Int32)">
+            <summary>Get data about a specified mod.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.GetModChangeLogs(System.String,System.Int32)">
+            <summary>Get the change logs for a mod, indexed by version number.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.Endorse(System.String,System.Int32,System.String)">
+            <summary>Add an endorsement for a mod.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+            <param name="version">The version to endorse.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusModsClient.Unendorse(System.String,System.Int32,System.String)">
+            <summary>Remove an endorsement for a mod.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The unique mod ID.</param>
+            <param name="version">The version to endorse.</param>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Endpoints.NexusUsersClient">
+            <summary>A wrapper for the Nexus users endpoints.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.Client">
+            <summary>The Nexus API client.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.#ctor(Pathoschild.Http.Client.IClient)">
+            <summary>Construct an instance.</summary>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.ValidateAsync">
+            <summary>Get the user details if the API key is valid.</summary>
+            <returns>Returns the user details if valid, else <c>null</c>.</returns>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.GetEndorsements">
+            <summary>Remove a mod from the user's tracked mods list, if it's tracked.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.GetTrackedMods">
+            <summary>Fetch the mods being tracked by the user.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.TrackMod(System.String,System.Int32)">
+            <summary>Add a mod to the user's tracked mods list.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The mod ID.</param>
+            <returns>Returns whether the mod is now being tracked (false if the mod doesn't exist).</returns>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Endpoints.NexusUsersClient.UntrackMod(System.String,System.Int32)">
+            <summary>Remove a mod from the user's tracked mods list, if it's tracked.</summary>
+            <param name="domainName">The game key.</param>
+            <param name="modID">The mod ID.</param>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Framework.InternalExtensions">
+            <summary>Provides extension methods for internal client code.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.InternalExtensions.MakeSyncSafe``1(System.Threading.Tasks.Task{``0})">
+            <summary>Configure an async task so it's safe to use in a synchronous context with <see cref="P:System.Threading.Tasks.Task`1.Result"/>.</summary>
+            <typeparam name="T">The task return type.</typeparam>
+            <param name="task">The task to extend.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.InternalExtensions.MakeSyncSafe(Pathoschild.Http.Client.IRequest)">
+            <summary>Configure an async task so it's safe to use in a synchronous context with <see cref="M:System.Threading.Tasks.Task.Wait"/>.</summary>
+            <param name="request">The request to extend.</param>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Framework.NexusErrorFilter">
+            <summary>An HTTP filter which parses Nexus API errors.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.NexusErrorFilter.OnRequest(Pathoschild.Http.Client.IRequest)">
+            <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
+            <param name="request">The HTTP request.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.NexusErrorFilter.OnResponse(Pathoschild.Http.Client.IResponse,System.Boolean)">
+            <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
+            <param name="response">The HTTP response.</param>
+            <param name="httpErrorAsException">Whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.NexusErrorFilter.GetError(Pathoschild.Http.Client.IResponse)">
+            <summary>Get the generic Nexus error from an HTTP response, if available.</summary>
+            <param name="response">The HTTP response.</param>
+            <returns>Returns the error if applicable, else <c>null</c>.</returns>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Framework.RateLimitManager">
+            <summary>Provides access to the Nexus Mods rate limits with utility helpers.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Framework.RateLimitManager.DailyLimit">
+            <summary>The number of API requests allowed per day.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Framework.RateLimitManager.DailyRemaining">
+            <summary>The number of API requests left for the current day before rate limits are enforced.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Framework.RateLimitManager.DailyReset">
+            <summary>When usage towards the <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.DailyLimit"/> will reset to zero.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Framework.RateLimitManager.HourlyLimit">
+            <summary>The number of API requests allowed per hour.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Framework.RateLimitManager.HourlyRemaining">
+            <summary>The number of API requests left for the current hour before rate limits are enforced.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Framework.RateLimitManager.HourlyReset">
+            <summary>When usage towards the <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyLimit"/> will reset to zero.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.RateLimitManager.UpdateFrom(Pathoschild.Http.Client.IResponse)">
+            <summary>Update the rate limit info.</summary>
+            <param name="response">The response from which to read rate limit data.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.RateLimitManager.IsOutdated">
+            <summary>Get whether the cached data is out of date.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.RateLimitManager.IsBlocked">
+            <summary>Get whether no requests can be submitted because <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.DailyRemaining"/> and <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyRemaining"/> are both zero.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.RateLimitManager.GetTimeUntilRenewal">
+            <summary>Get the time until the next reset if <see cref="M:Pathoschild.FluentNexus.IRateLimitManager.IsBlocked"/> returns true, else <see cref="F:System.TimeSpan.Zero"/>.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Framework.ResponseCallbackFilter">
+            <summary>An HTTP filter which raises an event when an HTTP response is received.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Framework.ResponseCallbackFilter.Callback">
+            <summary>The callback to invoke when a response is received.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.ResponseCallbackFilter.#ctor(System.Action{Pathoschild.Http.Client.IResponse})">
+            <summary>Construct an instance.</summary>
+            <param name="callback">The callback to invoke when a response is received.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.ResponseCallbackFilter.OnRequest(Pathoschild.Http.Client.IRequest)">
+            <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
+            <param name="request">The HTTP request.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.Framework.ResponseCallbackFilter.OnResponse(Pathoschild.Http.Client.IResponse,System.Boolean)">
+            <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
+            <param name="response">The HTTP response.</param>
+            <param name="httpErrorAsException">Whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions.</param>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.IRateLimitManager">
+            <summary>Provides access to the Nexus Mods rate limits with utility helpers.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.IRateLimitManager.DailyLimit">
+            <summary>The number of API requests allowed per day.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.IRateLimitManager.DailyRemaining">
+            <summary>The number of API requests left for the current day before rate limits are enforced.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.IRateLimitManager.DailyReset">
+            <summary>When usage towards the <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.DailyLimit"/> will reset to zero.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyLimit">
+            <summary>The number of API requests allowed per hour.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyRemaining">
+            <summary>The number of API requests left for the current hour before rate limits are enforced.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyReset">
+            <summary>When usage towards the <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyLimit"/> will reset to zero.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.IRateLimitManager.IsBlocked">
+            <summary>Get whether no requests can be submitted because <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.DailyRemaining"/> and <see cref="P:Pathoschild.FluentNexus.IRateLimitManager.HourlyRemaining"/> are both zero.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.IRateLimitManager.GetTimeUntilRenewal">
+            <summary>Get the time until the next reset if <see cref="M:Pathoschild.FluentNexus.IRateLimitManager.IsBlocked"/> returns true, else <see cref="F:System.TimeSpan.Zero"/>.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ColorScheme">
+            <summary>A Nexus color scheme.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ColorScheme.ID">
+            <summary>The unique color scheme ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ColorScheme.Name">
+            <summary>The color scheme name.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ColorScheme.PrimaryColor">
+            <summary>The primary color in the scheme, like '#92ab20'.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ColorScheme.SecondaryColor">
+            <summary>The secondary color in the scheme, like '#a4c21e'.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ColorScheme.DarkerColor">
+            <summary>The darker color in the scheme, like '#545e24'.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.EndorsementRef">
+            <summary>Simplified data about a mod endorsement.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.EndorsementRef.EndorseStatus">
+            <summary>The mod endorsement status.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.EndorsementRef.Timestamp">
+            <summary>When the user endorsed the mod (if they did).</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.EndorsementRef.Version">
+            <summary>The current mod version when the user endorsed the mod.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.EndorsementStatus">
+            <summary>A status representing whether the user has endorsed a mod.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.EndorsementStatus.None">
+            <summary>Not applicable.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.EndorsementStatus.Undecided">
+            <summary>The user is eligible to endorse the mod, but hasn't done so yet.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.EndorsementStatus.Abstained">
+            <summary>The user endorsed and subsequently un-endorsed the mod.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.EndorsementStatus.Endorsed">
+            <summary>The user has endorsed the mod.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.FileCategory">
+            <summary>A mod file category.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.FileCategory.Main">
+            <summary>A main file.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.FileCategory.Update">
+            <summary>An update file.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.FileCategory.Optional">
+            <summary>An optional file.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.FileCategory.Miscellaneous">
+            <summary>A miscellaneous file.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.FileCategory.Deleted">
+            <summary>A deleted file not shown in the UI.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.Game">
+            <summary>A Nexus game model.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.ID">
+            <summary>The unique game ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.DomainName">
+            <summary>The unique game key.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Name">
+            <summary>The game name.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.ModsUrl">
+            <summary>The URL to the Nexus Mods front page for this game.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.ForumUrl">
+            <summary>The URL to the Nexus Mods forum for this game.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Genre">
+            <summary>A brief description of the game genre, like 'Adventure' or 'Dungeon crawl'.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Mods">
+            <summary>The number of mods created for the game.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.ModFiles">
+            <summary>The number of files uploaded for the game's mods.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Downloads">
+            <summary>The number of file downloads for the game's mods.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Views">
+            <summary>The number of page views for the game's mods.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Authors">
+            <summary>The number of users who created a mod page for the game.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Endorsements">
+            <summary>The number of mod endorsements for the game's mods.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.Categories">
+            <summary>The mod categories defined for this game.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.IsApproved">
+            <summary>Whether the game is approved and available on Nexus Mods.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Game.ApprovedDate">
+            <summary>When the game became approved and available on Nexus Mods, if available. This may be null for very old approved games.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.GameCategory">
+            <summary>A mod category available for a game's mods.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.GameCategory.ID">
+            <summary>The category ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.GameCategory.Name">
+            <summary>The category name.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.GameCategory.ParentCategory">
+            <summary>The parent category, if any.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.GenericError">
+            <summary>The generic model for a Nexus Mods error.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.GenericError.Code">
+            <summary>The HTTP status code.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.GenericError.Message">
+            <summary>The error message indicating what went wrong.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.Mod">
+            <summary>A Nexus mod model.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Name">
+            <summary>The mod name.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Summary">
+            <summary>The short mod summary.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Description">
+            <summary>The long mod description in BBCode format.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.PictureUrl">
+            <summary>The URL for the main image shown in thumbnails.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.ModID">
+            <summary>The unique mod ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.GameID">
+            <summary>The unique game ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.DomainName">
+            <summary>The game key.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.CategoryID">
+            <summary>The mod category ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Version">
+            <summary>The mod version number.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Created">
+            <summary>When the mod was created.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Updated">
+            <summary>When the mod was created.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Author">
+            <summary>The user-defined 'created by' author name.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.UploadedBy">
+            <summary>The mod author's username.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.UploadedByProfileUrl">
+            <summary>The mod author's profile URL.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.ContainsAdultContent">
+            <summary>Whether the mod contains adult content such as gore, nudity, or extreme violence.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Status">
+            <summary>The mod publication status.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.IsAvailable">
+            <summary>Whether the mod is published and available.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.User">
+            <summary>The user who uploaded them od.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.Mod.Endorsement">
+            <summary>The user's endorsement status with this mod, or <c>null</c> if not applicable.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModFile">
+            <summary>A downloadable mod file.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.FileID">
+            <summary>The unique file ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.Name">
+            <summary>The download name.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.FileVersion">
+            <summary>The file version number.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.ModVersion">
+            <summary>The mod version at the time the file was uploaded.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.FileName">
+            <summary>The download filename.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.Category">
+            <summary>The file category.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.IsPrimary">
+            <summary>Whether the file is marked as the primary download.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.Size">
+            <summary>The file size in kilobytes.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.UploadedTimestamp">
+            <summary>When the file was uploaded.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.ExternalVirusScanUri">
+            <summary>The URL to the external virus scan results.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFile.ChangeLog">
+            <summary>The HTML change logs, if any.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModFileDownloadLink">
+            <summary>A mod file download link.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileDownloadLink.CdnName">
+            <summary>The full name of the CDN serving the file.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileDownloadLink.CdnShortName">
+            <summary>The short name of the CDN serving the file.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileDownloadLink.Uri">
+            <summary>The download URL.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModFileList">
+            <summary>A list of files for a mod.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileList.Files">
+            <summary>The matched file details.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileList.FileUpdates">
+            <summary>The update relationships between files (i.e. a record of the uploader marking each file as a newer version of a previous one, if they did).</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModFileUpdate">
+            <summary>A record indicating an update relationship between two files (e.g. 1.0.1 supersedes 1.0.0).</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileUpdate.OldFileID">
+            <summary>The older file ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileUpdate.OldFileName">
+            <summary>The older filename.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileUpdate.NewFileID">
+            <summary>The newer file ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileUpdate.NewFileName">
+            <summary>The newer filename.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileUpdate.UploadTilestamp">
+            <summary>When the newer file was uploaded.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModFileWithHash">
+            <summary>A downloadable mod file, with its MD5 hash.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModFileWithHash.Md5">
+            <summary>The MD5 file hash.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModHashResult">
+            <summary>The result of a mod MD5 hash search.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModHashResult.Mod">
+            <summary>The matched mod.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModHashResult.File">
+            <summary>The matched file details.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModStatus">
+            <summary>A mod publication status.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.None">
+            <summary>Not applicable.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.NotPublished">
+            <summary>The mod is not yet published.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.Published">
+            <summary>The mod is published and visible.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.PublishWithGame">
+            <summary>The mod should be published once the game goes live.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.Hidden">
+            <summary>The mod has been hidden by the author.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.UnderModeration">
+            <summary>The mod is hidden while it undergoes moderator review.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.Wastebinned">
+            <summary>The mod has been recoverably deleted.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.Models.ModStatus.Removed">
+            <summary>The mod has been permanently removed.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.ModUpdate">
+            <summary>A Nexus mod update record.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModUpdate.ModID">
+            <summary>The unique mod ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModUpdate.LatestFileUpdate">
+            <summary>When the mod files were last changed.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.ModUpdate.LatestModActivity">
+            <summary>When the mod data was last changed.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.User">
+            <summary>User login metadata.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.UserID">
+            <summary>The unique user ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.Key">
+            <summary>The user's API authentication key.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.Name">
+            <summary>The username.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.Email">
+            <summary>The user's email address.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.ProfileUrl">
+            <summary>The URL of the user's avatar.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.IsPremium">
+            <summary>Whether the user has a premium Nexus account.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.User.IsSupporter">
+            <summary>Whether the user has a supporter Nexus account.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.UserEndorsement">
+            <summary>A mod endorsement by the user.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserEndorsement.ModID">
+            <summary>The unique mod ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserEndorsement.DomainName">
+            <summary>The mod's game key.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserEndorsement.Date">
+            <summary>When the user endorsed the mod.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserEndorsement.Version">
+            <summary>The current mod version when the user endorsed the mod.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserEndorsement.Status">
+            <summary>The mod endorsement status.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.UserRef">
+            <summary>Simplified data about a user.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserRef.MemberID">
+            <summary>The unique user ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserRef.MemberGroupID">
+            <summary>The member group ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserRef.Name">
+            <summary>The username.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.Models.UserTrackedMod">
+            <summary>A mod tracked by the user.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserTrackedMod.ModID">
+            <summary>The unique mod ID.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.Models.UserTrackedMod.DomainName">
+            <summary>The mod's game key.</summary>
+        </member>
+        <member name="T:Pathoschild.FluentNexus.NexusClient">
+            <summary>A client for the Nexus Mods web API.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.NexusClient.LastAuthenticationFailed">
+            <summary>Whether authentication failed for the last API request.</summary>
+        </member>
+        <member name="F:Pathoschild.FluentNexus.NexusClient.RateLimits">
+            <summary>Provides access to the Nexus Mods rate limits with utility methods. This is <c>null</c> if no request was received yet, or if <see cref="F:Pathoschild.FluentNexus.NexusClient.LastAuthenticationFailed"/>.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.NexusClient.HttpClient">
+            <summary>The underlying HTTP client.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.NexusClient.ColorSchemes">
+            <summary>The color schemes endpoints.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.NexusClient.Games">
+            <summary>The games endpoints.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.NexusClient.Mods">
+            <summary>The mods endpoints.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.NexusClient.ModFiles">
+            <summary>The mod files endpoints.</summary>
+        </member>
+        <member name="P:Pathoschild.FluentNexus.NexusClient.Users">
+            <summary>The users endpoints.</summary>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.NexusClient.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>Construct an instance.</summary>
+            <param name="apiKey">The Nexus API key with which to authenticate.</param>
+            <param name="appName">An arbitrary name for the app/script using the client, reported to the Nexus Mods API and used in the user agent.</param>
+            <param name="appVersion">An arbitrary version number for the <paramref name="appName"/> (ideally a semantic version).</param>
+            <param name="baseUrl">The base URL for the API.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.NexusClient.SetUserAgent(System.String)">
+            <summary>Set the user agent header.</summary>
+            <param name="userAgent">The user agent to set.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.NexusClient.GetRateLimits">
+            <summary>Get metadata about the API rate limits from the last response. If no request has been sent yet, this sends an auth validation request (which doesn't consume rate limits).</summary>
+            <exception cref="T:System.InvalidOperationException">Can't retrieve rate limits because API authentication failed.</exception>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.NexusClient.OnResponseReceived(Pathoschild.Http.Client.IResponse)">
+            <summary>Track Nexus metadata for an HTTP response.</summary>
+            <param name="response">The HTTP response from the Nexus API.</param>
+        </member>
+        <member name="M:Pathoschild.FluentNexus.NexusClient.GetDefaultUserAgent(System.String,System.String)">
+            <summary>Get the default user agent.</summary>
+            <param name="appName">A unique name for the app or script using the client, reported to the Nexus Mods API and used in the user agent.</param>
+            <param name="appVersion">A version number for the <paramref name="appName"/> (ideally a semantic version).</param>
+        </member>
+    </members>
+</doc>
