@@ -8,6 +8,7 @@ using Automaton.ViewModel.Dialogs.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
+using Automaton.Model.Interfaces;
 
 namespace Automaton.ViewModel
 {
@@ -52,6 +53,15 @@ namespace Automaton.ViewModel
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IViewModel).IsAssignableFrom(t))
+                .SingleInstance()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IModel).IsAssignableFrom(t))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(ISingleton).IsAssignableFrom(t))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 

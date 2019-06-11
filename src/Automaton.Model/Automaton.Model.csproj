@@ -113,8 +113,10 @@
     <Compile Include="Interfaces\IHandyUtils.cs" />
     <Compile Include="Interfaces\ILifetimeData.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\INexusApiHandle.cs" />
     <Compile Include="Interfaces\IRegistryHandle.cs" />
+    <Compile Include="Interfaces\ISingleton.cs" />
     <Compile Include="LifetimeData.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NexusApiHandle.cs" />

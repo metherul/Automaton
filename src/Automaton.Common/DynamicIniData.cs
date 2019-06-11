@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
 
-namespace Automaton.Utils
+namespace Automaton.Common
 {
     public class DynamicIniData : DynamicObject
     {

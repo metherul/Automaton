@@ -44,39 +44,6 @@ namespace Automaton.ViewModel
 
         private void ApplyTheme()
         {
-            var mergedDictionaries = Application.Current.Resources.MergedDictionaries; //{Resources/Themes/DarkTheme.xaml}
-            var resourceIndex = mergedDictionaries.IndexOf(mergedDictionaries.First(x => x.Source.ToString() == "Resources/Themes/DarkTheme.xaml"));
-            var themeDictionary = mergedDictionaries[resourceIndex];
-
-            // Apply themes
-            var modpackHeader = _installBase.ModpackHeader;
-            if (modpackHeader.BackgroundColor != null)
-            {
-                themeDictionary["BackgroundColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.BackgroundColor));
-            }
-
-            if (modpackHeader.FontColor != null)
-            {
-                themeDictionary["TextColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.FontColor ?? themeDictionary["TextColor"]));
-            }
-
-            if (modpackHeader.ButtonColor != null)
-            {
-                themeDictionary["ButtonColor"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(modpackHeader.ButtonColor ?? themeDictionary["ButtonColor"]));
-            }
-
-            // Apply textual elements
-            var resourceDictionary = Application.Current.Resources;
-            resourceDictionary["ModpackName"] = modpackHeader.Name ?? resourceDictionary["ModpackName"];
-            resourceDictionary["ModpackDescription"] = modpackHeader.Description ?? resourceDictionary["ModpackDescription"];
-
-            // Apply header image
-            resourceIndex = mergedDictionaries.IndexOf(mergedDictionaries.First(x => x.Source.ToString() == "Resources/Images/ImageResources.xaml"));
-            themeDictionary = mergedDictionaries[resourceIndex];
-
-            themeDictionary["HeaderImage"] = _installBase.HeaderImage ?? themeDictionary["HeaderImage"];
-
-            resourceDictionary["AutomatonVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
     }
 }

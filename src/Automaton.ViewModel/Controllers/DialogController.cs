@@ -10,7 +10,6 @@ namespace Automaton.ViewModel.Controllers
     public class DialogController : IDialogController, INotifyPropertyChanged
     {
         private readonly ILifetimeScope _lifetimeScope;
-        private readonly ILogger _logger;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -20,10 +19,6 @@ namespace Automaton.ViewModel.Controllers
         public DialogController(IComponentContext components)
         {
             _lifetimeScope = components.Resolve<ILifetimeScope>();
-            _logger = components.Resolve<ILogger>();
-
-            _logger.CapturedError += Logger_CapturedError;
-            _logger.CapturedLog += Logger_CapturedLog;
         }
 
         public void CloseCurrentDialog()

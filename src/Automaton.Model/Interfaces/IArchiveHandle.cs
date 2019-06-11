@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Automaton.Model.Interfaces
 {
-    public interface IArchiveHandle
+    public interface IArchiveHandle : IModel
     {
         IArchiveHandle New(string archivePath);
         string GetArchiveMd5();

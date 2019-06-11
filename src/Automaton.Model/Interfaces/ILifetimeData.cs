@@ -1,6 +1,6 @@
 ﻿namespace Automaton.Model.Interfaces
 {
-    public interface ILifetimeData
+    public interface ILifetimeData : ISingleton
     {
         string RequestHeader { get; set; }
         string InstallPath { get; set; }

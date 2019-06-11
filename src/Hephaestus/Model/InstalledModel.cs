@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Automaton.Utils;
+using Automaton.Common;
+
 using System.IO;
 using IniParser;
 

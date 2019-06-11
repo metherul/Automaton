@@ -14,6 +14,7 @@
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -45,7 +46,7 @@
         <Button
             Grid.Row="1"
             Height="45"
-            Margin="0,0,0,30"
+            Margin="0,0,0,2"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             materialDesign:ButtonProgressAssist.IsIndeterminate="True"
@@ -58,6 +59,10 @@
                 VerticalAlignment="Stretch">
                 <TextBlock Style="{DynamicResource ButtonText}"><Run FontFamily="{DynamicResource RobotoMono}" Text="Fix" /></TextBlock>
             </Grid>
+        </Button>
+
+        <Button Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignToolButton}" ClipToBounds="True" Command="{Binding SkipStepCommand}">
+            <TextBlock  FontFamily="{DynamicResource RobotoMono}" Foreground="{DynamicResource FontColor}" FontStyle="Italic">Skip</TextBlock>
         </Button>
     </Grid>
 </UserControl>

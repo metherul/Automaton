@@ -40,7 +40,6 @@ namespace Automaton.ViewModel
             _viewController = components.Resolve<IViewController>();
             _fileSystemBrowser = components.Resolve<IFileSystemBrowser>();
             _dialogController = components.Resolve<IDialogController>();
-            _logger = components.Resolve<ILogger>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             //_nxmHandle.RecievedPipedDataEvent += NxmHandle_RecievedPipedDataEvent;
@@ -65,48 +64,15 @@ namespace Automaton.ViewModel
 
         private async void ValidateMods(string directoryPath = "")
         {
-            var directoryTarget = _installBase.DownloadsDirectory;
-
-            if (!string.IsNullOrEmpty(directoryPath))
-            {
-                directoryTarget = directoryPath;
-            }
-
-            var directoryContents = Directory.GetFiles(directoryTarget, "*.*", SearchOption.TopDirectoryOnly).ToList();
-
-            foreach (var mod in ModsList.Where(x => !x.IsValidationComplete))
-            {
-                await mod.FindValidDirectoryArchiveAsync(directoryContents);
-            }
         }
 
 
         private void ScanDirectory()
         {
-            var directoryPath = _fileSystemBrowser.OpenDirectoryBrowserAsync("Select a folder to scan for mod archives.").Result;
-
-            if (!string.IsNullOrEmpty(directoryPath))
-            {
-                ValidateMods(directoryPath);
-            }
         }
 
-        private void FindAndValidateMod(ExtendedMod mod)
+        private void OpenNexusLink()
         {
-            
-        }
-
-        private void OpenNexusLink(ExtendedMod mod)
-        {
-            if (mod.Repository == "NexusMods")
-            {
-                Process.Start($"https://nexusmods.com/{mod.TargetGame.ToLower()}/mods/{mod.ModId}?tab=files");
-            }
-
-            else
-            {
-                Process.Start($"https://www.google.com/search?q={Path.GetFileNameWithoutExtension(mod.FileName)}");
-            }
         }
     }
 

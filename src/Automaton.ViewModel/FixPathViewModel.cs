@@ -11,6 +11,7 @@ namespace Automaton.ViewModel
         private readonly IViewController _viewController;
 
         public RelayCommand StartFixPathCommand => new RelayCommand(StartFixPath);
+        public RelayCommand SkipStepCommand => new RelayCommand(SkipStep);
 
         private bool IsVisible { get; set; }
 
@@ -21,6 +22,12 @@ namespace Automaton.ViewModel
 
         private void StartFixPath()
         {
+            // Attempt to apply the fix here
+        }
+
+        private void SkipStep()
+        {
+            _viewController.IncrementCurrentViewIndex();
         }
     }
 }

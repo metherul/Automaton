@@ -6,7 +6,7 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Automaton.Utils
+namespace Automaton.Common
 {
     public class Utils
     {

@@ -1,6 +1,6 @@
 ﻿namespace Automaton.Model.Interfaces
 {
-    public interface IHandyUtils
+    public interface IHandyUtils : IModel
     {
         string GetMd5FromFile(string filePath);
     }
