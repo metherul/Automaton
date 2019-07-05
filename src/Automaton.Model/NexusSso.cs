@@ -8,7 +8,7 @@ namespace Automaton.Model
 {
     public class NexusSso : INexusSso
     {
-        public delegate string GrabbedKey(string key);
+        public delegate void GrabbedKey(string key);
         public event GrabbedKey GrabbedKeyEvent;
 
         public NexusSso New()
@@ -16,7 +16,15 @@ namespace Automaton.Model
             return this;
         }
 
-        public async Task ConnectAndGrabKey()
+        public async Task ConnectAndGrabKeyAsync()
+        {
+            await Task.Run(() =>
+            {
+                ConnectAndGrabKey();
+            });
+        }
+
+        public void ConnectAndGrabKey()
         {
             var guid = Guid.NewGuid();
             var websocket = new WebSocket("wss://sso.nexusmods.com")

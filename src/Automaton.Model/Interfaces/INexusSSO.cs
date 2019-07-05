@@ -2,11 +2,12 @@
 
 namespace Automaton.Model.Interfaces
 {
-    public interface INexusSso
+    public interface INexusSso : IModel
     {
         event NexusSso.GrabbedKey GrabbedKeyEvent;
 
-        Task ConnectAndGrabKey();
+        void ConnectAndGrabKey();
+        Task ConnectAndGrabKeyAsync();
         NexusSso New();
     }
 }
