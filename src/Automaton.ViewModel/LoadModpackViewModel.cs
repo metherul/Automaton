@@ -2,8 +2,10 @@
 using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
+using Automaton.ViewModel.Utilities;
 using Automaton.ViewModel.Utilities.Interfaces;
 using GalaSoft.MvvmLight.Command;
+using System.Threading.Tasks;
 
 namespace Automaton.ViewModel
 {
@@ -14,7 +16,7 @@ namespace Automaton.ViewModel
         private readonly IDialogController _dialogController;
         private readonly ILoadModpack _loadModpack;
 
-        public RelayCommand ChooseModpackCommand { get => new RelayCommand(ChooseModpack); }
+        public AsyncCommand ChooseModpackCommand { get => new AsyncCommand(ChooseModpack); }
 
         public LoadModpackViewModel(IComponentContext components)
         {
@@ -25,21 +27,22 @@ namespace Automaton.ViewModel
             _loadModpack = components.Resolve<ILoadModpack>();
         }
 
-        private async void ChooseModpack()
+        private async Task ChooseModpack()
         {
             var modpackPath = await _filesystemBrowser.OpenFileBrowserAsync("Automaton Modpacks (*.auto, *.7z, *.rar, *.zip) | *.auto; *.7z; *.rar; *.zip|All Files (*.*)|*.*", "Select an Automaton Modpack");
 
-            if (string.IsNullOrEmpty(modpackPath))
+            if (!string.IsNullOrEmpty(modpackPath))
             {
-                return;
+                _dialogController.OpenLoadingDialog();
+
+                await _loadModpack.LoadAsync(modpackPath);
+
+                // Apply theme
+                ApplyTheme();
+
+                _dialogController.CloseCurrentDialog();
+                _viewController.IncrementCurrentViewIndex();
             }
-
-            _loadModpack.Load(modpackPath);
-
-            // Apply theme
-            ApplyTheme();
-
-            _viewController.IncrementCurrentViewIndex();
         }
 
         private void ApplyTheme()

@@ -27,7 +27,7 @@
 
                 <TextBlock Grid.Row="0" Style="{DynamicResource HeaderText}">
                     <Run Text="Missing Mods: " />
-                    <Run Text="{Binding RemainingMissingModCount}" />
+                    <Run Text="{Binding MissingArchivesCount}" />
                 </TextBlock>
 
                 <Grid Grid.Column="2">
@@ -128,6 +128,33 @@
 
                                     <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
                                 </Button>
+
+                                <Image
+                                    Width="15"
+                                    Height="15"
+                                    Margin="3,0,4,0"
+                                    VerticalAlignment="Center"
+                                    RenderOptions.BitmapScalingMode="Fant">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="{StaticResource NexusLogo}" />
+                                            <Setter Property="ToolTip" Value="This is not a mod sourced from Nexus Mods. You will have to find this file manually." />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Repository}" Value="Nexus">
+                                                    <Setter Property="Source" Value="{StaticResource NexusLogoColor}" />
+                                                    <Setter Property="ToolTip" Value="This is a mod sourced from Nexus Mods." />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                    <Image.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
+                                            <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
+                                            <Setter Property="Background" Value="White" />
+                                            <Setter Property="Foreground" Value="Black" />
+                                        </Style>
+                                    </Image.Resources>
+                                </Image>
 
                                 <Grid
                                     Width="1.5"

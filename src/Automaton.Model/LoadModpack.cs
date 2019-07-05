@@ -6,6 +6,7 @@ using Automaton.Model.Modpack;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Automaton.Model
 {
@@ -24,6 +25,10 @@ namespace Automaton.Model
             _lifetimeData = components.Resolve<ILifetimeData>();
         }
 
+        public async Task LoadAsync(string modpackPath)
+        {
+            await Task.Run(() => Load(modpackPath));
+        }
         public void Load(string modpackPath)
         {
             var archiveHandle = _archiveHandle.New(modpackPath);
