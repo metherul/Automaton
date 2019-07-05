@@ -8,6 +8,7 @@ namespace Automaton.Model
     {
         public MasterDefinition MasterDefinition { get; set; }
         public List<Mod> Mods { get; set; }
+        public List<ExtendedArchive> Archives { get; set; }
         public List<ModpackItem> ModpackContent { get; set; }
         public string RequestHeader { get; set; }
         public string InstallPath { get; set; }

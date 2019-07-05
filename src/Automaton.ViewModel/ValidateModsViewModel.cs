@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using Autofac;
+﻿using Autofac;
 using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Controllers;
 using Automaton.ViewModel.Controllers.Interfaces;
@@ -25,12 +21,6 @@ namespace Automaton.ViewModel
         //public RelayCommand<ExtendedMod> OpenNexusLinkCommand => new RelayCommand<ExtendedMod>(OpenNexusLink);
 
         //public ObservableCollection<ExtendedMod> ModsList { get; set; } = new ObservableCollection<ExtendedMod>();
-
-        public int RemainingMissingModCount { get; set; }
-
-        public bool IsInitialValidating { get; set; } = true;
-        public bool AutodownloadsEnabled { get; set; }
-        public bool IsUserPremium { get; set; }
         
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -48,10 +38,6 @@ namespace Automaton.ViewModel
             {
                 return;
             }
-
-            // Here we need to 
-            // 1. Initialize the NXM router to start handling protocol requests
-            // 2. Initialize any automatic-downloader functionality
         }
 
 
@@ -69,34 +55,6 @@ namespace Automaton.ViewModel
 
         private void OpenNexusLink()
         {
-        }
-    }
-
-    public class RangeObservableCollection<T> : ObservableCollection<T>
-    {
-        private bool _suppressNotification;
-
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            if (!_suppressNotification)
-                base.OnCollectionChanged(e);
-        }
-
-        public void AddRange(IEnumerable<T> list)
-        {
-            if (list == null)
-                throw new ArgumentNullException("list");
-
-            _suppressNotification = true;
-
-            foreach (var item in list)
-            {
-                Add(item);
-            }
-
-            _suppressNotification = false;
-
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 }

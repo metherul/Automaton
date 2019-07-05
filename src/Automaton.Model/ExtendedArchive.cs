@@ -14,14 +14,9 @@ namespace Automaton.Model
     public class ExtendedArchive : SourceArchive
     {
         private Mod _parentMod;
-        private InstallPlan _parentInstallPlan;
 
         private IArchiveHandle _archiveHandle;
-        private IFileDownload _fileDownload;
         private ILifetimeData _lifetimeData;
-        private ILogger _logger;
-        private INexusApiHandle _nexusApiHandle;
-        private IRegistryHandle _registryHandle;
         private IHandyUtils _handyUtils;
 
         public string ArchivePath;
@@ -41,6 +36,7 @@ namespace Automaton.Model
         public void Install()
         {
             var installationDirectory = Path.Combine(_lifetimeData.InstallPath, _parentMod.Name);
+            var filePairings = _parentMod.InstallPlans.SelectMany(x => x.FilePairings);
 
             // Verify to ensure that the SourceArchive path exists
             if (!File.Exists(ArchivePath))
@@ -59,9 +55,10 @@ namespace Automaton.Model
             var installDictionary = new Dictionary<Entry, string>();
 
             // Build the installation dictionary
-            foreach (var filePairing in _parentInstallPlan.FilePairings)
+            foreach (var filePairing in filePairings)
             {
-                installDictionary.Add(archiveContents.First(x => x.FileName == filePairing.From), Path.Combine(installationDirectory, filePairing.To));
+                installDictionary.Add(archiveContents
+                    .First(x => x.FileName == filePairing.From), Path.Combine(installationDirectory, filePairing.To));
             }
 
             // Extract each into their target location 
@@ -119,6 +116,11 @@ namespace Automaton.Model
         public async Task TryLoadAsync(string archivePath)
         {
             await Task.Run(() => TryLoad(archivePath));
+        }
+
+        public void SearchInDir(string directoryPath)
+        {
+
         }
     }
 }

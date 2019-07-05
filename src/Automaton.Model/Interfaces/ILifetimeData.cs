@@ -10,5 +10,6 @@
         System.Collections.Generic.List<Common.Model.Mod> Mods { get; set; }
         
         System.Collections.Generic.List<ModpackItem> ModpackContent { get; set; }
+        System.Collections.Generic.List<ExtendedArchive> Archives { get; set; }
     }
 }

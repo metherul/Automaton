@@ -84,12 +84,14 @@ namespace Automaton.Model
             foreach (var mod in mods)
             {
                 var archive = mod.InstallPlans
-                    .Select(x => ClassExtensions.ToDerived<SourceArchive, ExtendedArchive>(x.SourceArchive))
-                    .Select(x => x.Initialize(_components, mod))
+                    .Select(x => ClassExtensions.ToDerived<SourceArchive, ExtendedArchive>(x.SourceArchive)) // Convert to Extended
+                    .Select(x => x.Initialize(_components, mod)) // Initialize each
                     .ToList();
 
                 archives.AddRange(archive);
             }
+
+            _lifetimeData.Archives = archives;
         }
     }
 }
