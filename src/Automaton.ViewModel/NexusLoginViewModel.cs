@@ -1,7 +1,10 @@
 ﻿using Autofac;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
+using Automaton.ViewModel.Utilities;
 using GalaSoft.MvvmLight.Command;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Automaton.ViewModel
 {
@@ -9,7 +12,7 @@ namespace Automaton.ViewModel
     {
         private readonly IViewController _viewController;
 
-        public RelayCommand LoginToNexusCommand => new RelayCommand(LoginToNexus);
+        public AsyncCommand LoginToNexusCommand => new AsyncCommand(LoginToNexus);
         public RelayCommand ContinueOfflineCommand => new RelayCommand(ContinueOffline);
 
         public bool IsLoggingIn { get; set; }
@@ -17,13 +20,15 @@ namespace Automaton.ViewModel
         public NexusLoginViewModel(IComponentContext components)
         {
             _viewController = components.Resolve<IViewController>();
+
+            
         }
 
-        public async void LoginToNexus()
+        public async Task LoginToNexus()
         {
             IsLoggingIn = true;
 
-            // Log into the nexus here
+            
         }
 
         public void ContinueOffline()

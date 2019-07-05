@@ -139,6 +139,10 @@
     </Compile>
     <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Utilities\FileSystemBrowser.cs" />
+    <Compile Include="Utilities\AsyncCommand.cs" />
+    <Compile Include="Utilities\CommandUtilities.cs" />
+    <Compile Include="Utilities\Interfaces\IAsyncCommand.cs" />
+    <Compile Include="Utilities\Interfaces\IErrorHandler.cs" />
     <Compile Include="Utilities\Interfaces\IFileSystemBrowser.cs" />
     <Compile Include="Utilities\Interfaces\IUtility.cs" />
     <Compile Include="ValidateModsViewModel.cs" />
@@ -155,9 +159,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Automaton.Common\Automaton.Common.csproj">
+      <Project>{8ddeafd5-2124-4d6d-abbf-69531dfcbd7a}</Project>
+      <Name>Automaton.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Automaton.Model\Automaton.Model.csproj">
       <Project>{caeb0f4e-5cb6-4daf-98f5-da0dd3c54d53}</Project>
       <Name>Automaton.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj">
+      <Project>{8aa97f58-5044-4bba-b8d9-a74b6947a660}</Project>
+      <Name>SevenZipExtractor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

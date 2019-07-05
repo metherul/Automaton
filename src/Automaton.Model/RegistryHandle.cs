@@ -1,27 +1,38 @@
 ﻿using Automaton.Model.Interfaces;
+using Microsoft.Win32;
 
 namespace Automaton.Model
 {
     public class RegistryHandle : IRegistryHandle
     {
-        public IRegistryHandle New(string key)
+        private string _keyName;
+        private string _valueName;
+
+        public IRegistryHandle New(string keyName, string valueName)
         {
-            throw new System.NotImplementedException();
+            _keyName = keyName;
+            _valueName = valueName;
+
+            return this;
         }
 
         public void ClearValue()
         {
-            throw new System.NotImplementedException();
+            SetValue(null);
         }
 
         public void DeleteKey()
         {
-            throw new System.NotImplementedException();
         }
 
         public void SetValue(object value)
         {
-            throw new System.NotImplementedException();
+            Registry.SetValue(_keyName, _valueName, value);
+        }
+
+        public object GetValue()
+        {
+            return Registry.GetValue(_keyName, _valueName, null);
         }
     }
 }

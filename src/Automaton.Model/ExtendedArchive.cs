@@ -3,12 +3,11 @@ using Automaton.Model.Interfaces;
 using Automaton.Model.Modpack;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
-using System;
 using SevenZipExtractor;
 using System.Collections.Generic;
 using System.Net;
-using Pathoschild.FluentNexus;
 using System.Threading.Tasks;
+using Automaton.Common.Model;
 
 namespace Automaton.Model
 {

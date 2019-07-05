@@ -1,9 +1,12 @@
-﻿namespace Automaton.Model.Modpack
+﻿namespace Automaton.Common.Model
 {
     public class ConfigPathOffsets
     {
         public static readonly string PackDefinitionConfig = "pack.auto_definition";
-        public static readonly string InstallConfig = "mods/*/install.json";
+        public static readonly string InstallConfig = "install.json";
+
+        public static readonly string DefaultContentDir = "content";
+        public static readonly string DefaultModsDir = "mods";
 
         public static readonly string SettingsIni = "*.ini";
         public static readonly string MetaIni = "mods/*/meta.ini";

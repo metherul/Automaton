@@ -5,6 +5,7 @@ using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
 using GalaSoft.MvvmLight.Command;
 using Alphaleonis.Win32.Filesystem;
+using Automaton.Model.Interfaces;
 
 namespace Automaton.ViewModel
 {
@@ -12,6 +13,7 @@ namespace Automaton.ViewModel
     {
         private readonly IViewController _viewController;
         private readonly IFileSystemBrowser _fileSystemBrowser;
+        private readonly ILifetimeData _lifetimeData;
 
         public RelayCommand OpenInstallFolderCommand { get => new RelayCommand(OpenInstallFolder); }
         public RelayCommand OpenDownloadsFolderCommand {get => new RelayCommand(OpenDownloadsFolder); }
@@ -24,6 +26,8 @@ namespace Automaton.ViewModel
         {
             _viewController = components.Resolve<IViewController>();
             _fileSystemBrowser = components.Resolve<IFileSystemBrowser>();
+
+            _lifetimeData = components.Resolve<ILifetimeData>();
         }
 
         public void OpenInstallFolder()
@@ -40,6 +44,9 @@ namespace Automaton.ViewModel
         {
             if (Directory.Exists(InstallLocation) && Directory.Exists(DownloadsLocation))
             {
+                _lifetimeData.InstallPath = InstallLocation;
+                _lifetimeData.DownloadPath = DownloadsLocation;
+
                 _viewController.IncrementCurrentViewIndex();
             }
         }

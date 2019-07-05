@@ -1,14 +1,9 @@
 ﻿using Autofac;
+using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
 using GalaSoft.MvvmLight.Command;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Media;
 
 namespace Automaton.ViewModel
 {
@@ -17,6 +12,7 @@ namespace Automaton.ViewModel
         private readonly IViewController _viewController;
         private readonly IFileSystemBrowser _filesystemBrowser;
         private readonly IDialogController _dialogController;
+        private readonly ILoadModpack _loadModpack;
 
         public RelayCommand ChooseModpackCommand { get => new RelayCommand(ChooseModpack); }
 
@@ -25,6 +21,8 @@ namespace Automaton.ViewModel
             _viewController = components.Resolve<IViewController>();
             _filesystemBrowser = components.Resolve<IFileSystemBrowser>(); 
             _dialogController = components.Resolve<IDialogController>();
+
+            _loadModpack = components.Resolve<ILoadModpack>();
         }
 
         private async void ChooseModpack()
@@ -35,6 +33,8 @@ namespace Automaton.ViewModel
             {
                 return;
             }
+
+            _loadModpack.Load(modpackPath);
 
             // Apply theme
             ApplyTheme();

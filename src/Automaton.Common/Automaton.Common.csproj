@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
 

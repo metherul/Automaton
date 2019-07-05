@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Autofac;
+using Automaton.ViewModel.Controllers.Interfaces;
+using System.ComponentModel;
 
 namespace Automaton.ViewModel
 {

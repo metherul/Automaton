@@ -1,5 +1,6 @@
 ﻿using IniParser;
 using Newtonsoft.Json;
+using SevenZipExtractor;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -28,7 +29,11 @@ namespace Automaton.Common
 
         public static T LoadJson<T>(StreamReader sr)
         {
-            return JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
+            var test1 = sr.ReadToEnd();
+            sr.BaseStream.Seek(0, SeekOrigin.Begin);
+            var test = JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
+
+            return test;
         }
 
         public static void WriteJson<T>(T inst, string filename)
@@ -145,6 +150,14 @@ namespace Automaton.Common
             {
                 wtr.Write(data);
             }
+        }
+
+        public static MemoryStream GetEntryMemoryStream(Entry entry)
+        {
+            var memoryStream = new MemoryStream();
+            entry.Extract(memoryStream);
+
+            return memoryStream;
         }
     }
 }

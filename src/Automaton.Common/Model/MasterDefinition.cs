@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Automaton.Model.Modpack
+namespace Automaton.Common.Model
 {
     public class MasterDefinition
     {

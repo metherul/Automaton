@@ -2,9 +2,10 @@
 {
     public interface IRegistryHandle : IModel
     {
-        IRegistryHandle New(string key);
         void SetValue(object value);
         void ClearValue();
         void DeleteKey();
+        IRegistryHandle New(string keyName, string valueName);
+        object GetValue();
     }
 }

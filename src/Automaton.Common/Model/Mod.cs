@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Automaton.Model.Modpack;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
-namespace Automaton.Model.Modpack
+namespace Automaton.Common.Model
 {
     public class Mod
     {

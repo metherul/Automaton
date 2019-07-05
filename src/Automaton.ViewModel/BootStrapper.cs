@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using Automaton.ViewModel.Dialogs.Interfaces;
@@ -9,6 +7,7 @@ using Automaton.ViewModel.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
 using Automaton.Model.Interfaces;
+using System.Reflection;
 
 namespace Automaton.ViewModel
 {
@@ -32,10 +31,25 @@ namespace Automaton.ViewModel
 
         public BootStrapper()
         {
+            // We need to force load the assemblies so the debugger doesn't get pissy.
+            foreach (var test in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                LoadReferencedAssembly(test);
+            }
+
             var builder = new ContainerBuilder();
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
 
             // Initialize the NXM router here
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IModel).IsAssignableFrom(t))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(ISingleton).IsAssignableFrom(t))
+                .SingleInstance()
+                .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IUtility).IsAssignableFrom(t))
@@ -56,21 +70,23 @@ namespace Automaton.ViewModel
                 .SingleInstance()
                 .AsImplementedInterfaces();
 
-            builder.RegisterAssemblyTypes(assembly)
-                .Where(t => typeof(IModel).IsAssignableFrom(t))
-                .AsImplementedInterfaces();
-
-            builder.RegisterAssemblyTypes(assembly)
-                .Where(t => typeof(ISingleton).IsAssignableFrom(t))
-                .SingleInstance()
-                .AsImplementedInterfaces();
-
             _rootScope = builder.Build();
         }
 
         private T Resolve<T>()
         {
             return _rootScope.Resolve<T>(new Parameter[0]);
+        }
+
+        private void LoadReferencedAssembly(Assembly assembly)
+        {
+            foreach (var name in assembly.GetReferencedAssemblies())
+            {
+                if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName == name.FullName))
+                {
+                    this.LoadReferencedAssembly(Assembly.Load(name));
+                }
+            }
         }
     }
 }
