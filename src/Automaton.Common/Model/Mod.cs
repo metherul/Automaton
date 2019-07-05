@@ -32,6 +32,7 @@ namespace Automaton.Common.Model
 
         [JsonProperty("pairings")]
         public List<FilePairing> FilePairings { get; set; }
+
     }
 
     public class FilePairing
@@ -41,5 +42,11 @@ namespace Automaton.Common.Model
 
         [JsonProperty("to")]
         public string To { get; set; }
+
+        // Used internally to track patch generation, doesn't exist after modpack creation
+        [JsonIgnore]
+        public bool is_patched { get; set; }
+        [JsonProperty("patch_id", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string patch_id { get; set; }
     }
 }

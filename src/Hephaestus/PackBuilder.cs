@@ -8,6 +8,7 @@ using System.Linq;
 using Hephaestus.Nexus;
 using System.IO.Compression;
 using Automaton.Common.Model;
+using SevenZipExtractor;
 
 namespace Hephaestus
 {
@@ -33,6 +34,82 @@ namespace Hephaestus
         public IList<Model.SourceArchive> SourceArchives { get; private set; }
 
         public readonly ISet<string> SupportedArchives = new HashSet<string>() { ".7z", ".7zip", ".rar", ".zip" };
+
+        public void CompilePatches()
+        {
+            // Create a folder for patches
+            string patch_folder = "./temp_patches";
+            Directory.CreateDirectory(patch_folder);
+
+            var sources = SourceArchives.GroupBy(d => d.SHA256).ToDictionary(d => d.Key);
+
+            var archives_with_patches = (from mod in CompiledMods
+                                         from plan in mod.InstallPlans
+                                         from pairing in plan.FilePairings
+                                         where pairing.is_patched == true
+                                         select (sources[plan.SourceArchive.SHA256].First(), pairing, mod)).GroupBy(x => x.Item1);
+
+            Log.Info("Generating patches from {0} archives", archives_with_patches.Count());
+
+
+
+            archives_with_patches.AsParallel()
+                                 .Select(x => GeneratePatchsForArchive(patch_folder, x.Key, x.Select(p => (p.pairing, p.mod))))
+                                 .ToList();
+                           
+
+        }
+
+        private Model.SourceArchive GeneratePatchsForArchive(string patch_folder, Model.SourceArchive archive, IEnumerable<(FilePairing pairing, Mod mod)> pairings)
+        {
+            var need_patches = pairings.Where(p => p.pairing.is_patched).ToList();
+
+
+            foreach (var pairing in need_patches)
+            {
+                pairing.pairing.patch_id = Guid.NewGuid().ToString();
+            }
+
+            var selected_files = need_patches.Select(n => n.pairing.From).ToHashSet();
+
+            Dictionary<string, MemoryStream> extracted = new Dictionary<string, MemoryStream>();
+
+            using (var file = new ArchiveFile(archive.FullPath))
+            {
+                file.Extract(e => {
+                    if (selected_files.Contains(e.FileName))
+                    {
+                        var stream = new MemoryStream();
+                        extracted.Add(e.FileName, stream);
+                        return stream;
+                    }
+                    return null;
+
+                });
+            }
+
+            foreach (var pairing in need_patches)
+            {
+                var ss = extracted[pairing.pairing.From];
+                var patched_file = Path.Combine(ModsFolder, pairing.mod.Name, pairing.pairing.To);
+                using (var origin = new MemoryStream(ss.ToArray())) 
+                using (var dest = File.OpenRead(patched_file))
+                using (var output = File.OpenWrite(Path.Combine(patch_folder, pairing.pairing.patch_id)))
+                {
+                    var ps = new PatchingStream(origin, dest, output, new FileInfo(patched_file).Length);
+                    ps.Patch();
+                }
+
+            }
+
+
+            return archive;
+        }
+
+        public void CleanupPatches()
+        {
+            Directory.Delete("./temp_patches", true);
+        }
 
         public PackBuilder() { }
 
@@ -187,42 +264,71 @@ namespace Hephaestus
                 if (ignore != null && ignore.Contains(Path.GetExtension(file))) continue;
 
                 var sha = Utils.FileSHA256(file);
+                var to_path = Utils.StripPrefix(full_path, file);
 
+                // Exact match
                 if (IndexedArchives.TryGetValue(sha, out var entries))
                 {
+                    // Find the archive with the same name as our primary_source
                     var pair = (from entry in entries
                                 where entry.archive == primary_source
                                 select entry).FirstOrDefault();
 
+                    // Or default to the first archive
                     if (pair.archive == null)
                     {
                         pair = entries.First();
                     }
 
-                    var install_plan = compiled_mod.InstallPlans.FirstOrDefault(v => v.SourceArchive.SHA256 == pair.archive.SHA256);
-                    if (install_plan == null)
-                    {
-                        install_plan = new InstallPlan();
-                        compiled_mod.InstallPlans.Add(install_plan);
-
-                        install_plan.SourceArchive = new Automaton.Common.Model.SourceArchive();
-                        install_plan.FilePairings = new List<FilePairing>();
-                        Utils.MemberwiseCopy(pair.archive, install_plan.SourceArchive);
-
-                    }
-                    install_plan.FilePairings.Add(new FilePairing()
-                    {
-                        From = pair.file.FileName,
-                        To = Utils.StripPrefix(full_path, file)
-                    });
+                    AddPairToMod(compiled_mod, to_path, pair.archive, pair.file);
+                    continue;
 
                 }
-                else
+
+
+                // Find a file in the primary source with the same name?
+                var primary_source_file = (from archive_file in primary_source.ArchiveEntries
+                                           where Path.GetFileName(archive_file.FileName) == Path.GetFileName(archive_file.FileName)
+                                           select archive_file).FirstOrDefault();
+
+                if (primary_source_file != null)
+                {
+                    Log.Info("Found name match for {0} in primary mod source, building patch.", file);
+
+                    var pairing = AddPairToMod(compiled_mod, to_path, primary_source, primary_source_file);
+                    pairing.is_patched = true;
+                    continue;
+                }
+
+                
+
                 {
                     Log.Warn("No match: {0}", file);
                 }
 
             }
+        }
+
+        private static FilePairing AddPairToMod(Mod compiled_mod, string to_path, Model.SourceArchive archive, ArchiveEntry file)
+        {
+            var install_plan = compiled_mod.InstallPlans.FirstOrDefault(v => v.SourceArchive.SHA256 == archive.SHA256);
+            if (install_plan == null)
+            {
+                install_plan = new InstallPlan();
+                compiled_mod.InstallPlans.Add(install_plan);
+
+                install_plan.SourceArchive = new Automaton.Common.Model.SourceArchive();
+                install_plan.FilePairings = new List<FilePairing>();
+                Utils.MemberwiseCopy(archive, install_plan.SourceArchive);
+
+            }
+            var pairing = new FilePairing()
+            {
+                From = file.FileName,
+                To = to_path
+            };
+            install_plan.FilePairings.Add(pairing);
+            return pairing;
         }
 
         public void CompileGameDirectory()
@@ -263,6 +369,11 @@ namespace Hephaestus
                     if (File.Exists(full_path))
                         zip.CreateEntryFromFile(full_path, file);
 
+                }
+
+                foreach (var file in Directory.EnumerateFiles("./temp_patches"))
+                {
+                    zip.CreateEntryFromFile(file, "patches/" + Path.GetFileName(file));
                 }
 
                 foreach (var file in Directory.EnumerateFiles(ProfileFolder, "*.meta"))

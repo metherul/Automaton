@@ -32,10 +32,12 @@ namespace Automaton.ViewModel
         {
             IsLoggingIn = true;
 
-            var nexusSso = _nexusSso.New();
-            nexusSso.GrabbedKeyEvent += NexusSso_GrabbedKeyEvent;
+            NexusSso_GrabbedKeyEvent("UDZNZWNoR3A3MkNyZXdNcExBc0JpdzVTbE5UenBWSVZKOElFWi8yeUNXRWREV3FWbjBOUW1JUGcrV3JlS0c4RS0tdE5CK2ZQZmFXNytNL2tYcXBnalNQQT09--53065a9dd5fd2880be1b882d3947b0c96de2864d");
 
-            await nexusSso.ConnectAndGrabKeyAsync();
+            //var nexusSso = _nexusSso.New();
+            //nexusSso.GrabbedKeyEvent += NexusSso_GrabbedKeyEvent;
+
+            //await nexusSso.ConnectAndGrabKeyAsync();
         }
 
         private void NexusSso_GrabbedKeyEvent(string key)
