@@ -30,9 +30,12 @@ namespace Automaton.Model
 
         public bool HasArchive;
 
-        public void Initialize(IComponentContext components)
+        public ExtendedArchive Initialize(IComponentContext components, Mod parentMod)
         {
             // Load in required modules
+            _parentMod = parentMod;
+
+            return this;
         }
 
         public void Install()

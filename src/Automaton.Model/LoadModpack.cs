@@ -2,6 +2,7 @@
 using Automaton.Common;
 using Automaton.Common.Model;
 using Automaton.Model.Interfaces;
+using Automaton.Model.Modpack;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,11 +11,15 @@ namespace Automaton.Model
 {
     public class LoadModpack : ILoadModpack
     {
+        private readonly IComponentContext _components;
+
         private readonly IArchiveHandle _archiveHandle;
         private readonly ILifetimeData _lifetimeData;
 
         public LoadModpack(IComponentContext components)
         {
+            _components = components;
+
             _archiveHandle = components.Resolve<IArchiveHandle>();
             _lifetimeData = components.Resolve<ILifetimeData>();
         }
@@ -71,6 +76,19 @@ namespace Automaton.Model
                 }).ToList();
 
                 _lifetimeData.ModpackContent = contentItems;
+            }
+
+            // We want to flip the mods objects so that they're archive-first
+            var archives = new List<ExtendedArchive>();
+
+            foreach (var mod in mods)
+            {
+                var archive = mod.InstallPlans
+                    .Select(x => ClassExtensions.ToDerived<SourceArchive, ExtendedArchive>(x.SourceArchive))
+                    .Select(x => x.Initialize(_components, mod))
+                    .ToList();
+
+                archives.AddRange(archive);
             }
         }
     }

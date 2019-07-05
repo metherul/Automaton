@@ -8,6 +8,8 @@ namespace Automaton.Model
     {
         private NexusClient _nexusClient;
 
+        private bool _isPremium;
+
         public void Init(string key)
         {
             _nexusClient = new NexusClient(key, "Automaton", "indev");
@@ -17,6 +19,8 @@ namespace Automaton.Model
         {
             var validateResult = await _nexusClient.Users.ValidateAsync();
             var test = _nexusClient.GetRateLimits();
+
+            _isPremium = validateResult.IsPremium;
 
             return validateResult.IsPremium;
         }

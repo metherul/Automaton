@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using Autofac;
 using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Controllers;
@@ -65,7 +62,6 @@ namespace Automaton.ViewModel
         private async void ValidateMods(string directoryPath = "")
         {
         }
-
 
         private void ScanDirectory()
         {

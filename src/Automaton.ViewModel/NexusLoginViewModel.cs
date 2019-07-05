@@ -41,7 +41,8 @@ namespace Automaton.ViewModel
         private void NexusSso_GrabbedKeyEvent(string key)
         {
             _nexusApi.Init(key);
-            _nexusApi.IsPremiumUser();
+
+            _viewController.IncrementCurrentViewIndex();
         }
 
         public void ContinueOffline()

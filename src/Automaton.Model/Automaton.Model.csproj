@@ -56,7 +56,7 @@
       <HintPath>..\packages\NamedPipeWrapper.1.5.0\lib\net40\NamedPipeWrapper.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Pathoschild.Http.Client, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Pathoschild.Http.FluentClient.3.3.0\lib\net45\Pathoschild.Http.Client.dll</HintPath>
@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveHandle.cs" />
+    <Compile Include="ClassExtensions.cs" />
     <Compile Include="ExtendedArchive.cs" />
     <Compile Include="FileDownload.cs" />
     <Compile Include="HandyUtils.cs" />
