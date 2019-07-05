@@ -8,27 +8,32 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Automaton.Common.Model;
+using System.ComponentModel;
 
 namespace Automaton.Model
 {
-    public class ExtendedArchive : SourceArchive
+    public class ExtendedArchive : SourceArchive, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private Mod _parentMod;
 
         private IArchiveHandle _archiveHandle;
         private ILifetimeData _lifetimeData;
         private IHandyUtils _handyUtils;
 
-        public string ArchivePath;
+        public string ArchivePath { get; set; }
 
-        public int DownloadPercentage;
-
-        public bool HasArchive;
+        public int DownloadPercentage { get; set; }
 
         public ExtendedArchive Initialize(IComponentContext components, Mod parentMod)
         {
             // Load in required modules
             _parentMod = parentMod;
+
+            _archiveHandle = components.Resolve<IArchiveHandle>();
+            _lifetimeData = components.Resolve<ILifetimeData>();
+            _handyUtils = components.Resolve<IHandyUtils>();
 
             return this;
         }
@@ -69,6 +74,7 @@ namespace Automaton.Model
             await Task.Run(Install);
         }
 
+
         public void Download()
         {
             // Initialize the webClient and set required headers
@@ -92,15 +98,16 @@ namespace Automaton.Model
             await Task.Run(Download);
         }
 
+
         public void TryLoad(string archivePath)
         {
-            HasArchive = false;
-
             // For performance we can check the file length first
             if (File.GetSize(archivePath) != Size)
             {
                 return;
             }
+
+            var test = MD5;
 
             // We want to try to load in the archive, but we want to check it against the metadata we have stored first
             if (_handyUtils.GetMd5FromFile(archivePath) != MD5)
@@ -110,7 +117,6 @@ namespace Automaton.Model
 
             // We're good. This isn't quick, but it's accurate. We can add on further logic here further down the line.
             ArchivePath = archivePath;
-            HasArchive = true;
         }
 
         public async Task TryLoadAsync(string archivePath)
@@ -118,9 +124,21 @@ namespace Automaton.Model
             await Task.Run(() => TryLoad(archivePath));
         }
 
+
         public void SearchInDir(string directoryPath)
         {
+            var dirContents = new Queue<string>(Directory.GetFiles(directoryPath, "*.*", System.IO.SearchOption.TopDirectoryOnly));
 
+            while (!File.Exists(ArchivePath) && dirContents.Any())
+            {
+                var file = dirContents.Dequeue();
+
+                TryLoad(file);
+            }
+        }
+        public async Task SearchInDirAsync(string directoryPath)
+        {
+            await Task.Run(() => SearchInDir(directoryPath));
         }
     }
 }

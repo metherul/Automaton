@@ -30,21 +30,28 @@
     </i:Interaction.Triggers>
 
     <materialDesign:DialogHost
-        DataContext="{Binding DialogController, Source={StaticResource ViewModelLocator}}"
-        Foreground="Transparent"
+        DataContext="{Binding DialogController, Source={StaticResource ViewModelLocator}}" OverridesDefaultStyle="True" Background="Transparent" 
         IsOpen="{Binding IsDialogOpen}">
+
         <materialDesign:DialogHost.DialogContent>
             <materialDesign:Transitioner materialDesign:TransitionAssist.DisableTransitions="True" SelectedIndex="{Binding CurrentIndex}">
-                <materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide >
                     <dialogs:GenericErrorDialog />
                 </materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide >
                     <dialogs:GenericLogDialog />
                 </materialDesign:TransitionerSlide>
+
+                <materialDesign:TransitionerSlide >
+                    <dialogs:GenericLoadingDialog />
+                </materialDesign:TransitionerSlide>
+                
             </materialDesign:Transitioner>
         </materialDesign:DialogHost.DialogContent>
 
-        <Grid Background="{DynamicResource BackgroundColor}" DataContext="{Binding MainWindow, Source={StaticResource ViewModelLocator}}">
+        <Grid Background="{DynamicResource BackgroundColor}" DataContext="{Binding MainWindow, Source={StaticResource ViewModelLocator}}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />

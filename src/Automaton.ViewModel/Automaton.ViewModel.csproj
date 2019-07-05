@@ -107,6 +107,7 @@
     <Compile Include="Controllers\ToastController.cs" />
     <Compile Include="Controllers\ViewIndex.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
+    <Compile Include="Dialogs\GenericLoadingDialog.cs" />
     <Compile Include="Dialogs\GenericLogDialog.cs" />
     <Compile Include="Dialogs\Interfaces\IGenericLogDialog.cs" />
     <Compile Include="Dialogs\Interfaces\IGenericErrorDialog.cs" />
@@ -156,6 +157,8 @@
     <Compile Include="Utilities\FileSystemBrowser.cs" />
     <Compile Include="Utilities\AsyncCommand.cs" />
     <Compile Include="Utilities\CommandUtilities.cs" />
+    <Compile Include="Utilities\GenericAsyncCommand.cs" />
+    <Compile Include="Utilities\Interfaces\IGenericAsyncCommand.cs" />
     <Compile Include="Utilities\Interfaces\IAsyncCommand.cs" />
     <Compile Include="Utilities\Interfaces\IErrorHandler.cs" />
     <Compile Include="Utilities\Interfaces\IFileSystemBrowser.cs" />

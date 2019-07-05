@@ -96,7 +96,7 @@
                 Grid.Row="1"
                 Margin="5,0,0,0"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{Binding ModsList, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ModsListToMissingConverter}}"
+                ItemsSource="{Binding ArchivesView, UpdateSourceTrigger=PropertyChanged}"
                 VirtualizingStackPanel.IsVirtualizing="True">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
@@ -139,7 +139,7 @@
                                     Content="{Binding Version}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding FileName}">
+                                    ToolTip="{Binding ArchiveName}">
                                     <Label.Resources>
                                         <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
                                             <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
@@ -155,10 +155,10 @@
                                     Background="{DynamicResource FontColor}" />
                                 <Label
                                     VerticalAlignment="Center"
-                                    Content="{Binding DisplayName}"
+                                    Content="{Binding Name}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding FileName}">
+                                    ToolTip="{Binding ArchiveName}">
                                     <Label.Resources>
                                         <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
                                             <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
@@ -180,7 +180,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ProgressBar
+            <!--<ProgressBar
                 Grid.Row="0"
                 Grid.RowSpan="2"
                 Width="50"
@@ -189,7 +189,7 @@
                 Foreground="{DynamicResource FontColor}"
                 IsIndeterminate="True"
                 Style="{StaticResource MaterialDesignCircularProgressBar}"
-                Visibility="{Binding IsInitialValidating, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Visibility="{Binding IsInitialValidating, Converter={StaticResource BoolToVisibilityConverter}}" />-->
         </Grid>
     </Grid>
 </UserControl>

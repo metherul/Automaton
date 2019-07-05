@@ -114,6 +114,9 @@
     <Compile Include="Dialogs\GenericErrorDialog.xaml.cs">
       <DependentUpon>GenericErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\GenericLoadingDialog.xaml.cs">
+      <DependentUpon>GenericLoadingDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GenericLogDialog.xaml.cs">
       <DependentUpon>GenericLogDialog.xaml</DependentUpon>
     </Compile>
@@ -144,6 +147,10 @@
     <Page Include="Dialogs\GenericErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GenericLoadingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\GenericLogDialog.xaml">
       <SubType>Designer</SubType>

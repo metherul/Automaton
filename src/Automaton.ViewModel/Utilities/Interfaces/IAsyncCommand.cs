@@ -8,4 +8,5 @@ namespace Automaton.ViewModel.Utilities.Interfaces
         Task ExecuteAsync();
         bool CanExecute();
     }
+
 }

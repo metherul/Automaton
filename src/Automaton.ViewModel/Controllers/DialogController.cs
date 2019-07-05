@@ -61,11 +61,18 @@ namespace Automaton.ViewModel.Controllers
 
             _lifetimeScope.Resolve<IGenericLogDialog>().DisplayParams(message);
         }
+
+        public void OpenLoadingDialog()
+        {
+            IsDialogOpen = true;
+            CurrentIndex = (int)DialogType.GenericLoadingDialog;
+        }
     }
 
     public enum DialogType
     {
         GenericErrorDialog,
-        GenericLogDialog
+        GenericLogDialog,
+        GenericLoadingDialog
     }
 }

@@ -7,6 +7,7 @@
 
         void CloseCurrentDialog();
         void OpenErrorDialog(bool isFatal, string header, string message);
+        void OpenLoadingDialog();
         void OpenLogDialog(string message);
     }
 }
