@@ -1,5 +1,4 @@
-﻿using Automaton.Model.Modpack;
-using Automaton.Common;
+﻿using Automaton.Common;
 using Hephaestus.Model;
 using System;
 using System.Collections.Generic;
@@ -8,18 +7,19 @@ using System.Text;
 using System.Linq;
 using Hephaestus.Nexus;
 using System.IO.Compression;
+using Automaton.Common.Model;
 
 namespace Hephaestus
 {
     public class PackBuilder
     {
-        public ModPackMasterDefinition ModPackMasterDefinition { get; private set; }
+        public MasterDefinition ModPackMasterDefinition { get; private set; }
         public Preferences Preferences { get; private set; }
         public NexusClient NexusClient { get; private set; }
         public dynamic MO2Ini { get; set; }
         public string DefaultGame { get; set; }
         public List<string> ModListData { get; set; }
-        public List<CompiledMod> CompiledMods { get; private set; }
+        public List<Mod> CompiledMods { get; private set; }
 
 
 
@@ -30,7 +30,7 @@ namespace Hephaestus
         }
 
         public IList<InstalledMod> InstalledMods { get; private set; }
-        public IList<SourceArchive> SourceArchives { get; private set; }
+        public IList<Model.SourceArchive> SourceArchives { get; private set; }
 
         public readonly ISet<string> SupportedArchives = new HashSet<string>() { ".7z", ".7zip", ".rar", ".zip" };
 
@@ -89,7 +89,7 @@ namespace Hephaestus
             }
         }
 
-        public Dictionary<string, IGrouping<string, (SourceArchive archive, ArchiveEntry file)>> IndexedArchives { get; private set; }
+        public Dictionary<string, IGrouping<string, (Model.SourceArchive archive, ArchiveEntry file)>> IndexedArchives { get; private set; }
 
         public void FindArchives()
         {
@@ -100,7 +100,7 @@ namespace Hephaestus
                              select file).ToList();
 
             var archives = from_mods.AsParallel()
-                                    .Select(file => SourceArchive.FromFileName(this, file))
+                                    .Select(file => Model.SourceArchive.FromFileName(this, file))
                                     .ToList();
             SourceArchives = archives;
 
@@ -111,7 +111,7 @@ namespace Hephaestus
 
         public void LoadPackDefinition(string path)
         {
-            ModPackMasterDefinition = Utils.LoadJson<ModPackMasterDefinition>(path);
+            ModPackMasterDefinition = Utils.LoadJson<MasterDefinition>(path);
         }
 
         public void LoadInstalledMods()
@@ -152,9 +152,9 @@ namespace Hephaestus
             
         }
 
-        private CompiledMod CompileMod(InstalledMod mod)
+        private Mod CompileMod(InstalledMod mod)
         {
-            var compiled_mod = new CompiledMod();
+            var compiled_mod = new Mod();
             compiled_mod.Name = mod.ModName;
             compiled_mod.InstallPlans = new List<InstallPlan>();
 
@@ -179,7 +179,7 @@ namespace Hephaestus
             return compiled_mod;
         }
 
-        private void ScanDirectory(string full_path, CompiledMod compiled_mod, SourceArchive primary_source, ISet<string> ignore)
+        private void ScanDirectory(string full_path, Mod compiled_mod, Model.SourceArchive primary_source, ISet<string> ignore)
         {
             foreach (var file in Directory.EnumerateFiles(full_path, "*", SearchOption.AllDirectories))
             {
@@ -205,7 +205,7 @@ namespace Hephaestus
                         install_plan = new InstallPlan();
                         compiled_mod.InstallPlans.Add(install_plan);
 
-                        install_plan.SourceArchive = new InstallSourceArchive();
+                        install_plan.SourceArchive = new Automaton.Common.Model.SourceArchive();
                         install_plan.FilePairings = new List<FilePairing>();
                         Utils.MemberwiseCopy(pair.archive, install_plan.SourceArchive);
 
@@ -228,7 +228,7 @@ namespace Hephaestus
         public void CompileGameDirectory()
         {
             if (!ModPackMasterDefinition.ScanGameDirectory) return;
-            var game_dir_mod = new CompiledMod();
+            var game_dir_mod = new Mod();
             CompiledMods.Add(game_dir_mod);
             game_dir_mod.ModType = ModType.GameDirectoryMod;
             ScanDirectory(MO2Ini.General.gamePath, game_dir_mod, null, new HashSet<string>() { ".bsa", ".psc", ".bak" });

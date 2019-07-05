@@ -8,9 +8,9 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Automaton.Utils;
 using System.Threading;
 using System.IO;
+using Automaton.Common;
 
 namespace Hephaestus.Nexus
 {
