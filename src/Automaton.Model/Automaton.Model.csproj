@@ -115,6 +115,7 @@
     <Compile Include="Interfaces\ILoadModpack.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IModel.cs" />
+    <Compile Include="Interfaces\INexusApi.cs" />
     <Compile Include="Interfaces\INexusApiHandle.cs" />
     <Compile Include="Interfaces\INexusSso.cs" />
     <Compile Include="Interfaces\IRegistryHandle.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="LoadModpack.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ModpackItem.cs" />
+    <Compile Include="NexusApi.cs" />
     <Compile Include="NexusApiHandle.cs" />
     <Compile Include="NexusSso.cs" />
     <Compile Include="Properties\Annotations.cs" />
