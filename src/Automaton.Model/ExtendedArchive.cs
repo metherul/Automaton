@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Automaton.Model.Interfaces;
-using Automaton.Model.Modpack;
 using Alphaleonis.Win32.Filesystem;
 using System.Linq;
 using SevenZipExtractor;

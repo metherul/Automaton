@@ -2,7 +2,6 @@
 using Automaton.Common;
 using Automaton.Common.Model;
 using Automaton.Model.Interfaces;
-using Automaton.Model.Modpack;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

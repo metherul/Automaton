@@ -30,8 +30,8 @@ namespace Automaton.Common
         public static T LoadJson<T>(StreamReader sr)
         {
             var test1 = sr.ReadToEnd();
-            sr.BaseStream.Seek(0, SeekOrigin.Begin);
-            var test = JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
+            //sr.BaseStream.Seek(0, SeekOrigin.Begin);
+            var test = JsonConvert.DeserializeObject<T>(test1);
 
             return test;
         }

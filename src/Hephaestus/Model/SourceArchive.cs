@@ -156,7 +156,7 @@ namespace Hephaestus.Model
                     return;
                 }
 
-                var matches = results.Where(result => result.FileDetails.FileName == ArchiveName)
+                var matches = results.Where(result => result.FileDetails.FileName == ArchiveName && result.FileDetails.CategoryId != 6)
                                         .ToList();
 
                 if (matches.Count > 1) {
