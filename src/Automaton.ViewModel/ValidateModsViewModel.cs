@@ -87,6 +87,10 @@ namespace Automaton.ViewModel
                 await archive.SearchInDirAsync(_lifetimeData.DownloadPath);
             }
 
+            var test = Archives.ToList().GroupBy(x => x.ArchiveName)
+                               .Where(x => x.Count() > 1)
+                               .Select(x => x.Key);
+
             _dialogController.CloseCurrentDialog();
         }
 

@@ -8,6 +8,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Automaton.Common.Model;
 using System.ComponentModel;
+using System;
+using Automaton.Model.HandyUtils;
+using Automaton.Common;
 
 namespace Automaton.Model
 {
@@ -19,7 +22,7 @@ namespace Automaton.Model
 
         private IArchiveHandle _archiveHandle;
         private ILifetimeData _lifetimeData;
-        private IHandyUtils _handyUtils;
+        private INexusApi _nexusApi;
 
         public string ArchivePath { get; set; }
 
@@ -32,7 +35,7 @@ namespace Automaton.Model
 
             _archiveHandle = components.Resolve<IArchiveHandle>();
             _lifetimeData = components.Resolve<ILifetimeData>();
-            _handyUtils = components.Resolve<IHandyUtils>();
+            _nexusApi = components.Resolve<INexusApi>();
 
             return this;
         }
@@ -73,30 +76,55 @@ namespace Automaton.Model
             await Task.Run(Install);
         }
 
-
-        public void Download()
+        public async Task DownloadAsync()
         {
+            // We need to grab the download URL for this given item
+            var downloadLink = await _nexusApi.GetArchiveDownloadUrl(this);
+
+            if (downloadLink == null)
+            {
+                return;
+            }
+
             // Initialize the webClient and set required headers
             var webClient = new WebClient();
+
+            webClient.Headers.Add("User-Agent", _lifetimeData.UserAgent);
+
+            var archivePath = Path.Combine(_lifetimeData.DownloadPath, ArchiveName);
+            var partPath = Path.Combine(_lifetimeData.DownloadPath, ArchiveName + ".part");
+
+            if (File.Exists(archivePath))
+            {
+                File.Delete(archivePath);
+            }
+
+            if (File.Exists(partPath))
+            {
+                File.Delete(partPath);
+            }
+
+            File.Create(archivePath).Close();
+
+            var archivePathLock = new FileLock(archivePath);
 
             webClient.DownloadProgressChanged += (sender, e) =>
             {
                 DownloadPercentage = e.ProgressPercentage;
             };
 
-            webClient.DownloadFileCompleted += (sender, e) =>
+            webClient.DownloadFileCompleted += async (sender, e) =>
             {
-                TryLoad(Path.Combine(_lifetimeData.DownloadPath, ArchiveName));
+                archivePathLock.Dispose();
+
+                File.Delete(archivePath);
+                File.Move(partPath, archivePath);
+
+                await TryLoadAsync(Path.Combine(_lifetimeData.DownloadPath, ArchiveName));
             };
 
-            webClient.DownloadFile("", Path.Combine(_lifetimeData.DownloadPath, ArchiveName));
+            webClient.DownloadFileAsync(new Uri(downloadLink), partPath);
         }
-
-        public async Task DownloadAsync()
-        {
-            await Task.Run(Download);
-        }
-
 
         public void TryLoad(string archivePath)
         {
@@ -109,7 +137,7 @@ namespace Automaton.Model
             var test = MD5;
 
             // We want to try to load in the archive, but we want to check it against the metadata we have stored first
-            if (_handyUtils.GetMd5FromFile(archivePath) != MD5)
+            if (Utils.FileMD5(archivePath) != MD5)
             {
                 return;
             }
@@ -123,7 +151,6 @@ namespace Automaton.Model
             await Task.Run(() => TryLoad(archivePath));
         }
 
-
         public void SearchInDir(string directoryPath)
         {
             var dirContents = new Queue<string>(Directory.GetFiles(directoryPath, "*.*", System.IO.SearchOption.TopDirectoryOnly));
@@ -135,6 +162,7 @@ namespace Automaton.Model
                 TryLoad(file);
             }
         }
+
         public async Task SearchInDirAsync(string directoryPath)
         {
             await Task.Run(() => SearchInDir(directoryPath));

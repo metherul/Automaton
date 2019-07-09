@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Automaton.Common.Model
 {
-    public class SourceArchive 
+    public class SourceArchive
     {
         [JsonProperty("archive_name")]
         public string ArchiveName { get; set; }

@@ -14,6 +14,7 @@ namespace Automaton.ViewModel
         private readonly IViewController _viewController;
         private readonly INexusSso _nexusSso;
         private readonly INexusApi _nexusApi;
+        private readonly IDialogController _dialogController;
 
         public AsyncCommand LoginToNexusCommand => new AsyncCommand(LoginToNexus);
         public RelayCommand ContinueOfflineCommand => new RelayCommand(ContinueOffline);
@@ -26,6 +27,7 @@ namespace Automaton.ViewModel
 
             _nexusSso = components.Resolve<INexusSso>();
             _nexusApi = components.Resolve<INexusApi>();
+            _dialogController = components.Resolve<IDialogController>();
         }
 
         public async Task LoginToNexus()
@@ -38,11 +40,15 @@ namespace Automaton.ViewModel
             await nexusSso.ConnectAndGrabKeyAsync();
         }
 
-        private void NexusSso_GrabbedKeyEvent(string key)
+        private async void NexusSso_GrabbedKeyEvent(string key)
         {
-            _nexusApi.Init(key);
+            _dialogController.OpenLoadingDialog();
+
+            await _nexusApi.Init(key);
 
             _viewController.IncrementCurrentViewIndex();
+
+            _dialogController.CloseCurrentDialog();
         }
 
         public void ContinueOffline()

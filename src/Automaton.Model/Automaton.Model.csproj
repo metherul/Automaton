@@ -111,7 +111,7 @@
     <Compile Include="ClassExtensions.cs" />
     <Compile Include="ExtendedArchive.cs" />
     <Compile Include="FileDownload.cs" />
-    <Compile Include="HandyUtils.cs" />
+    <Compile Include="HandyUtils\FileLock.cs" />
     <Compile Include="Interfaces\IArchiveHandle.cs" />
     <Compile Include="Interfaces\IFileDownload.cs" />
     <Compile Include="Interfaces\IHandyUtils.cs" />
@@ -129,7 +129,6 @@
     <Compile Include="Logger.cs" />
     <Compile Include="ModpackItem.cs" />
     <Compile Include="NexusApi.cs" />
-    <Compile Include="NexusApiHandle.cs" />
     <Compile Include="NexusSso.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

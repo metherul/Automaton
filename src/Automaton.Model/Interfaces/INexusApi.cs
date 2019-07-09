@@ -4,7 +4,8 @@ namespace Automaton.Model.Interfaces
 {
     public interface INexusApi : ISingleton
     {
-        void Init(string key);
+        Task<string> GetArchiveDownloadUrl(ExtendedArchive archive, string protocolParams = "");
+        Task Init(string key);
         Task<bool> IsPremiumUser();
     }
 }

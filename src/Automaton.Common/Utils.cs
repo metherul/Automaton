@@ -76,6 +76,18 @@ namespace Automaton.Common
             }
         }
 
+        public static string FileMD5(string filePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var fileStream = File.OpenRead(filePath))
+                {
+                    var hash = md5.ComputeHash(fileStream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+
         public static string ToHex(byte[] bytes)
         {
             StringBuilder result = new StringBuilder(bytes.Length * 2);

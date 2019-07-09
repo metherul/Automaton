@@ -8,6 +8,8 @@ namespace Automaton.Model
 {
     public class NexusSso : INexusSso
     {
+        private WebSocket _websocket;
+
         public delegate void GrabbedKey(string key);
         public event GrabbedKey GrabbedKeyEvent;
 
@@ -27,7 +29,7 @@ namespace Automaton.Model
         public void ConnectAndGrabKey()
         {
             var guid = Guid.NewGuid();
-            var websocket = new WebSocket("wss://sso.nexusmods.com")
+            _websocket = new WebSocket("wss://sso.nexusmods.com")
             {
                 SslConfiguration =
                 {
@@ -35,15 +37,15 @@ namespace Automaton.Model
                 }
             };
 
-            websocket.OnMessage += Websocket_OnMessage;
+            _websocket.OnMessage += _websocket_OnMessage;
 
-            websocket.Connect();
-            websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
+            _websocket.Connect();
+            _websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
 
             Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=Automaton");
         }
 
-        private void Websocket_OnMessage(object sender, MessageEventArgs e)
+        private void _websocket_OnMessage(object sender, MessageEventArgs e)
         {
             var key = e.Data;
 
@@ -51,6 +53,8 @@ namespace Automaton.Model
             {
                 return;
             }
+
+            _websocket.Close();
 
             GrabbedKeyEvent.Invoke(key);
         }

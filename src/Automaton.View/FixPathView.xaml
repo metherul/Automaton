@@ -61,8 +61,18 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignToolButton}" ClipToBounds="True" Command="{Binding SkipStepCommand}">
-            <TextBlock  FontFamily="{DynamicResource RobotoMono}" Foreground="{DynamicResource FontColor}" FontStyle="Italic">Skip</TextBlock>
+        <Button
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            ClipToBounds="True"
+            Command="{Binding SkipStepCommand}"
+            Style="{StaticResource MaterialDesignToolButton}">
+            <TextBlock
+                FontFamily="{DynamicResource RobotoMono}"
+                FontStyle="Italic"
+                Foreground="{DynamicResource FontColor}">
+                Skip
+            </TextBlock>
         </Button>
     </Grid>
 </UserControl>

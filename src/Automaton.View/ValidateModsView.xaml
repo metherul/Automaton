@@ -97,6 +97,7 @@
                 Margin="5,0,0,0"
                 HorizontalAlignment="Stretch"
                 ItemsSource="{Binding ArchivesView, UpdateSourceTrigger=PropertyChanged}"
+                VirtualizingPanel.VirtualizationMode="Recycling"
                 VirtualizingStackPanel.IsVirtualizing="True">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
@@ -198,10 +199,11 @@
 
                             <ProgressBar
                                 HorizontalAlignment="Stretch"
+                                materialDesign:TransitionAssist.DisableTransitions="True"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 Foreground="{DynamicResource FontColor}"
-                                Value="{Binding CurrentDownloadProgress, UpdateSourceTrigger=PropertyChanged}" />
+                                Value="{Binding DownloadPercentage, UpdateSourceTrigger=PropertyChanged}" />
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
