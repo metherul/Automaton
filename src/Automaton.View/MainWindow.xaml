@@ -22,15 +22,6 @@
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
 
-    <!--<i:Interaction.Triggers>
-    -->
-    <!--  Mouse drag functionality  -->
-    <!--
-        <i:EventTrigger EventName="MouseDown">
-            <i:InvokeCommandAction Command="{Binding MoveWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type view:MainWindowView}}}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>-->
-
     <materialDesign:DialogHost
         Background="Transparent"
         DataContext="{Binding DialogController, Source={StaticResource ViewModelLocator}}"
