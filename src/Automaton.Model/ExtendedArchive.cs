@@ -51,8 +51,10 @@ namespace Automaton.Model
 
         public void Install()
         {
-            var installationDirectory = Path.Combine(_lifetimeData.InstallPath, _parentMod.Name);
-            var filePairings = _parentMod.InstallPlans.SelectMany(x => x.FilePairings);
+            var installationDirectory = Path.Combine(_lifetimeData.InstallPath, "mods", _parentMod.Name);
+            //var filePairings = _parentMod.InstallPlans.SelectMany(x => x.FilePairings);
+
+            var plan = _parentMod.InstallPlans.Where(p => p.SourceArchive.SHA256 == SHA256).First();
 
             // Verify to ensure that the SourceArchive path exists
             if (!File.Exists(ArchivePath))
@@ -66,18 +68,54 @@ namespace Automaton.Model
                 Directory.CreateDirectory(installationDirectory);
             }
 
-            // Spool up new ArchiveHandle and filter each entry by their name
-            var archiveContents = _archiveHandle.New(ArchivePath).GetContents();
-            var installDictionary = new Dictionary<Entry, string>();
+            // Get a dictionary of all the files we need to copy indexed by their name in the archive
+            var extract_files = plan.FilePairings.GroupBy(p => p.From).ToDictionary(p => p.Key);
 
-            // Build the installation dictionary
-            foreach (var filePairing in filePairings)
+
+            // Let's pre-create all the directories in the mod folder so we don't have to check
+            // for missing folders during the install.
+            var directories = (from entry in extract_files
+                               from to in entry.Value
+                               let full_path = Path.Combine(installationDirectory, to.To)
+                               select Path.GetDirectoryName(full_path)).Distinct();
+
+            foreach (var dir in directories)
+                Directory.CreateDirectory(dir);
+
+
+            using (var file = new ArchiveFile(ArchivePath))
             {
-                installDictionary.Add(archiveContents
-                    .First(x => x.FileName == filePairing.From), Path.Combine(installationDirectory, filePairing.To));
+                file.Extract(entry => {
+                    if (extract_files.ContainsKey(entry.FileName))
+                    {
+                        // We may need to copy the same file to multiple locations so extract to the first one, 
+                        // we'll copy this file around later.
+                        var to = extract_files[entry.FileName].First();
+                        var path = Path.Combine(installationDirectory, to.To);
+                        return File.OpenWrite(Path.Combine(installationDirectory, path));
+                    }
+
+                    return null;
+                });
             }
 
-            // Extract each into their target location 
+            // Now that we've installed all the files, copy around any files that exist in more than one location
+            // in the mod.
+            foreach (var copy_group in extract_files.Select(e => e.Value).Where(es => es.Count() > 1))
+            {
+                var from = copy_group.First();
+                foreach (var to in copy_group.Skip(1))
+                {
+                    File.Copy(Path.Combine(installationDirectory, from.To),
+                              Path.Combine(installationDirectory, to.To));
+                }
+            }
+
+            // <INSERT BINARY PATCHING CODE HERE>
+
+            // And we're done!
+
+
         }
 
         public async Task InstallAsync()
@@ -191,7 +229,7 @@ namespace Automaton.Model
             }
 
             // We want to try to load in the archive, but we want to check it against the metadata we have stored first
-            if (Utils.FileMD5(archivePath) != MD5)
+            if (Utils.FileSHA256(archivePath) != SHA256)
             {
                 return;
             }

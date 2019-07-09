@@ -76,6 +76,13 @@ namespace Automaton.ViewModel
 
                         Application.Current.Dispatcher.BeginInvoke(new Action(() => ArchivesView.Refresh()));
                     }
+                    if (MissingArchivesCount == 0)
+                    {
+                        foreach (var archive in _lifetimeData.Archives) {
+                            archive.Install();
+                        }
+                        break;
+                    }
 
                     Thread.Sleep(500);
                 }
