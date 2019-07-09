@@ -76,6 +76,7 @@ namespace Automaton.ViewModel
 
                         Application.Current.Dispatcher.BeginInvoke(new Action(() => ArchivesView.Refresh()));
                     }
+                    // TODO: have metherul wire this up proper
                     if (MissingArchivesCount == 0)
                     {
                         foreach (var archive in _lifetimeData.Archives) {

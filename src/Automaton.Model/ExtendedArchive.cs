@@ -36,7 +36,9 @@ namespace Automaton.Model
         public bool IsDownloading { get; set; }
         public bool IsValidationComplete { get; set; }
 
-        public ExtendedArchive Initialize(IComponentContext components, Mod parentMod)
+        public Dictionary<string, SevenZipExtractor.Entry> Patches { get; private set; }
+
+        public ExtendedArchive Initialize(IComponentContext components, Mod parentMod, Dictionary<string, SevenZipExtractor.Entry> patches)
         {
             // Load in required modules
             _parentMod = parentMod;
@@ -45,6 +47,7 @@ namespace Automaton.Model
             _lifetimeData = components.Resolve<ILifetimeData>();
             _nexusApi = components.Resolve<INexusApi>();
             _dialogRedirector = components.Resolve<IDialogRedirector>();
+            Patches = patches;
 
             return this;
         }
@@ -111,7 +114,32 @@ namespace Automaton.Model
                 }
             }
 
-            // <INSERT BINARY PATCHING CODE HERE>
+            foreach (var to_patch in plan.FilePairings.Where(p => p.patch_id != null))
+            {
+                using (var patch_stream = new System.IO.MemoryStream())
+                {
+                    // Read in the patch data
+                    Patches[to_patch.patch_id].Extract(patch_stream);
+                    patch_stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+                    System.IO.MemoryStream old_data = new System.IO.MemoryStream();
+                    var to_file = Path.Combine(installationDirectory, to_patch.To);
+                    // Read in the unpatched file
+                    using (var unpatched = File.OpenRead(to_file))
+                    {
+                        unpatched.CopyTo(old_data);
+                        old_data.Seek(0, System.IO.SeekOrigin.Begin);
+                    }
+
+                    // Patch it
+                    using (var out_stream = File.OpenWrite(to_file))
+                    {
+                        var ps = new PatchingStream(old_data, patch_stream, out_stream, patch_stream.Length);
+                        ps.Patch();
+                    }
+                }
+
+            }
 
             // And we're done!
 

@@ -85,11 +85,16 @@ namespace Automaton.Model
             // We want to flip the mods objects so that they're archive-first
             var archives = new List<ExtendedArchive>();
 
+            var patches = archiveHandle.GetContents()
+                                       .Where(x => x.FileName.StartsWith("patches\\"))
+                                       .ToDictionary(x => Path.GetFileName(x.FileName));
+
+
             foreach (var mod in mods)
             {
                 var archive = mod.InstallPlans
                     .Select(x => ClassExtensions.ToDerived<SourceArchive, ExtendedArchive>(x.SourceArchive)) // Convert to Extended
-                    .Select(x => x.Initialize(_components, mod)) // Initialize each
+                    .Select(x => x.Initialize(_components, mod, patches)) // Initialize each
                     .ToList();
 
                 archives.AddRange(archive);
