@@ -12,6 +12,8 @@ using System;
 using Automaton.Model.HandyUtils;
 using Automaton.Common;
 using Automaton.Model.HandyUtils.Interfaces;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Automaton.Model
 {
@@ -27,8 +29,10 @@ namespace Automaton.Model
         private IDialogRedirector _dialogRedirector;
 
         public string ArchivePath { get; set; }
-
+        public double MbPerSecond { get; set; }
         public int DownloadPercentage { get; set; }
+        public bool IsDownloading { get; set; }
+        public bool IsValidationComplete { get; set; }
 
         public ExtendedArchive Initialize(IComponentContext components, Mod parentMod)
         {
@@ -81,11 +85,14 @@ namespace Automaton.Model
 
         public async Task DownloadAsync()
         {
+            IsDownloading = true;
+
             // We need to grab the download URL for this given item
             var downloadLink = await _nexusApi.GetArchiveDownloadUrl(this);
 
             if (downloadLink == null)
             {
+                IsDownloading = false;
                 _dialogRedirector.RouteLog($"Failed to get Nexus download link for {ArchiveName}. This file must be downloaded manually. If this issue persists, please contact the modpack developer.");
 
                 return;
@@ -99,36 +106,62 @@ namespace Automaton.Model
             var archivePath = Path.Combine(_lifetimeData.DownloadPath, ArchiveName);
             var partPath = Path.Combine(_lifetimeData.DownloadPath, ArchiveName + ".part");
 
-            if (File.Exists(archivePath))
-            {
-                File.Delete(archivePath);
-            }
-
             if (File.Exists(partPath))
             {
+                IsValidationComplete = true;
+                IsDownloading = false;
+
+                ArchivePath = archivePath;
+
+                return; // A hack
+
                 File.Delete(partPath);
             }
 
-            File.Create(archivePath).Close();
+            _lifetimeData.CurrentDownloads++;
 
-            var archivePathLock = new FileLock(archivePath);
+            var lastBytesRecieved = (long)0;
+            var dateTime = DateTime.Now;
 
-            webClient.DownloadProgressChanged += (sender, e) =>
+            webClient.DownloadProgressChanged += async (sender, e) =>
             {
-                DownloadPercentage = e.ProgressPercentage;
+                var timeSpan = DateTime.Now - dateTime;
+                lastBytesRecieved = e.BytesReceived - lastBytesRecieved;
+
+                var bytesPerSecond = lastBytesRecieved / (double)timeSpan.TotalSeconds;
+
+                MbPerSecond = Math.Round((double)bytesPerSecond / (double)1024 / (double)1024, 2);
+                DownloadPercentage = (int)(1000 * ((double)e.BytesReceived / (double)e.TotalBytesToReceive));
             };
 
             webClient.DownloadFileCompleted += async (sender, e) =>
             {
-                archivePathLock.Dispose();
+                _lifetimeData.CurrentDownloads--;
 
-                File.Delete(archivePath);
+                IsDownloading = false;
+
+                if (File.Exists(archivePath))
+                {
+                    File.Delete(archivePath);
+                }
+
                 File.Move(partPath, archivePath);
 
                 await TryLoadAsync(Path.Combine(_lifetimeData.DownloadPath, ArchiveName));
+
+                if (File.Exists(ArchivePath))
+                {
+                    webClient.Dispose();
+                }
             };
 
             webClient.DownloadFileAsync(new Uri(downloadLink), partPath);
+        }
+
+        public void DownloadThreaded()
+        {
+            var thread = new Thread(() => DownloadAsync());
+            thread.Start();
         }
 
         public void TryLoad(string archivePath)
@@ -139,8 +172,6 @@ namespace Automaton.Model
                 return;
             }
 
-            var test = MD5;
-
             // We want to try to load in the archive, but we want to check it against the metadata we have stored first
             if (Utils.FileMD5(archivePath) != MD5)
             {
@@ -149,6 +180,8 @@ namespace Automaton.Model
 
             // We're good. This isn't quick, but it's accurate. We can add on further logic here further down the line.
             ArchivePath = archivePath;
+
+            IsValidationComplete = true;
         }
 
         public async Task TryLoadAsync(string archivePath)

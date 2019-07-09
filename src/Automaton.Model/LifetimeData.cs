@@ -17,6 +17,7 @@ namespace Automaton.Model
         public string InstallPath { get; set; }
         public string DownloadPath { get; set; }
         public string ApiKey { get; set; }
+        public int CurrentDownloads { get; set; }
 
         public LifetimeData()
         {

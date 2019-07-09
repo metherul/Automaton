@@ -11,5 +11,6 @@
         
         System.Collections.Generic.List<ModpackItem> ModpackContent { get; set; }
         System.Collections.Generic.List<ExtendedArchive> Archives { get; set; }
+        int CurrentDownloads { get; set; }
     }
 }

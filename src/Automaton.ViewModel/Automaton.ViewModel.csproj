@@ -109,6 +109,7 @@
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Controllers\ToastController.cs" />
     <Compile Include="Controllers\ViewIndex.cs" />
+    <Compile Include="Converters\BoolToCollapsedVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
     <Compile Include="Dialogs\GenericLoadingDialog.cs" />
     <Compile Include="Dialogs\GenericLogDialog.cs" />

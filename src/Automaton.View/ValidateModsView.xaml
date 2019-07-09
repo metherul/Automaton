@@ -106,7 +106,8 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <VirtualizingStackPanel Width="{Binding RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}, Path=ActualWidth}">
+                        <VirtualizingStackPanel Width="{Binding RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}, Path=ActualWidth}" Visibility="{Binding IsValidationComplete, Converter={StaticResource BoolToCollapsedVisibilityConverter}, ConverterParameter=Inverse}">
+
                             <VirtualizingStackPanel Orientation="Horizontal">
                                 <Button
                                     VerticalAlignment="Center"
@@ -132,13 +133,16 @@
                                 <Image
                                     Width="15"
                                     Height="15"
-                                    Margin="3,0,4,0"
+                                    Margin="5,0,5,0"
                                     VerticalAlignment="Center"
-                                    RenderOptions.BitmapScalingMode="Fant">
+                                    RenderOptions.BitmapScalingMode="Fant"
+                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}, ConverterParameter=Inverse}">
                                     <Image.Style>
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="{StaticResource NexusLogo}" />
                                             <Setter Property="ToolTip" Value="This is not a mod sourced from Nexus Mods. You will have to find this file manually." />
+
+                                            <Setter Property="Visibility" Value="Visible" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Repository}" Value="Nexus">
                                                     <Setter Property="Source" Value="{StaticResource NexusLogoColor}" />
@@ -156,15 +160,57 @@
                                     </Image.Resources>
                                 </Image>
 
+                                <!--<materialDesign:PackIcon
+                                    Width="18"
+                                    Height="18"
+                                    Margin="5,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource FontColor}"
+                                    Kind="ProgressDownload"
+                                    ToolTip="{Binding MbPerSecond}"
+                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                                    <materialDesign:PackIcon.Resources>
+                                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
+                                            <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
+                                            <Setter Property="Background" Value="White" />
+                                            <Setter Property="Foreground" Value="Black" />
+                                        </Style>
+                                    </materialDesign:PackIcon.Resources>
+                                </materialDesign:PackIcon>-->
+
+                                <Label
+                                    Margin="5,0,-5,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Content="{Binding MbPerSecond}"
+                                    FontFamily="{StaticResource RobotoMono}"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource FontColor}"
+                                    ToolTip="{Binding MbPerSecond}"
+                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" />
+
+                                <Label
+                                    Margin="0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Content="MB/s"
+                                    FontFamily="{StaticResource RobotoMono}"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource FontColor}"
+                                    ToolTip="{Binding MbPerSecond}"
+                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" />
+
                                 <Grid
                                     Width="1.5"
                                     Height="Auto"
                                     Margin="3,10"
                                     Background="{DynamicResource FontColor}" />
+
                                 <Label
                                     VerticalAlignment="Center"
                                     Content="{Binding Version}"
                                     FontFamily="{StaticResource RobotoMono}"
+                                    FontSize="13"
                                     Foreground="{DynamicResource FontColor}"
                                     ToolTip="{Binding ArchiveName}">
                                     <Label.Resources>
@@ -175,6 +221,7 @@
                                         </Style>
                                     </Label.Resources>
                                 </Label>
+
                                 <Grid
                                     Width="1.5"
                                     Height="Auto"
@@ -184,6 +231,7 @@
                                     VerticalAlignment="Center"
                                     Content="{Binding Name}"
                                     FontFamily="{StaticResource RobotoMono}"
+                                    FontSize="13"
                                     Foreground="{DynamicResource FontColor}"
                                     ToolTip="{Binding ArchiveName}">
                                     <Label.Resources>
@@ -202,22 +250,12 @@
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 Foreground="{DynamicResource FontColor}"
+                                Maximum="1000"
                                 Value="{Binding DownloadPercentage, UpdateSourceTrigger=PropertyChanged}" />
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
-            <!--<ProgressBar
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Width="50"
-                Height="Auto"
-                VerticalAlignment="Center"
-                Foreground="{DynamicResource FontColor}"
-                IsIndeterminate="True"
-                Style="{StaticResource MaterialDesignCircularProgressBar}"
-                Visibility="{Binding IsInitialValidating, Converter={StaticResource BoolToVisibilityConverter}}" />-->
         </Grid>
     </Grid>
 </UserControl>

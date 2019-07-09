@@ -42,6 +42,7 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
             <converters:ModsListToMissingConverter x:Key="ModsListToMissingConverter" />
+            <converters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
 
             <vm:BootStrapper x:Key="ViewModelLocator" d:IsDataSource="True" />
         </ResourceDictionary>

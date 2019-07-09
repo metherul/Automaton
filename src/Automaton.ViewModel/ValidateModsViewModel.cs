@@ -60,7 +60,6 @@ namespace Automaton.ViewModel
             Archives = new ObservableCollection<ExtendedArchive>(_lifetimeData.Archives);
 
             ArchivesView = CollectionViewSource.GetDefaultView(Archives);
-            ArchivesView.Filter = ArchivesViewFilter;
 
             var controllerThread = new Thread(() =>
             {
@@ -80,22 +79,32 @@ namespace Automaton.ViewModel
                     Thread.Sleep(100);
                 }
             });
-            controllerThread.Start();
+            //controllerThread.Start();
 
             foreach (var archive in Archives)
             {
                 await archive.SearchInDirAsync(_lifetimeData.DownloadPath);
             }
 
-            var test = Archives.ToList().GroupBy(x => x.ArchiveName)
-                               .Where(x => x.Count() > 1)
-                               .Select(x => x.Key);
-
             _dialogController.CloseCurrentDialog();
         }
 
         private async Task ScanDirectory()
         {
+            foreach (var thing in Archives)
+            {
+                while (_lifetimeData.CurrentDownloads >= 5)
+                {
+                    await Task.Delay(500);
+                }
+
+                thing.DownloadThreaded();
+
+                await Task.Delay(500);
+            }
+
+            return;
+
             var directoryPath = await _fileSystemBrowser.OpenDirectoryBrowserAsync("Select a folder to scan.");
 
             if (!string.IsNullOrEmpty(directoryPath))
