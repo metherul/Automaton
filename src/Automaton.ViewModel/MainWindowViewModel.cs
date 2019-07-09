@@ -33,8 +33,6 @@ namespace Automaton.ViewModel
             CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
             MinimizeWindowCommand = new RelayCommand<Window>(MinimizeWindow);
             MaximizeWindowCommand = new RelayCommand<Window>(MaximizeWindow);
-
-            MoveWindowCommand = new RelayCommand<Window>(MoveWindow);
         }
 
         private void ViewIndexUpdate(object sender, int currentIndex)
@@ -64,19 +62,6 @@ namespace Automaton.ViewModel
             else
             {
                 window.WindowState = WindowState.Normal;
-            }
-        }
-
-        private static void MoveWindow(Window window)
-        {
-            try
-            {
-                window.DragMove();
-            }
-
-            catch
-            {
-                // ignored
             }
         }
 

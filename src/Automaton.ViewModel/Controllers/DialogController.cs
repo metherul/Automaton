@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
-using System.Runtime.ExceptionServices;
 using Autofac;
-using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Dialogs.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.Model.HandyUtils.Interfaces;
@@ -33,26 +31,6 @@ namespace Automaton.ViewModel.Controllers
         public void CloseCurrentDialog()
         {
             IsDialogOpen = false;
-        }
-
-        private void Logger_CapturedError(object sender, FirstChanceExceptionEventArgs e)
-        {
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                return;
-            }
-
-            if (e.Exception.Message.Contains("materialDesign")) // Annoying XAML binding error. Can't fix.
-            {
-                return;
-            }
-
-            OpenErrorDialog(true, "Error", e.Exception.Message);
-        }
-
-        private void Logger_CapturedLog(object sender, string e)
-        {
-            OpenLogDialog(e);
         }
 
         public void OpenErrorDialog(bool isFatal, string header, string message)

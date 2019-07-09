@@ -22,12 +22,14 @@
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
 
-    <i:Interaction.Triggers>
-        <!--  Mouse drag functionality  -->
+    <!--<i:Interaction.Triggers>
+    -->
+    <!--  Mouse drag functionality  -->
+    <!--
         <i:EventTrigger EventName="MouseDown">
             <i:InvokeCommandAction Command="{Binding MoveWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type view:MainWindowView}}}" />
         </i:EventTrigger>
-    </i:Interaction.Triggers>
+    </i:Interaction.Triggers>-->
 
     <materialDesign:DialogHost
         Background="Transparent"
@@ -53,7 +55,10 @@
             </materialDesign:Transitioner>
         </materialDesign:DialogHost.DialogContent>
 
-        <Grid Background="{DynamicResource BackgroundColor}" DataContext="{Binding MainWindow, Source={StaticResource ViewModelLocator}}">
+        <Grid
+            Background="{DynamicResource BackgroundColor}"
+            DataContext="{Binding MainWindow, Source={StaticResource ViewModelLocator}}"
+            MouseLeftButtonDown="Grid_MouseLeftButtonDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -161,7 +166,7 @@
                             FontSize="12"
                             FontWeight="Normal"
                             Foreground="{DynamicResource FontColor}">
-                            &gt;__ Metherul
+                            &gt;__ The Automaton Team
                         </Label>
                     </Button>
 
@@ -182,7 +187,7 @@
                                 FontSize="12"
                                 FontWeight="Normal"
                                 Foreground="{DynamicResource FontColor}">
-                                Support Automaton
+                                Patreon
                             </Label>
 
                             <Image
