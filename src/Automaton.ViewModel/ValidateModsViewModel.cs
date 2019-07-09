@@ -31,6 +31,7 @@ namespace Automaton.ViewModel
 
         public AsyncCommand ScanDirectoryCommand => new AsyncCommand(ScanDirectory);
         public GenericAsyncCommand<ExtendedArchive> FindAndValidateModCommand => new GenericAsyncCommand<ExtendedArchive>(FindAndValidateMod);
+        public GenericAsyncCommand<ExtendedArchive> CancelDownloadCommand => new GenericAsyncCommand<ExtendedArchive>(CancelDownload);
         public RelayCommand<ExtendedArchive> OpenNexusLinkCommand => new RelayCommand<ExtendedArchive>(OpenNexusLink);
 
         public ObservableCollection<ExtendedArchive> Archives { get; set; }
@@ -63,11 +64,11 @@ namespace Automaton.ViewModel
 
             var controllerThread = new Thread(() =>
             {
-                var startingMissingModsCount = Archives.ToList().Count(x => string.IsNullOrEmpty(x.ArchivePath));
+                var startingMissingModsCount = Archives.ToList().Count(x => !x.IsValidationComplete);
 
                 while (true)
                 {
-                    MissingArchivesCount = Archives.ToList().Count(x => string.IsNullOrEmpty(x.ArchivePath));
+                    MissingArchivesCount = Archives.ToList().Count(x => !x.IsValidationComplete);
 
                     if (MissingArchivesCount != startingMissingModsCount)
                     {
@@ -76,10 +77,10 @@ namespace Automaton.ViewModel
                         Application.Current.Dispatcher.BeginInvoke(new Action(() => ArchivesView.Refresh()));
                     }
 
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                 }
             });
-            //controllerThread.Start();
+            controllerThread.Start();
 
             foreach (var archive in Archives)
             {
@@ -100,7 +101,7 @@ namespace Automaton.ViewModel
 
                 thing.DownloadThreaded();
 
-                await Task.Delay(500);
+                await Task.Delay(250);
             }
 
             return;
@@ -155,11 +156,16 @@ namespace Automaton.ViewModel
             _dialogController.CloseCurrentDialog();
         }
 
+        private async Task CancelDownload(ExtendedArchive archive)
+        {
+            archive.CancelDownload();
+        }
+
         private bool ArchivesViewFilter(object item)
         {
             var archive = item as ExtendedArchive;
 
-            return string.IsNullOrEmpty(archive.ArchivePath);
+            return !archive.IsValidationComplete;
         }
     }
 }

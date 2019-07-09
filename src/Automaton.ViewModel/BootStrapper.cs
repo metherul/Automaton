@@ -31,6 +31,8 @@ namespace Automaton.ViewModel
 
         public BootStrapper()
         {
+            
+
             // We need to force load the assemblies so the debugger doesn't get pissy.
             foreach (var test in AppDomain.CurrentDomain.GetAssemblies())
             {

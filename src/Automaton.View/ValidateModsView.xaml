@@ -109,96 +109,89 @@
                         <VirtualizingStackPanel Width="{Binding RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}, Path=ActualWidth}" Visibility="{Binding IsValidationComplete, Converter={StaticResource BoolToCollapsedVisibilityConverter}, ConverterParameter=Inverse}">
 
                             <VirtualizingStackPanel Orientation="Horizontal">
-                                <Button
-                                    VerticalAlignment="Center"
-                                    Command="{Binding FindAndValidateModCommand}"
-                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
-                                    DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
-                                    IsEnabled="{Binding IsDownloading, Converter={StaticResource BoolToInverseConverter}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}">
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}, ConverterParameter=Inverse}">
+                                    <Button
+                                        VerticalAlignment="Center"
+                                        Command="{Binding FindAndValidateModCommand}"
+                                        CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
+                                        DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
+                                        Style="{DynamicResource MaterialDesignToolButton}">
 
-                                    <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
-                                </Button>
-                                <Button
-                                    VerticalAlignment="Center"
-                                    Command="{Binding OpenNexusLinkCommand}"
-                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
-                                    DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
-                                    IsEnabled="{Binding IsDownloading, Converter={StaticResource BoolToInverseConverter}}"
-                                    Style="{DynamicResource MaterialDesignToolButton}">
+                                        <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="FileFind" />
+                                    </Button>
+                                    <Button
+                                        VerticalAlignment="Center"
+                                        Command="{Binding OpenNexusLinkCommand}"
+                                        CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
+                                        DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
+                                        Style="{DynamicResource MaterialDesignToolButton}">
 
-                                    <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
-                                </Button>
+                                        <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="OpenInNew" />
+                                    </Button>
 
-                                <Image
-                                    Width="15"
-                                    Height="15"
-                                    Margin="5,0,5,0"
-                                    VerticalAlignment="Center"
-                                    RenderOptions.BitmapScalingMode="Fant"
-                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}, ConverterParameter=Inverse}">
-                                    <Image.Style>
-                                        <Style TargetType="Image">
-                                            <Setter Property="Source" Value="{StaticResource NexusLogo}" />
-                                            <Setter Property="ToolTip" Value="This is not a mod sourced from Nexus Mods. You will have to find this file manually." />
+                                    <Image
+                                        Width="15"
+                                        Height="15"
+                                        Margin="5,0,5,0"
+                                        VerticalAlignment="Center"
+                                        RenderOptions.BitmapScalingMode="Fant">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Source" Value="{StaticResource NexusLogo}" />
+                                                <Setter Property="ToolTip" Value="This is not a mod sourced from Nexus Mods. You will have to find this file manually." />
 
-                                            <Setter Property="Visibility" Value="Visible" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Repository}" Value="Nexus">
-                                                    <Setter Property="Source" Value="{StaticResource NexusLogoColor}" />
-                                                    <Setter Property="ToolTip" Value="This is a mod sourced from Nexus Mods." />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                    <Image.Resources>
-                                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
-                                            <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
-                                            <Setter Property="Background" Value="White" />
-                                            <Setter Property="Foreground" Value="Black" />
-                                        </Style>
-                                    </Image.Resources>
-                                </Image>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Repository}" Value="Nexus">
+                                                        <Setter Property="Source" Value="{StaticResource NexusLogoColor}" />
+                                                        <Setter Property="ToolTip" Value="This is a mod sourced from Nexus Mods." />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                        <Image.Resources>
+                                            <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
+                                                <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
+                                                <Setter Property="Background" Value="White" />
+                                                <Setter Property="Foreground" Value="Black" />
+                                            </Style>
+                                        </Image.Resources>
+                                    </Image>
+                                </StackPanel>
 
-                                <!--<materialDesign:PackIcon
-                                    Width="18"
-                                    Height="18"
-                                    Margin="5,0"
-                                    VerticalAlignment="Center"
-                                    Foreground="{DynamicResource FontColor}"
-                                    Kind="ProgressDownload"
-                                    ToolTip="{Binding MbPerSecond}"
-                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
-                                    <materialDesign:PackIcon.Resources>
-                                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
-                                            <Setter Property="FontFamily" Value="{StaticResource RobotoMono}" />
-                                            <Setter Property="Background" Value="White" />
-                                            <Setter Property="Foreground" Value="Black" />
-                                        </Style>
-                                    </materialDesign:PackIcon.Resources>
-                                </materialDesign:PackIcon>-->
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                                    <Button
+                                        VerticalAlignment="Center"
+                                        Command="{Binding CancelDownloadCommand}"
+                                        CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=VirtualizingStackPanel, Mode=FindAncestor}}"
+                                        DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"
+                                        Style="{DynamicResource MaterialDesignToolButton}">
 
-                                <Label
-                                    Margin="5,0,-5,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Content="{Binding MbPerSecond}"
-                                    FontFamily="{StaticResource RobotoMono}"
-                                    FontSize="14"
-                                    Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding MbPerSecond}"
-                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" />
+                                        <materialDesign:PackIcon Foreground="{DynamicResource FontColor}" Kind="Close" />
+                                    </Button>
 
-                                <Label
-                                    Margin="0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Content="MB/s"
-                                    FontFamily="{StaticResource RobotoMono}"
-                                    FontSize="14"
-                                    Foreground="{DynamicResource FontColor}"
-                                    ToolTip="{Binding MbPerSecond}"
-                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" />
+                                    <Label
+                                        Margin="5,0,-5,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="{Binding MbPerSecond}"
+                                        FontFamily="{StaticResource RobotoMono}"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource FontColor}"
+                                        ToolTip="{Binding MbPerSecond}"
+                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" />
+
+                                    <Label
+                                        Margin="0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="MB/s"
+                                        FontFamily="{StaticResource RobotoMono}"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource FontColor}"
+                                        ToolTip="{Binding MbPerSecond}"
+                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" />
+                                </StackPanel>
 
                                 <Grid
                                     Width="1.5"

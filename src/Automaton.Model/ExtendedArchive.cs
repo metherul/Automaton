@@ -23,6 +23,8 @@ namespace Automaton.Model
 
         private Mod _parentMod;
 
+        private WebClient _webClient;
+
         private IArchiveHandle _archiveHandle;
         private ILifetimeData _lifetimeData;
         private INexusApi _nexusApi;
@@ -86,6 +88,7 @@ namespace Automaton.Model
         public async Task DownloadAsync()
         {
             IsDownloading = true;
+            _lifetimeData.CurrentDownloads++;
 
             // We need to grab the download URL for this given item
             var downloadLink = await _nexusApi.GetArchiveDownloadUrl(this);
@@ -93,15 +96,15 @@ namespace Automaton.Model
             if (downloadLink == null)
             {
                 IsDownloading = false;
+                _lifetimeData.CurrentDownloads--;
                 _dialogRedirector.RouteLog($"Failed to get Nexus download link for {ArchiveName}. This file must be downloaded manually. If this issue persists, please contact the modpack developer.");
 
                 return;
             }
 
             // Initialize the webClient and set required headers
-            var webClient = new WebClient();
-
-            webClient.Headers.Add("User-Agent", _lifetimeData.UserAgent);
+            _webClient = new WebClient();
+            _webClient.Headers.Add("User-Agent", _lifetimeData.UserAgent);
 
             var archivePath = Path.Combine(_lifetimeData.DownloadPath, ArchiveName);
             var partPath = Path.Combine(_lifetimeData.DownloadPath, ArchiveName + ".part");
@@ -110,6 +113,7 @@ namespace Automaton.Model
             {
                 IsValidationComplete = true;
                 IsDownloading = false;
+                _lifetimeData.CurrentDownloads--;
 
                 ArchivePath = archivePath;
 
@@ -118,50 +122,64 @@ namespace Automaton.Model
                 File.Delete(partPath);
             }
 
-            _lifetimeData.CurrentDownloads++;
-
             var lastBytesRecieved = (long)0;
-            var dateTime = DateTime.Now;
+            var dateTime = DateTime.MinValue;
 
-            webClient.DownloadProgressChanged += async (sender, e) =>
+            _webClient.DownloadProgressChanged += async (sender, e) =>
             {
+                if (dateTime == DateTime.MinValue)
+                {
+                    dateTime = DateTime.Now;
+                }
+
                 var timeSpan = DateTime.Now - dateTime;
                 lastBytesRecieved = e.BytesReceived - lastBytesRecieved;
 
-                var bytesPerSecond = lastBytesRecieved / (double)timeSpan.TotalSeconds;
+                var bytesPerSecond = e.BytesReceived / (double)timeSpan.TotalSeconds;
 
-                MbPerSecond = Math.Round((double)bytesPerSecond / (double)1024 / (double)1024, 2);
+                MbPerSecond = Math.Round((double)bytesPerSecond / ((double)1024 * (double)1024), 2);
                 DownloadPercentage = (int)(1000 * ((double)e.BytesReceived / (double)e.TotalBytesToReceive));
             };
 
-            webClient.DownloadFileCompleted += async (sender, e) =>
+            _webClient.DownloadFileCompleted += async (sender, e) =>
             {
-                _lifetimeData.CurrentDownloads--;
+                if (e.Cancelled)
+                {
+                    DownloadPercentage = 0;
 
+                    File.Delete(partPath);
+                }
+
+                else
+                {
+                    if (File.Exists(archivePath))
+                    {
+                        File.Delete(archivePath);
+                    }
+
+                    File.Move(partPath, archivePath);
+
+                    await TryLoadAsync(Path.Combine(_lifetimeData.DownloadPath, ArchiveName));
+                }
+
+                _lifetimeData.CurrentDownloads--;
                 IsDownloading = false;
 
-                if (File.Exists(archivePath))
-                {
-                    File.Delete(archivePath);
-                }
-
-                File.Move(partPath, archivePath);
-
-                await TryLoadAsync(Path.Combine(_lifetimeData.DownloadPath, ArchiveName));
-
-                if (File.Exists(ArchivePath))
-                {
-                    webClient.Dispose();
-                }
+                return;
             };
 
-            webClient.DownloadFileAsync(new Uri(downloadLink), partPath);
+            _webClient.DownloadFileAsync(new Uri(downloadLink), partPath);
         }
 
         public void DownloadThreaded()
         {
             var thread = new Thread(() => DownloadAsync());
             thread.Start();
+        }
+
+        public void CancelDownload()
+        {
+            _webClient.CancelAsync();
         }
 
         public void TryLoad(string archivePath)
