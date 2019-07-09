@@ -118,6 +118,8 @@ namespace Automaton.ViewModel
 
         private void OpenNexusLink(ExtendedArchive archive)
         {
+            archive.DownloadAsync();
+
             if (archive.Repository == "Nexus" && !string.IsNullOrEmpty(archive.ModId))
             {
                 Process.Start($"https://nexusmods.com/{archive.GameName}/mods/{archive.ModId}/");

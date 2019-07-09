@@ -97,7 +97,6 @@
                 Margin="5,0,0,0"
                 HorizontalAlignment="Stretch"
                 ItemsSource="{Binding ArchivesView, UpdateSourceTrigger=PropertyChanged}"
-                VirtualizingPanel.VirtualizationMode="Recycling"
                 VirtualizingStackPanel.IsVirtualizing="True">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">

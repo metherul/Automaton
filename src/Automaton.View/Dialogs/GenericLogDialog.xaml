@@ -38,6 +38,7 @@
                 Foreground="Black"
                 IsReadOnly="True"
                 Text="{Binding Message}"
+                TextAlignment="Left"
                 TextWrapping="Wrap" />
 
             <Grid Grid.Row="2">

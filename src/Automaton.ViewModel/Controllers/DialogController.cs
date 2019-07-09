@@ -4,21 +4,30 @@ using Autofac;
 using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Dialogs.Interfaces;
 using Automaton.ViewModel.Controllers.Interfaces;
+using Automaton.Model.HandyUtils.Interfaces;
 
 namespace Automaton.ViewModel.Controllers
 {
     public class DialogController : IDialogController, INotifyPropertyChanged
     {
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly IDialogRedirector _dialogRedirector;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         public int CurrentIndex { get; set; }
         public bool IsDialogOpen { get; set; }
         
         public DialogController(IComponentContext components)
         {
             _lifetimeScope = components.Resolve<ILifetimeScope>();
+            _dialogRedirector = components.Resolve<IDialogRedirector>();
+
+            _dialogRedirector.RoutedLogEvent += _dialogRedirector_RoutedLogEvent;
+        }
+
+        private void _dialogRedirector_RoutedLogEvent(string message)
+        {
+            OpenLogDialog(message);
         }
 
         public void CloseCurrentDialog()

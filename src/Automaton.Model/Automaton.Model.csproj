@@ -111,7 +111,9 @@
     <Compile Include="ClassExtensions.cs" />
     <Compile Include="ExtendedArchive.cs" />
     <Compile Include="FileDownload.cs" />
+    <Compile Include="HandyUtils\DialogRedirector.cs" />
     <Compile Include="HandyUtils\FileLock.cs" />
+    <Compile Include="HandyUtils\Interfaces\IDialogRedirector.cs" />
     <Compile Include="Interfaces\IArchiveHandle.cs" />
     <Compile Include="Interfaces\IFileDownload.cs" />
     <Compile Include="Interfaces\IHandyUtils.cs" />
@@ -148,6 +150,7 @@
       <Name>SevenZipExtractor</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

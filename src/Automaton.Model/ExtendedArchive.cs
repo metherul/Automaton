@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System;
 using Automaton.Model.HandyUtils;
 using Automaton.Common;
+using Automaton.Model.HandyUtils.Interfaces;
 
 namespace Automaton.Model
 {
@@ -23,6 +24,7 @@ namespace Automaton.Model
         private IArchiveHandle _archiveHandle;
         private ILifetimeData _lifetimeData;
         private INexusApi _nexusApi;
+        private IDialogRedirector _dialogRedirector;
 
         public string ArchivePath { get; set; }
 
@@ -36,6 +38,7 @@ namespace Automaton.Model
             _archiveHandle = components.Resolve<IArchiveHandle>();
             _lifetimeData = components.Resolve<ILifetimeData>();
             _nexusApi = components.Resolve<INexusApi>();
+            _dialogRedirector = components.Resolve<IDialogRedirector>();
 
             return this;
         }
@@ -83,6 +86,8 @@ namespace Automaton.Model
 
             if (downloadLink == null)
             {
+                _dialogRedirector.RouteLog($"Failed to get Nexus download link for {ArchiveName}. This file must be downloaded manually. If this issue persists, please contact the modpack developer.");
+
                 return;
             }
 
