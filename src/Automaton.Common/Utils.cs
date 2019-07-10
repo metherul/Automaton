@@ -67,14 +67,23 @@ namespace Automaton.Common
             return new DynamicIniData(fi.ReadFile(filename));
         }
 
-        public static string FileSHA256(string filename)
+        public static string FileSHA256(string filename, bool use_caching = false)
         {
+            var sha_path = filename + ".sha256_hash";
+
+            if (use_caching && File.Exists(sha_path) && new FileInfo(filename).LastWriteTime <= new FileInfo(sha_path).LastWriteTime)
+                return Slurp(sha_path);
+
             using (var stream = File.OpenRead(filename))
             {
                 var sha = new SHA256Managed();
-                return ToHex(sha.ComputeHash(stream));
+                var hash = ToHex(sha.ComputeHash(stream));
+                if (use_caching)
+                    File.WriteAllText(sha_path, hash);
+                return hash;
             }
         }
+
 
         public static string FileMD5(string filePath)
         {
@@ -124,6 +133,14 @@ namespace Automaton.Common
             if (prefix.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 return value.Substring(prefix.Length);
             return value.Substring(prefix.Length + 1);
+        }
+
+        public static string Slurp(Stream s)
+        {
+            using (var rdr = new StreamReader(s))
+            {
+                return rdr.ReadToEnd();
+            }
         }
 
         /// <summary>

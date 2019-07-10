@@ -16,6 +16,9 @@ namespace Automaton.Common.Model
         [JsonProperty("mod_type")]
         [JsonConverter(typeof(StringEnumConverter))]
         public ModType ModType { get; set; }
+
+        [JsonIgnore]
+        public string ModIni { get; set; }
     }
     
     public enum ModType

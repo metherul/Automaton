@@ -9,6 +9,7 @@ using Hephaestus.Nexus;
 using System.IO.Compression;
 using Automaton.Common.Model;
 using SevenZipExtractor;
+using System.Net.Http;
 
 namespace Hephaestus
 {
@@ -352,6 +353,7 @@ namespace Hephaestus
                 var master = ModPackMasterDefinition.Clone();
                 master.MO2Directory = null;
                 master.AlternateArchiveLocations = new List<string>();
+                master.MO2Archive = GetMO2ARchiveInfo();
                 Utils.SpitJsonInto(zip, "pack.auto_definition", master);
 
                 foreach (var mod in CompiledMods)
@@ -382,6 +384,45 @@ namespace Hephaestus
                 }
 
             }
+        }
+
+
+        class GitHubRelease
+        {
+            public bool prerelease;
+            public List<GitHubAsset> assets { get; set; }
+        }
+
+        class GitHubAsset
+        {
+            public string name;
+            public long size;
+            public string browser_download_url;
+        }
+
+        public Automaton.Common.Model.SourceArchive GetMO2ARchiveInfo()
+        {
+            Log.Info("Loading latest MO2 Archive Info from GitHub");
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "request");
+            var result = client.GetStreamAsync("https://api.github.com/repos/ModOrganizer2/modorganizer/releases");
+            result.Wait();
+            var releases = Utils.LoadJson<List<GitHubRelease>>(result.Result);
+            var use_archive = (from release in releases
+                               where !release.prerelease
+                               from asset in release.assets
+                               where !asset.name.EndsWith(".exe")
+                               select asset).First();
+
+            var archive = new Automaton.Common.Model.SourceArchive();
+            archive.Name = use_archive.name;
+            archive.Name = use_archive.name;
+            archive.Repository = "GitHub";
+            archive.DirectURL = use_archive.browser_download_url;
+            archive.Size = use_archive.size;
+            return archive;
+
         }
 
 

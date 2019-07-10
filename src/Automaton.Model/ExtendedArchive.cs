@@ -19,6 +19,12 @@ namespace Automaton.Model
 {
     public class ExtendedArchive : SourceArchive, INotifyPropertyChanged
     {
+        public enum InstallerTypeEnum
+        {
+            Mod,
+            ModOrganizer2,
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Mod _parentMod;
@@ -36,9 +42,11 @@ namespace Automaton.Model
         public bool IsDownloading { get; set; }
         public bool IsValidationComplete { get; set; }
 
+        public InstallerTypeEnum InstallerType {get; set;}
+
         public Dictionary<string, SevenZipExtractor.Entry> Patches { get; private set; }
 
-        public ExtendedArchive Initialize(IComponentContext components, Mod parentMod, Dictionary<string, SevenZipExtractor.Entry> patches)
+        public ExtendedArchive Initialize(IComponentContext components, Mod parentMod, Dictionary<string, SevenZipExtractor.Entry> patches, InstallerTypeEnum installerType = InstallerTypeEnum.Mod)
         {
             // Load in required modules
             _parentMod = parentMod;
@@ -156,17 +164,29 @@ namespace Automaton.Model
             IsDownloading = true;
             _lifetimeData.CurrentDownloads++;
 
-            // We need to grab the download URL for this given item
-            var downloadLink = await _nexusApi.GetArchiveDownloadUrl(this);
+            string downloadLink = null;
 
-            if (downloadLink == null)
+            if (this.DirectURL != null)
             {
-                IsDownloading = false;
-                _lifetimeData.CurrentDownloads--;
-                _dialogRedirector.RouteLog($"Failed to get Nexus download link for {ArchiveName}. This file must be downloaded manually. If this issue persists, please contact the modpack developer.");
-
-                return;
+                // Use a direct URL if we have it
+                downloadLink = this.DirectURL;
             }
+
+            if (this.Repository == "Nexus" && downloadLink == null)
+            {
+                // We need to grab the download URL for this given item
+                downloadLink = await _nexusApi.GetArchiveDownloadUrl(this);
+
+                if (downloadLink == null)
+                {
+                    IsDownloading = false;
+                    _lifetimeData.CurrentDownloads--;
+                    _dialogRedirector.RouteLog($"Failed to get Nexus download link for {ArchiveName}. This file must be downloaded manually. If this issue persists, please contact the modpack developer.");
+
+                    return;
+                }
+            }
+
 
             // Initialize the webClient and set required headers
             _webClient = new WebClient();
