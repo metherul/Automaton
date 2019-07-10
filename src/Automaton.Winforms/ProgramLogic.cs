@@ -1,5 +1,6 @@
 ﻿using Automaton.Common;
 using Automaton.Common.Model;
+using SevenZipExtractor;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,6 +46,7 @@ namespace Automaton.Winforms
         }
 
         public string NexusAPIKey { get; private set; }
+        public Dictionary<string, string> Hashes { get; private set; }
 
         internal void SetWorkerUpdateFn(Action<string[]> updateWorkers)
         {
@@ -170,20 +172,9 @@ namespace Automaton.Winforms
             Directory.CreateDirectory(ModsFolder);
             Directory.CreateDirectory(DownloadsFolder);
 
-            Info("Hashing existing downloads");
+            Hashes = HashDownloadsFolder();
 
-            var hashes = Directory.EnumerateFiles(DownloadsFolder)
-                                  .Where(f => File.Exists(f))
-                                  .Where(f => supported_archives.Contains(Path.GetExtension(f)))
-                                  .PMap(WorkQueue, f =>
-                                  {
-                                      SetStatus("Hashing {0}", Path.GetFileName(f));
-                                      return new { name = f, hash = Utils.FileSHA256(f, true) };
-                                  })
-                                  .GroupBy(f => f.hash)
-                                  .ToDictionary(f => f.Key, f => f.First().hash);
-
-            Info("Done Hashing {0} Downloads", hashes.Count);
+            Info("Done Hashing {0} Downloads", Hashes.Count);
 
 
             foreach (var mod in InstallerData.Mods)
@@ -194,12 +185,12 @@ namespace Automaton.Winforms
 
             var required_archives = (from mod in InstallerData.Mods
                                      from archive in mod.InstallPlans
-                                     select archive.SourceArchive).ToList();
+                                     select archive.SourceArchive)
+                                     .Append(InstallerData.MasterDefinition.MO2Archive)
+                                     .ToList();
 
             Info("Found {0} archives in this pack", required_archives.Count());
-
-            var missing = required_archives.Where(a => !hashes.ContainsKey(a.SHA256))
-                                           .ToList();
+            List<SourceArchive> missing = FindMissingArchives(Hashes, required_archives);
 
             Info("Missing {0} archives for this pack", missing.Count);
 
@@ -209,15 +200,171 @@ namespace Automaton.Winforms
 
             missing.PMap(WorkQueue, DownloadArchive).ToList();
 
+            Hashes = HashDownloadsFolder();
+            missing = FindMissingArchives(Hashes, required_archives);
+            if (missing.Count > 0)
+            {
+                Info("Aborting installation, missing {0} archives", missing.Count);
+                foreach (var miss in missing)
+                    Info("    {0}", miss.ArchiveName);
+                return;
+            }
+
+            required_archives.PMap(WorkQueue, InstallMod).ToList();
+
+
+        }
+
+        private SourceArchive InstallMod(SourceArchive archive)
+        {
+            SetStatus("Installing: {0}", archive.ArchiveName);
+            var parentMod = (from mod in InstallerData.Mods
+                             from iplan in mod.InstallPlans
+                             where iplan.SourceArchive == archive
+                             select mod).FirstOrDefault();
+
+            if (parentMod == null)
+                // TODO: this is gross, fix it
+                return InstallMO2Archive(archive);
+
+            var installationDirectory = Path.Combine(ModsFolder, parentMod.Name);
+            //var filePairings = _parentMod.InstallPlans.SelectMany(x => x.FilePairings);
+
+            var plan = parentMod.InstallPlans.Where(p => p.SourceArchive.SHA256 == archive.SHA256).First();
+
+
+            // Verify to ensure that the mod's installation directory exists
+            if (!Directory.Exists(installationDirectory))
+            {
+                Directory.CreateDirectory(installationDirectory);
+            }
+
+            // Get a dictionary of all the files we need to copy indexed by their name in the archive
+            var extract_files = plan.FilePairings.GroupBy(p => p.From).ToDictionary(p => p.Key);
+
+
+            // Let's pre-create all the directories in the mod folder so we don't have to check
+            // for missing folders during the install.
+            var directories = (from entry in extract_files
+                               from to in entry.Value
+                               let full_path = Path.Combine(installationDirectory, to.To)
+                               select Path.GetDirectoryName(full_path)).Distinct();
+
+            Info("Preparing directories for {0}", archive.Name);
+
+            foreach (var dir in directories)
+                Directory.CreateDirectory(dir);
+
+            Info("Extracting {0}", archive.Name);
+            var archive_path = Hashes[archive.SHA256];
+            using (var file = new ArchiveFile(archive_path))
+            {
+                file.Extract(entry => {
+                    if (extract_files.ContainsKey(entry.FileName))
+                    {
+                        // We may need to copy the same file to multiple locations so extract to the first one, 
+                        // we'll copy this file around later.
+                        var to = extract_files[entry.FileName].First();
+                        var path = Path.Combine(installationDirectory, to.To);
+                        return File.OpenWrite(Path.Combine(installationDirectory, path));
+                    }
+
+                    return null;
+                });
+            }
+
+            // Now that we've installed all the files, copy around any files that exist in more than one location
+            // in the mod.
+            Info("Copying duplicated files for {0}", archive.Name);
+            foreach (var copy_group in extract_files.Select(e => e.Value).Where(es => es.Count() > 1))
+            {
+                var from = copy_group.First();
+                foreach (var to in copy_group.Skip(1))
+                {
+                    File.Copy(Path.Combine(installationDirectory, from.To),
+                              Path.Combine(installationDirectory, to.To));
+                }
+            }
+
+            /*
+            foreach (var to_patch in plan.FilePairings.Where(p => p.patch_id != null))
+            {
+                using (var patch_stream = new System.IO.MemoryStream())
+                {
+                    // Read in the patch data
+                    Patches[to_patch.patch_id].Extract(patch_stream);
+                    patch_stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+                    System.IO.MemoryStream old_data = new System.IO.MemoryStream();
+                    var to_file = Path.Combine(installationDirectory, to_patch.To);
+                    // Read in the unpatched file
+                    using (var unpatched = File.OpenRead(to_file))
+                    {
+                        unpatched.CopyTo(old_data);
+                        old_data.Seek(0, System.IO.SeekOrigin.Begin);
+                    }
+
+                    // Patch it
+                    using (var out_stream = File.OpenWrite(to_file))
+                    {
+                        var ps = new PatchingStream(old_data, patch_stream, out_stream, patch_stream.Length);
+                        ps.Patch();
+                    }
+                }
+
+            }*/
+
+
+            return archive;
+        }
+
+        private SourceArchive InstallMO2Archive(SourceArchive archive)
+        {
+            var archive_path = Hashes[archive.SHA256];
+            using (var af = new ArchiveFile(archive_path))
+                af.Extract(InstallFolder);
+            return archive;
+        }
+
+        private static List<SourceArchive> FindMissingArchives(Dictionary<string, string> hashes, List<SourceArchive> required_archives)
+        {
+            return required_archives.Where(a => !hashes.ContainsKey(a.SHA256))
+                                           .ToList();
+        }
+
+        private Dictionary<string, string> HashDownloadsFolder()
+        {
+            Info("Hashing existing downloads");
+            return Directory.EnumerateFiles(DownloadsFolder)
+                                  .Where(f => File.Exists(f))
+                                  .Where(f => supported_archives.Contains(Path.GetExtension(f)))
+                                  .PMap(WorkQueue, f =>
+                                  {
+                                      SetStatus("Hashing {0}", Path.GetFileName(f));
+                                      return new { name = f, hash = Utils.FileSHA256(f, true) };
+                                  })
+                                  .GroupBy(f => f.hash)
+                                  .ToDictionary(f => f.Key, f => f.First().name);
         }
 
         private SourceArchive DownloadArchive(SourceArchive archive)
         {
             if (archive.Repository == "Nexus")
                 return DownloadNexusMod(archive);
+            else if (archive.DirectURL != null)
+                return DownloadDirectURL(archive);
             else
                 Info("Don't know how to download from {0} for {1}", archive.Name, archive.Repository);
 
+
+            return archive;
+        }
+
+        private SourceArchive DownloadDirectURL(SourceArchive archive)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "requestor");
+            DownloadURL(archive, client, archive.DirectURL);
 
             return archive;
         }
@@ -227,7 +374,7 @@ namespace Automaton.Winforms
             SetStatus("Getting download link for {0}", archive.ArchiveName);
             var client = BaseNexusClient();
             string url;
-            string get_url_link = String.Format("https://api.nexusmods.com/v1/games/{0}/mods/{1}/files/{2}/download_link.json", 
+            string get_url_link = String.Format("https://api.nexusmods.com/v1/games/{0}/mods/{1}/files/{2}/download_link.json",
                                                 ConvertGameName(archive.GameName), archive.ModId, archive.FileId);
             using (var s = client.GetStreamSync(get_url_link))
             {
@@ -236,6 +383,13 @@ namespace Automaton.Winforms
 
             SetStatus("Downloading {0}", archive.ArchiveName);
 
+            DownloadURL(archive, client, url);
+
+            return archive;
+        }
+
+        private void DownloadURL(SourceArchive archive, HttpClient client, string url)
+        {
             long total_read = 0;
             int buffer_size = 1024 * 32;
 
@@ -260,13 +414,11 @@ namespace Automaton.Winforms
 
                     fs.Write(buffer, 0, read);
                     total_read += read;
-                  
+
                 }
             }
             SetStatus("Hashing {0}", archive.Name);
             Utils.FileSHA256(output_path, true);
-
-            return archive;
         }
 
         private HttpClient BaseNexusClient()

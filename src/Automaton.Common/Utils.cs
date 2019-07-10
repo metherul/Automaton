@@ -188,5 +188,15 @@ namespace Automaton.Common
 
             return memoryStream;
         }
+
+        public static string SHA256(Stream result)
+        {
+            using (var stream = result)
+            {
+                var sha = new SHA256Managed();
+                var hash = ToHex(sha.ComputeHash(stream));
+                return hash;
+            }
+        }
     }
 }

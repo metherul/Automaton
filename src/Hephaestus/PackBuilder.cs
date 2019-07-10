@@ -417,14 +417,18 @@ namespace Hephaestus
 
             var archive = new Automaton.Common.Model.SourceArchive();
             archive.Name = use_archive.name;
-            archive.Name = use_archive.name;
+            archive.ArchiveName = use_archive.name;
             archive.Repository = "GitHub";
             archive.DirectURL = use_archive.browser_download_url;
+
+            Log.Info("Hashing latest MO2");
+            result = client.GetStreamAsync(archive.DirectURL);
+            result.Wait();
+            archive.SHA256 = Utils.SHA256(result.Result); ;
             archive.Size = use_archive.size;
             return archive;
 
         }
-
 
     }
 }

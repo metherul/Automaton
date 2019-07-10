@@ -59,5 +59,6 @@ namespace Automaton.Common.Model
 
         [JsonProperty("direct_url")]
         public string DirectURL { get; set; }
+
     }
 }

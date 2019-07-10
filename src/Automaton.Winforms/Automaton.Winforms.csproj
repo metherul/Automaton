@@ -95,6 +95,10 @@
       <Project>{8ddeafd5-2124-4d6d-abbf-69531dfcbd7a}</Project>
       <Name>Automaton.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj">
+      <Project>{8aa97f58-5044-4bba-b8d9-a74b6947a660}</Project>
+      <Name>SevenZipExtractor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
