@@ -363,21 +363,32 @@ namespace Hephaestus
                     zip.CreateEntryFromFile(Path.Combine(ModsFolder, mod.Name, "meta.ini"), Path.Combine("mods", mod.Name, "meta.ini"));
                 }
 
-                var extra_files = new List<string>{"modlist.txt", "lockedorder.txt", "plugins.txt",
-                                                   "archives.txt"};
-                foreach (var file in extra_files)
+                string full_path;
+                foreach (var file in Directory.EnumerateFiles(ProfileFolder).Where(f => File.Exists(f)))
                 {
-                    var full_path = Path.Combine(ProfileFolder, file);
-                    if (File.Exists(full_path))
-                        zip.CreateEntryFromFile(full_path, file);
+                    if (Path.GetFileName(file) == "modlist.txt") continue;
+
+                    full_path = Path.Combine("profile", Path.GetFileName(file));
+                    zip.CreateEntryFromFile(file, full_path);
 
                 }
 
+                // Scrub the mod list of disabled mods
+                var mod_list = File.ReadAllLines(Path.Combine(ProfileFolder, "modlist.txt"))
+                                   .Where(x => !x.StartsWith("-") || x.EndsWith("_separator"))
+                                   .ToArray();
+                
+                full_path = Path.Combine("profile", "modlist.txt");
+                Utils.SpitInto(zip, full_path, String.Join("\n", mod_list));
+
+
+                // Write Patches
                 foreach (var file in Directory.EnumerateFiles("./temp_patches"))
                 {
-                    zip.CreateEntryFromFile(file, "patches/" + Path.GetFileName(file));
+                    zip.CreateEntryFromFile(file, "patches\\" + Path.GetFileName(file));
                 }
 
+                // Write Mod metadata
                 foreach (var file in Directory.EnumerateFiles(ProfileFolder, "*.meta"))
                 {
                     zip.CreateEntryFromFile(file, Path.GetFileName(file));

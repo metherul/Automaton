@@ -76,10 +76,10 @@
             // 
             // LogListBox
             // 
-            this.LogListBox.Enabled = false;
             this.LogListBox.FormattingEnabled = true;
             this.LogListBox.Location = new System.Drawing.Point(12, 349);
             this.LogListBox.Name = "LogListBox";
+            this.LogListBox.ScrollAlwaysVisible = true;
             this.LogListBox.Size = new System.Drawing.Size(1216, 277);
             this.LogListBox.TabIndex = 4;
             // 

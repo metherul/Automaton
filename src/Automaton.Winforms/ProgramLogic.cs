@@ -47,6 +47,7 @@ namespace Automaton.Winforms
 
         public string NexusAPIKey { get; private set; }
         public Dictionary<string, string> Hashes { get; private set; }
+        public string PackFilename { get; private set; }
 
         internal void SetWorkerUpdateFn(Action<string[]> updateWorkers)
         {
@@ -109,6 +110,7 @@ namespace Automaton.Winforms
 
         public void LoadModPack(string filename)
         {
+            PackFilename = filename;
             Info("Loading Mod Pack: {0}", filename);
             using (var fs = File.OpenRead(filename))
             using (var zipfile = new ZipArchive(fs))
@@ -212,7 +214,31 @@ namespace Automaton.Winforms
 
             required_archives.PMap(WorkQueue, InstallMod).ToList();
 
+            Info("Writing mod meta.ini files");
+            foreach (var mod in InstallerData.Mods)
+            {
+                Info("Writing: {0}\\meta.ini", mod.Name);
+                File.WriteAllText(Path.Combine(ModsFolder, mod.Name, "meta.ini"), mod.ModIni);
+            }
 
+
+            using (var fs = File.OpenRead(PackFilename))
+            using (var zip = new ZipArchive(fs))
+            {
+                var profile_dir = Path.Combine(InstallFolder, "profiles", InstallerData.MasterDefinition.PackName);
+                Directory.CreateDirectory(profile_dir);
+                Info("Copying profile data");
+                foreach (var entry in zip.Entries.Where(e => e.FullName.StartsWith("profile\\")))
+                {
+                    Info("Writing to {0}", entry.Name);
+                    using (var i = entry.Open())
+                    using (var o = File.OpenWrite(Path.Combine(profile_dir, entry.Name)))
+                        i.CopyTo(o);
+                }
+            }
+
+            Info("Congrats! {0} is now installed!", InstallerData.MasterDefinition.PackName);
+            Installing = false;
         }
 
         private SourceArchive InstallMod(SourceArchive archive)
@@ -286,35 +312,43 @@ namespace Automaton.Winforms
                 }
             }
 
-            /*
-            foreach (var to_patch in plan.FilePairings.Where(p => p.patch_id != null))
+            // Now patch all the files from this archive
+            using (var fs = File.OpenRead(PackFilename))
+            using (var zip = new ZipArchive(fs))
             {
-                using (var patch_stream = new System.IO.MemoryStream())
+
+                foreach (var to_patch in plan.FilePairings.Where(p => p.patch_id != null))
                 {
-                    // Read in the patch data
-                    Patches[to_patch.patch_id].Extract(patch_stream);
-                    patch_stream.Seek(0, System.IO.SeekOrigin.Begin);
-
-                    System.IO.MemoryStream old_data = new System.IO.MemoryStream();
-                    var to_file = Path.Combine(installationDirectory, to_patch.To);
-                    // Read in the unpatched file
-                    using (var unpatched = File.OpenRead(to_file))
+                    using (var patch_stream = new System.IO.MemoryStream())
                     {
-                        unpatched.CopyTo(old_data);
-                        old_data.Seek(0, System.IO.SeekOrigin.Begin);
+                        SetStatus("Patching {0}", Path.GetFileName(to_patch.To));
+                        // Read in the patch data
+                        using (var zps = zip.GetEntry("patches\\" + to_patch.patch_id).Open())
+                            zps.CopyTo(patch_stream);
+
+
+                        patch_stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+                        System.IO.MemoryStream old_data = new System.IO.MemoryStream();
+                        var to_file = Path.Combine(installationDirectory, to_patch.To);
+                        // Read in the unpatched file
+                        using (var unpatched = File.OpenRead(to_file))
+                        {
+                            unpatched.CopyTo(old_data);
+                            old_data.Seek(0, System.IO.SeekOrigin.Begin);
+                        }
+
+                        // Patch it
+                        using (var out_stream = File.OpenWrite(to_file))
+                        {
+                            var ps = new PatchingStream(old_data, patch_stream, out_stream, patch_stream.Length);
+                            ps.Patch();
+                        }
                     }
 
-                    // Patch it
-                    using (var out_stream = File.OpenWrite(to_file))
-                    {
-                        var ps = new PatchingStream(old_data, patch_stream, out_stream, patch_stream.Length);
-                        ps.Patch();
-                    }
                 }
-
-            }*/
-
-
+            }
+            
             return archive;
         }
 
