@@ -48,7 +48,7 @@ namespace Automaton.Model
         }
 
         /// <summary>
-        /// This sends an object from the client to the server, if a client is connected
+        /// This sends an object from the client to the server, if a client is connected.
         /// </summary>
         /// <param name="message"></param>
         public void SendToServer(string message)
