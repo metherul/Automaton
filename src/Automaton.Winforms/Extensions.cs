@@ -22,7 +22,7 @@ namespace Automaton.Winforms
 
         public static HttpResponseMessage GetSync(this HttpClient client, string url)
         {
-            var result = client.GetAsync(url);
+            var result = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
             result.Wait();
             return result.Result;
         }

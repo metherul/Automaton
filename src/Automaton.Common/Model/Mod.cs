@@ -19,13 +19,23 @@ namespace Automaton.Common.Model
 
         [JsonIgnore]
         public string ModIni { get; set; }
+
+        [JsonIgnore]
+        public bool IsVirtualMod
+        {
+            get
+            {
+                return ModType == ModType.MO2Mod || ModType == ModType.GameDirectoryMod;
+            }
+        }
     }
     
     public enum ModType
     {
         InstalledArchive,
         Separator,
-        GameDirectoryMod
+        GameDirectoryMod,
+        MO2Mod
     }
 
     public class InstallPlan

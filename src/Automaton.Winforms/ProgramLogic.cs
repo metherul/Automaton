@@ -94,7 +94,7 @@ namespace Automaton.Winforms
 
         public void SetStatus(string fmt, params object[] args)
         {
-            var str = String.Format(fmt, args.Select(arg => arg.ToString()).ToArray()) + "\n";
+            var str = String.Format(fmt, args) + "\n";
             WorkQueue.SetWorkerStatus(str);
         }
 
@@ -116,6 +116,10 @@ namespace Automaton.Winforms
             using (var zipfile = new ZipArchive(fs))
             {
                 var entry = zipfile.GetEntry("pack.auto_definition");
+
+                var game_mod_entry = zipfile.GetEntry("game_folder_mod.json");
+                if (game_mod_entry != null)
+                    InstallerData.GameFolderMod = Utils.LoadJson<Mod>(game_mod_entry.Open());
 
                 MasterDefinition master;
                 using (var entry_stream = entry.Open())
@@ -157,6 +161,20 @@ namespace Automaton.Winforms
 
                 InstallerData.Mods = mod_defs;
 
+                if (InstallerData.GameFolderMod != null)
+                    InstallerData.Mods.Add(InstallerData.GameFolderMod);
+
+                InstallerData.Mods.Add(new Mod()
+                {
+                    Name = "MO2 Folder",
+                    ModType = ModType.MO2Mod,
+                    InstallPlans = new List<InstallPlan>() {
+                        new InstallPlan()
+                    {
+                        SourceArchive = InstallerData.MasterDefinition.MO2Archive
+                    }}
+                });
+
                 Info("Loaded information for {0} mods", mod_defs.Count());
                 
 
@@ -179,7 +197,7 @@ namespace Automaton.Winforms
             Info("Done Hashing {0} Downloads", Hashes.Count);
 
 
-            foreach (var mod in InstallerData.Mods)
+            foreach (var mod in InstallerData.Mods.Where(m => !m.IsVirtualMod))
             {
                 Info("Creating mod directory for {0}", mod.Name);
                 Directory.CreateDirectory(Path.Combine(ModsFolder, mod.Name));
@@ -188,7 +206,6 @@ namespace Automaton.Winforms
             var required_archives = (from mod in InstallerData.Mods
                                      from archive in mod.InstallPlans
                                      select archive.SourceArchive)
-                                     .Append(InstallerData.MasterDefinition.MO2Archive)
                                      .ToList();
 
             Info("Found {0} archives in this pack", required_archives.Count());
@@ -198,7 +215,7 @@ namespace Automaton.Winforms
 
             Info("Getting API key for nexus, please click accept in your web browser");
 
-            NexusAPIKey = GetNexusAPIKey();
+            NexusAPIKey = Utils.GetNexusAPIKey();
 
             missing.PMap(WorkQueue, DownloadArchive).ToList();
 
@@ -215,7 +232,7 @@ namespace Automaton.Winforms
             required_archives.PMap(WorkQueue, InstallMod).ToList();
 
             Info("Writing mod meta.ini files");
-            foreach (var mod in InstallerData.Mods)
+            foreach (var mod in InstallerData.Mods.Where(m => !m.IsVirtualMod))
             {
                 Info("Writing: {0}\\meta.ini", mod.Name);
                 File.WriteAllText(Path.Combine(ModsFolder, mod.Name, "meta.ini"), mod.ModIni);
@@ -249,13 +266,25 @@ namespace Automaton.Winforms
                              where iplan.SourceArchive == archive
                              select mod).FirstOrDefault();
 
-            if (parentMod == null)
-                // TODO: this is gross, fix it
-                return InstallMO2Archive(archive);
+            switch (parentMod.ModType)
+            {
+                case ModType.MO2Mod:
+                    InstallMO2Archive(archive);
+                    break;
+                case ModType.InstalledArchive:
+                    ExtractArchive(archive, parentMod, Path.Combine(ModsFolder, parentMod.Name));
+                    break;
+                case ModType.GameDirectoryMod:
+                    ExtractArchive(archive, parentMod, Path.Combine(InstallFolder, "Game Folder Files"));
+                    break;
+                case ModType.Separator:
+                    break;
+            }
+            return archive;
+        }
 
-            var installationDirectory = Path.Combine(ModsFolder, parentMod.Name);
-            //var filePairings = _parentMod.InstallPlans.SelectMany(x => x.FilePairings);
-
+        private void ExtractArchive(SourceArchive archive, Mod parentMod, string installationDirectory)
+        {
             var plan = parentMod.InstallPlans.Where(p => p.SourceArchive.SHA256 == archive.SHA256).First();
 
 
@@ -285,7 +314,8 @@ namespace Automaton.Winforms
             var archive_path = Hashes[archive.SHA256];
             using (var file = new ArchiveFile(archive_path))
             {
-                file.Extract(entry => {
+                file.Extract(entry =>
+                {
                     if (extract_files.ContainsKey(entry.FileName))
                     {
                         // We may need to copy the same file to multiple locations so extract to the first one, 
@@ -348,8 +378,6 @@ namespace Automaton.Winforms
 
                 }
             }
-            
-            return archive;
         }
 
         private SourceArchive InstallMO2Archive(SourceArchive archive)
@@ -383,7 +411,7 @@ namespace Automaton.Winforms
 
         private SourceArchive DownloadArchive(SourceArchive archive)
         {
-            if (archive.Repository == "Nexus")
+            if (archive.GameName != null && archive.ModId != null && archive.FileId != null)
                 return DownloadNexusMod(archive);
             else if (archive.DirectURL != null)
                 return DownloadDirectURL(archive);
@@ -398,6 +426,14 @@ namespace Automaton.Winforms
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "requestor");
+            if (archive.HttpHeaders != null)
+            {
+                foreach (var header in archive.HttpHeaders)
+                {
+                    var split = header.IndexOf(':');
+                    client.DefaultRequestHeaders.Add(header.Substring(0, split), header.Substring(split + 1));
+                }
+            }
             DownloadURL(archive, client, archive.DirectURL);
 
             return archive;
@@ -432,7 +468,7 @@ namespace Automaton.Winforms
             stream.Wait();
 
             var header = response.Content.Headers.GetValues("Content-Length").FirstOrDefault();
-            double content_size = header != null ? Double.Parse(header) : 1;
+            long content_size = header != null ? long.Parse(header) : 1;
 
             var output_path = Path.Combine(DownloadsFolder, archive.ArchiveName);
 
@@ -444,7 +480,7 @@ namespace Automaton.Winforms
                 {
                     var read = webs.Read(buffer, 0, buffer_size);
                     if (read == 0) break;
-                    SetStatus("{0:00.00}% downloading {1}", (total_read / content_size * 100.0), archive.Name);
+                    SetStatus("{0}% downloading {1}", (total_read * 100 / content_size), archive.Name);
 
                     fs.Write(buffer, 0, read);
                     total_read += read;
@@ -477,39 +513,6 @@ namespace Automaton.Winforms
                 
         }
 
-        public string GetNexusAPIKey()
-        {
-            FileInfo fi = new FileInfo("nexus.key_cache");
-            if (fi.Exists && fi.LastWriteTime > DateTime.Now.AddHours(-12))
-            {
-                return Utils.Slurp("nexus.key_cache");
-            }
 
-            var guid = Guid.NewGuid();
-            var _websocket = new WebSocket("wss://sso.nexusmods.com")
-            {
-                SslConfiguration =
-            {
-                EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12
-            }
-            };
-
-            TaskCompletionSource<string> api_key = new TaskCompletionSource<string>();
-            _websocket.OnMessage += (sender, msg) =>
-            {
-                api_key.SetResult(msg.Data);
-                return;
-            };
-
-            _websocket.Connect();
-            _websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
-
-            Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=Automaton");
-
-            api_key.Task.Wait();
-            var result = api_key.Task.Result;
-            File.WriteAllText("nexus.key_cache", result);
-            return result;
-        }
     }
 }

@@ -2,10 +2,13 @@
 using Newtonsoft.Json;
 using SevenZipExtractor;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using WebSocketSharp;
 
 namespace Automaton.Common
 {
@@ -197,6 +200,41 @@ namespace Automaton.Common
                 var hash = ToHex(sha.ComputeHash(stream));
                 return hash;
             }
+        }
+
+        public static string GetNexusAPIKey()
+        {
+            FileInfo fi = new FileInfo("nexus.key_cache");
+            if (fi.Exists && fi.LastWriteTime > DateTime.Now.AddHours(-12))
+            {
+                return Utils.Slurp("nexus.key_cache");
+            }
+
+            var guid = Guid.NewGuid();
+            var _websocket = new WebSocket("wss://sso.nexusmods.com")
+            {
+                SslConfiguration =
+            {
+                EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12
+            }
+            };
+
+            TaskCompletionSource<string> api_key = new TaskCompletionSource<string>();
+            _websocket.OnMessage += (sender, msg) =>
+            {
+                api_key.SetResult(msg.Data);
+                return;
+            };
+
+            _websocket.Connect();
+            _websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
+
+            Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=Automaton");
+
+            api_key.Task.Wait();
+            var result = api_key.Task.Result;
+            File.WriteAllText("nexus.key_cache", result);
+            return result;
         }
     }
 }

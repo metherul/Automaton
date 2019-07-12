@@ -64,6 +64,9 @@ namespace Hephaestus.Model
         [JsonProperty("direct_url", NullValueHandling = NullValueHandling.Include)]
         public string DirectURL { get; set; }
 
+        [JsonProperty("http_headers")]
+        public List<string> HttpHeaders { get; set; }
+
         [JsonProperty("author_id")]
         public long AuthorId { get; set; }
 

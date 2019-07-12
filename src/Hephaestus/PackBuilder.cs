@@ -27,8 +27,8 @@ namespace Hephaestus
 
         public void LoadPrefs(string filepath)
         {
-            Preferences = Utils.LoadJson<Preferences>(filepath);
-            NexusClient = new NexusClient(Preferences.ApiKey);
+            //Preferences = Utils.LoadJson<Preferences>(filepath);
+            NexusClient = new NexusClient(Utils.GetNexusAPIKey());
         }
 
         public IList<InstalledMod> InstalledMods { get; private set; }
@@ -251,13 +251,13 @@ namespace Hephaestus
             else
             {
                 compiled_mod.ModType = ModType.InstalledArchive;
-                ScanDirectory(mod.FullPath, compiled_mod, primary_source, null);
+                ScanDirectory(mod.FullPath, compiled_mod, primary_source, null, false);
             }
             Log.Info("Done Compiling {0}", mod.ModName);
             return compiled_mod;
         }
 
-        private void ScanDirectory(string full_path, Mod compiled_mod, Model.SourceArchive primary_source, ISet<string> ignore)
+        private void ScanDirectory(string full_path, Mod compiled_mod, Model.SourceArchive primary_source, ISet<string> ignore, bool supress_warning)
         {
             foreach (var file in Directory.EnumerateFiles(full_path, "*", SearchOption.AllDirectories))
             {
@@ -288,21 +288,23 @@ namespace Hephaestus
 
 
                 // Find a file in the primary source with the same name?
-                var primary_source_file = (from archive_file in primary_source.ArchiveEntries
-                                           where Path.GetFileName(archive_file.FileName) == Path.GetFileName(archive_file.FileName)
-                                           select archive_file).FirstOrDefault();
-
-                if (primary_source_file != null)
+                if (primary_source != null)
                 {
-                    Log.Info("Found name match for {0} in primary mod source, building patch.", file);
+                    var primary_source_file = (from archive_file in primary_source.ArchiveEntries
+                                               where Path.GetFileName(archive_file.FileName) == Path.GetFileName(archive_file.FileName)
+                                               select archive_file).FirstOrDefault();
 
-                    var pairing = AddPairToMod(compiled_mod, to_path, primary_source, primary_source_file);
-                    pairing.is_patched = true;
-                    continue;
+                    if (primary_source_file != null)
+                    {
+                        Log.Info("Found name match for {0} in primary mod source, building patch.", file);
+
+                        var pairing = AddPairToMod(compiled_mod, to_path, primary_source, primary_source_file);
+                        pairing.is_patched = true;
+                        continue;
+                    }
                 }
-
                 
-
+                if (!supress_warning)
                 {
                     Log.Warn("No match: {0}", file);
                 }
@@ -338,7 +340,9 @@ namespace Hephaestus
             var game_dir_mod = new Mod();
             CompiledMods.Add(game_dir_mod);
             game_dir_mod.ModType = ModType.GameDirectoryMod;
-            ScanDirectory(MO2Ini.General.gamePath, game_dir_mod, null, new HashSet<string>() { ".bsa", ".psc", ".bak" });
+            game_dir_mod.Name = "Game Directory Files";
+            Log.Info("Scanning Game Folder");
+            ScanDirectory(MO2Ini.General.gamePath, game_dir_mod, null, new HashSet<string>() { ".bsa", ".psc", ".bak" }, true);
         }
 
         public void ExportPack()
@@ -358,9 +362,17 @@ namespace Hephaestus
 
                 foreach (var mod in CompiledMods)
                 {
-                    Log.Info("Exporting {0}", mod.Name);
-                    Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "install.json"), mod);
-                    zip.CreateEntryFromFile(Path.Combine(ModsFolder, mod.Name, "meta.ini"), Path.Combine("mods", mod.Name, "meta.ini"));
+                    if (mod.ModType == ModType.GameDirectoryMod)
+                    {
+                        Log.Info("Exporting Game Directory Files");
+                        Utils.SpitJsonInto(zip, "game_folder_mod.json", mod);
+                    }
+                    else
+                    {
+                        Log.Info("Exporting {0}", mod.Name);
+                        Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "install.json"), mod);
+                        zip.CreateEntryFromFile(Path.Combine(ModsFolder, mod.Name, "meta.ini"), Path.Combine("mods", mod.Name, "meta.ini"));
+                    }
                 }
 
                 string full_path;
@@ -370,7 +382,7 @@ namespace Hephaestus
 
                     full_path = Path.Combine("profile", Path.GetFileName(file));
                     zip.CreateEntryFromFile(file, full_path);
-
+                    
                 }
 
                 // Scrub the mod list of disabled mods

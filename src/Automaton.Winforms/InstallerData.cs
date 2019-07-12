@@ -11,5 +11,7 @@ namespace Automaton.Winforms
     {
         public MasterDefinition MasterDefinition { get; internal set; }
         public List<Mod> Mods { get; internal set; }
+        public Mod GameFolderMod { get; internal set; }
+
     }
 }
