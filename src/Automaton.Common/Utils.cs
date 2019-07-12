@@ -192,12 +192,20 @@ namespace Automaton.Common
             return memoryStream;
         }
 
-        public static string SHA256(Stream result)
+        public static string SHA256(Stream result, string cache_name = null)
         {
+            var cache_file = cache_name == null ? null : Path.Combine("stream_caches", cache_name);
+            if (cache_file != null && File.Exists(cache_file))
+                return File.ReadAllText(cache_file);
+
             using (var stream = result)
             {
                 var sha = new SHA256Managed();
                 var hash = ToHex(sha.ComputeHash(stream));
+
+                if (cache_file != null)
+                    File.WriteAllText(cache_file, hash);
+
                 return hash;
             }
         }

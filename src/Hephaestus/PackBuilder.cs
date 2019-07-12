@@ -91,14 +91,16 @@ namespace Hephaestus
 
             foreach (var pairing in need_patches)
             {
+                Log.Info("Generating Patch for: {0} ", Path.GetFileName(pairing.pairing.To));
                 var ss = extracted[pairing.pairing.From];
                 var patched_file = Path.Combine(ModsFolder, pairing.mod.Name, pairing.pairing.To);
                 using (var origin = new MemoryStream(ss.ToArray())) 
                 using (var dest = File.OpenRead(patched_file))
                 using (var output = File.OpenWrite(Path.Combine(patch_folder, pairing.pairing.patch_id)))
                 {
-                    var ps = new PatchingStream(origin, dest, output, new FileInfo(patched_file).Length);
-                    ps.Patch();
+                    var a = origin.ReadAll();
+                    var b = dest.ReadAll();
+                    BSDiff.Create(a, b, output);
                 }
 
             }

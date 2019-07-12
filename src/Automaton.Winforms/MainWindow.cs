@@ -93,5 +93,10 @@ namespace Automaton.Winforms
             }
             ).Start();
         }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

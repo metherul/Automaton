@@ -121,6 +121,7 @@
             this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.Text = "Automaton";
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

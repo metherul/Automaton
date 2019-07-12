@@ -358,6 +358,8 @@ namespace Automaton.Winforms
 
 
                         patch_stream.Seek(0, System.IO.SeekOrigin.Begin);
+                        var patch_data = patch_stream.ToArray();
+                        patch_stream.Dispose();
 
                         System.IO.MemoryStream old_data = new System.IO.MemoryStream();
                         var to_file = Path.Combine(installationDirectory, to_patch.To);
@@ -371,8 +373,7 @@ namespace Automaton.Winforms
                         // Patch it
                         using (var out_stream = File.OpenWrite(to_file))
                         {
-                            var ps = new PatchingStream(old_data, patch_stream, out_stream, patch_stream.Length);
-                            ps.Patch();
+                            BSDiff.Apply(old_data, () => new MemoryStream(patch_data), out_stream);
                         }
                     }
 
