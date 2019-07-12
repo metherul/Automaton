@@ -31,6 +31,7 @@ namespace Automaton.Model
         private IDialogRedirector _dialogRedirector;
 
         public string ArchivePath { get; set; }
+        public string AuthenticationParams { get; set; }
         public double MbPerSecond { get; set; }
         public int DownloadPercentage { get; set; }
         public bool IsDownloading { get; set; }
@@ -153,11 +154,17 @@ namespace Automaton.Model
 
         public async Task DownloadAsync()
         {
+            // Check to make sure we're not already downloading this file
+            if (IsDownloading)
+            {
+                return;
+            }
+
             IsDownloading = true;
             _lifetimeData.CurrentDownloads++;
 
             // We need to grab the download URL for this given item
-            var downloadLink = await _nexusApi.GetArchiveDownloadUrl(this);
+            var downloadLink = await _nexusApi.GetArchiveDownloadUrl(this, AuthenticationParams);
 
             if (downloadLink == null)
             {

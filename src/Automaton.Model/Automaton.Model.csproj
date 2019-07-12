@@ -124,6 +124,7 @@
     <Compile Include="Interfaces\INexusApi.cs" />
     <Compile Include="Interfaces\INexusApiHandle.cs" />
     <Compile Include="Interfaces\INexusSso.cs" />
+    <Compile Include="Interfaces\INXMRoute.cs" />
     <Compile Include="Interfaces\IRegistryHandle.cs" />
     <Compile Include="Interfaces\ISingleton.cs" />
     <Compile Include="LifetimeData.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="ModpackItem.cs" />
     <Compile Include="NexusApi.cs" />
     <Compile Include="NexusSso.cs" />
+    <Compile Include="NXMRoute.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryHandle.cs" />

@@ -44,7 +44,7 @@ namespace Automaton.ViewModel
 
         private static void CloseWindow(Window window)
         {
-            window.Close();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private static void MinimizeWindow(Window window)

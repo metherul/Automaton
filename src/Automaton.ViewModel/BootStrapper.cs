@@ -8,12 +8,15 @@ using Automaton.ViewModel.Controllers.Interfaces;
 using Automaton.ViewModel.Utilities.Interfaces;
 using Automaton.Model.Interfaces;
 using System.Reflection;
+using System.Diagnostics;
+using Application = System.Windows.Forms.Application;
+using System.Windows;
 
 namespace Automaton.ViewModel
 {
     public class BootStrapper
     {
-        private readonly ILifetimeScope _rootScope;
+        private ILifetimeScope _rootScope;
 
         public IViewModel MainWindow => Resolve<IMainWindowViewModel>();
         public IViewModel FixPath => Resolve<IFixPathViewModel>();
@@ -31,8 +34,6 @@ namespace Automaton.ViewModel
 
         public BootStrapper()
         {
-            
-
             // We need to force load the assemblies so the debugger doesn't get pissy.
             foreach (var test in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -43,6 +44,7 @@ namespace Automaton.ViewModel
             var assembly = AppDomain.CurrentDomain.GetAssemblies();
 
             // Initialize the NXM router here
+            InitNxmRoute(builder, assembly);
 
             builder.RegisterAssemblyTypes(assembly)
                 .Where(t => typeof(IModel).IsAssignableFrom(t))
@@ -88,6 +90,34 @@ namespace Automaton.ViewModel
                 {
                     this.LoadReferencedAssembly(Assembly.Load(name));
                 }
+            }
+        }
+
+        private void InitNxmRoute(ContainerBuilder builder, Assembly[] assembly)
+        {
+            if (Process.GetProcessesByName("Automaton").Count() <= 1)
+            {
+                return;
+            }
+
+            var cliArgs = Environment.GetCommandLineArgs();
+
+            MessageBox.Show(cliArgs[1]);
+
+            if (cliArgs.Length == 2 && cliArgs[0] == Assembly.GetEntryAssembly().Location)
+            {
+                builder.RegisterAssemblyTypes(assembly)
+                    .Where(t => typeof(INXMRoute).IsAssignableFrom(t))
+                    .SingleInstance()
+                    .AsImplementedInterfaces();
+                _rootScope = builder.Build();
+
+                var nxmRoute = Resolve<INXMRoute>();
+
+                nxmRoute.ConnectClient();
+                nxmRoute.SendToServer(cliArgs[1]);
+
+                Application.Exit();
             }
         }
     }

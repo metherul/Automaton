@@ -27,6 +27,7 @@ namespace Automaton.ViewModel
         private readonly IFileSystemBrowser _fileSystemBrowser;
         private readonly IDialogController _dialogController;
         private readonly ILifetimeData _lifetimeData;
+        private readonly INXMRoute _NXMRoute;
         private readonly ILogger _logger;
 
         public AsyncCommand ScanDirectoryCommand => new AsyncCommand(ScanDirectory);
@@ -36,7 +37,6 @@ namespace Automaton.ViewModel
 
         public ObservableCollection<ExtendedArchive> Archives { get; set; }
         public ICollectionView ArchivesView { get; set; }
-
         public int MissingArchivesCount { get; set; }
 
         public ValidateModsViewModel(IComponentContext components)
@@ -45,8 +45,25 @@ namespace Automaton.ViewModel
             _fileSystemBrowser = components.Resolve<IFileSystemBrowser>();
             _dialogController = components.Resolve<IDialogController>();
             _lifetimeData = components.Resolve<ILifetimeData>();
+            _NXMRoute = components.Resolve<INXMRoute>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
+            _NXMRoute.RecieveMessageEvent += _NXMRoute_RecieveMessageEvent;
+        }
+
+        private void _NXMRoute_RecieveMessageEvent(string message)
+        {
+            var pipedData = _NXMRoute.ToPipedData(message);
+            var matchingArchives = Archives.Where(x => x.ModId == pipedData.ModId && x.FileId == pipedData.FileId);
+
+            if (matchingArchives != null)
+            {
+                foreach (var archive in matchingArchives)
+                {
+                    archive.AuthenticationParams = pipedData.AuthenticationParams;
+                    archive.DownloadThreaded();
+                }
+            }
         }
 
         private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
@@ -96,6 +113,7 @@ namespace Automaton.ViewModel
             }
 
             _dialogController.CloseCurrentDialog();
+            _NXMRoute.StartServer();
         }
 
         private async Task ScanDirectory()
@@ -136,8 +154,6 @@ namespace Automaton.ViewModel
 
         private void OpenNexusLink(ExtendedArchive archive)
         {
-            archive.DownloadAsync();
-
             if (archive.Repository == "Nexus" && !string.IsNullOrEmpty(archive.ModId))
             {
                 Process.Start($"https://nexusmods.com/{archive.GameName}/mods/{archive.ModId}/");
