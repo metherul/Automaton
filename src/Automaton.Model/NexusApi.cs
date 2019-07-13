@@ -17,7 +17,9 @@ namespace Automaton.Model
 
         private string _key;
         private int _remainingRequests;
-        private bool _isPremium;
+
+        public bool IsLoggedIn { get; set; }
+        public bool IsPremium { get; set; }
 
         public NexusApi(IComponentContext components)
         {
@@ -39,7 +41,7 @@ namespace Automaton.Model
             _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
             _key = key;
-            _isPremium = await IsPremiumUser();
+            IsPremium = await IsPremiumUser();
         }
 
         public async Task<bool> IsPremiumUser()
@@ -47,7 +49,20 @@ namespace Automaton.Model
             var validate = "/v1/users/validate.json";
             var result = await MakeGenericApiCall(validate);
 
-            return (bool)JObject.Parse(result)["is_premium"];
+            if (result == null)
+            {
+                IsLoggedIn = false;
+                IsPremium = false;
+
+                return false;
+            }            
+
+            var isPremium = (bool)JObject.Parse(result)["is_premium"];
+
+            IsLoggedIn = true;
+            IsPremium = isPremium;
+
+            return isPremium;
         }
 
         public async Task<string> GetArchiveDownloadUrl(ExtendedArchive archive, string protocolParams = "")

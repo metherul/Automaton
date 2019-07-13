@@ -28,6 +28,7 @@ namespace Automaton.ViewModel
         private readonly IDialogController _dialogController;
         private readonly ILifetimeData _lifetimeData;
         private readonly INXMRoute _NXMRoute;
+        private readonly INexusApi _nexusApi;
         private readonly ILogger _logger;
 
         public AsyncCommand ScanDirectoryCommand => new AsyncCommand(ScanDirectory);
@@ -39,6 +40,7 @@ namespace Automaton.ViewModel
         public ICollectionView ArchivesView { get; set; }
 
         public int MissingArchivesCount { get; set; }
+        public bool AutodownloadsEnabled { get; set; }
 
 
         public ValidateModsViewModel(IComponentContext components)
@@ -48,9 +50,39 @@ namespace Automaton.ViewModel
             _dialogController = components.Resolve<IDialogController>();
             _lifetimeData = components.Resolve<ILifetimeData>();
             _NXMRoute = components.Resolve<INXMRoute>();
+            _nexusApi = components.Resolve<INexusApi>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _NXMRoute.RecieveMessageEvent += _NXMRoute_RecieveMessageEvent;
+        }
+
+
+        private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
+        {
+            if (e != (int)ViewIndex.ValidateMods)
+            {
+                return;
+            }
+
+            _dialogController.OpenLoadingDialog();
+
+            Archives = new ObservableCollection<ExtendedArchive>(_lifetimeData.Archives);
+
+            ArchivesView = CollectionViewSource.GetDefaultView(Archives);
+
+            foreach (var archive in Archives)
+            {
+                await archive.SearchInDirAsync(_lifetimeData.DownloadPath);
+            }
+
+            var controllerThread = new Thread(() =>
+            {
+                ValidateController();
+            });
+            controllerThread.Start();
+
+            _dialogController.CloseCurrentDialog();
+            _NXMRoute.StartServer();
         }
 
         private void _NXMRoute_RecieveMessageEvent(string message)
@@ -68,55 +100,6 @@ namespace Automaton.ViewModel
             }
         }
 
-        private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
-        {
-            if (e != (int)ViewIndex.ValidateMods)
-            {
-                return;
-            }
-
-            _dialogController.OpenLoadingDialog();
-
-            Archives = new ObservableCollection<ExtendedArchive>(_lifetimeData.Archives);
-
-            ArchivesView = CollectionViewSource.GetDefaultView(Archives);
-
-            var controllerThread = new Thread(() =>
-            {
-                var startingMissingModsCount = Archives.ToList().Count(x => !x.IsValidationComplete);
-
-                while (true)
-                {
-                    MissingArchivesCount = Archives.ToList().Count(x => !x.IsValidationComplete);
-
-                    if (MissingArchivesCount != startingMissingModsCount)
-                    {
-                        startingMissingModsCount = MissingArchivesCount;
-
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() => ArchivesView.Refresh()));
-                    }
-                    // TODO: have metherul wire this up proper
-                    if (MissingArchivesCount == 0)
-                    {
-                        foreach (var archive in _lifetimeData.Archives) {
-                            archive.Install();
-                        }
-                        break;
-                    }
-
-                    Thread.Sleep(500);
-                }
-            });
-            controllerThread.Start();
-
-            foreach (var archive in Archives)
-            {
-                await archive.SearchInDirAsync(_lifetimeData.DownloadPath);
-            }
-
-            _dialogController.CloseCurrentDialog();
-            _NXMRoute.StartServer();
-        }
 
         private async Task ScanDirectory()
         {
@@ -143,7 +126,7 @@ namespace Automaton.ViewModel
                 await Archives.ToList().ParallelForEachAsync(async archive =>
                 {
                     await archive.SearchInDirAsync(directoryPath);
-                }, maxDegreeOfParalellism:4);
+                }, maxDegreeOfParalellism: 4);
 
                 //foreach (var archive in Archives)
                 //{
@@ -187,6 +170,65 @@ namespace Automaton.ViewModel
         private async Task CancelDownload(ExtendedArchive archive)
         {
             archive.CancelDownload();
+        }
+
+        private void ValidateController()
+        {
+            var startingMissingModsCount = Archives.ToList().Count(x => !x.IsValidationComplete);
+            var lastAutodownloadsStatus = AutodownloadsEnabled;
+
+            while (true)
+            {
+                MissingArchivesCount = Archives.ToList().Count(x => !x.IsValidationComplete);
+
+                if (MissingArchivesCount != startingMissingModsCount)
+                {
+                    startingMissingModsCount = MissingArchivesCount;
+
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => ArchivesView.Refresh()));
+                }
+
+                if (MissingArchivesCount == 0)
+                {
+                    _viewController.IncrementCurrentViewIndex();
+
+                    return;
+                }
+
+                if (AutodownloadsEnabled && !lastAutodownloadsStatus)
+                {
+                    // We queue up each for downloads
+                    lastAutodownloadsStatus = AutodownloadsEnabled;
+
+                    if (_nexusApi.IsPremium && _nexusApi.IsLoggedIn)
+                    {
+                        foreach (var archive in Archives)
+                        {
+                            archive.DownloadThreaded();
+
+                            Thread.Sleep(400);
+                        }
+                    }
+
+                    else
+                    {
+                        _dialogController.OpenLogDialog("You must be a Nexus Premium member to use the auto-downloading feature of Automaton.");
+                        AutodownloadsEnabled = false;
+                    }
+                }
+
+                if (!AutodownloadsEnabled && lastAutodownloadsStatus)
+                {
+                    lastAutodownloadsStatus = AutodownloadsEnabled;
+
+                    foreach (var archive in Archives)
+                    {
+                        archive.CancelDownload();
+                    }
+                }
+
+                Thread.Sleep(500);
+            }
         }
 
         private bool ArchivesViewFilter(object item)

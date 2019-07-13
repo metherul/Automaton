@@ -171,10 +171,15 @@ namespace Automaton.Model
         public async Task DownloadAsync()
         {
             // Check to make sure we're not already downloading this file
-            if (IsDownloading)
+            if (IsDownloading || IsValidationComplete)
             {
                 return;
             }
+
+            //while (_lifetimeData.CurrentDownloads >= 5)
+            //{
+            //    Thread.Sleep(300);
+            //}
 
             IsDownloading = true;
             _lifetimeData.CurrentDownloads++;
@@ -200,14 +205,6 @@ namespace Automaton.Model
 
             if (File.Exists(partPath))
             {
-                //IsValidationComplete = true;
-                //IsDownloading = false;
-                //_lifetimeData.CurrentDownloads--;
-
-                //ArchivePath = archivePath;
-
-                return; // A hack
-
                 File.Delete(partPath);
             }
 
@@ -268,6 +265,13 @@ namespace Automaton.Model
 
         public void CancelDownload()
         {
+            IsDownloading = false;
+
+            if (_webClient == null)
+            {
+                return;
+            }
+
             _webClient.CancelAsync();
         }
 
