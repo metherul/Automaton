@@ -1,5 +1,6 @@
 ﻿using Automaton.Common;
 using Automaton.Common.Model;
+using CG.Web.MegaApiClient;
 using SevenZipExtractor;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 using WebSocketSharp;
 
@@ -88,8 +90,15 @@ namespace Automaton.Winforms
 
         public void Info(string fmt, params object[] args)
         {
-            var str = String.Format(fmt, args.Select(arg => arg.ToString()).ToArray()) + "\n";
-            _logfn(str);
+            if (args.Length > 0)
+            {
+                var str = String.Format(fmt, args.Select(arg => arg.ToString()).ToArray()) + "\n";
+                _logfn(str);
+            }
+            else
+            {
+                _logfn(fmt);
+            }
         }
 
         public void SetStatus(string fmt, params object[] args)
@@ -415,7 +424,16 @@ namespace Automaton.Winforms
             if (archive.GameName != null && archive.ModId != null && archive.FileId != null)
                 return DownloadNexusMod(archive);
             else if (archive.DirectURL != null)
-                return DownloadDirectURL(archive);
+                if (archive.DirectURL.StartsWith("https://www.dropbox.com/"))
+                    return DownloadDropboxURL(archive);
+                else if (archive.DirectURL.StartsWith("https://drive.google.com/")) {
+                    Info("Cannot download {0} Google Drive links are not currently supported", archive.ArchiveName);
+                    return archive;
+                }
+                else if (archive.DirectURL.StartsWith("https://mega.nz/"))
+                    return DownloadMegaURL(archive);
+                else
+                    return DownloadDirectURL(archive);
             else
                 Info("Don't know how to download from {0} for {1}", archive.Name, archive.Repository);
 
@@ -423,9 +441,40 @@ namespace Automaton.Winforms
             return archive;
         }
 
+        private SourceArchive DownloadMegaURL(SourceArchive archive)
+        {
+            var client = new MegaApiClient();
+            SetStatus("Logging into MEGA (as anonymous)");
+            client.LoginAnonymous();
+            var file_link = new Uri(archive.DirectURL);
+            var node = client.GetNodeFromLink(file_link);
+            SetStatus("Downloading MEGA file: {0}", archive.ArchiveName);
+
+            var output_path = Path.Combine(DownloadsFolder, archive.ArchiveName);
+            client.DownloadFile(file_link, output_path);
+            return archive;
+
+        }
+
+        private SourceArchive DownloadDropboxURL(SourceArchive archive)
+        {
+            // We need to make sure we pass dl=1 in the query params.
+            var uri = new UriBuilder(archive.DirectURL);
+            var query = HttpUtility.ParseQueryString(uri.Query);
+
+            if (query.Contains("dl"))
+                query.Remove("dl");
+            query.Set("dl", "1");
+
+            uri.Query = query.ToString();
+            archive.DirectURL = uri.ToString();
+            return DownloadDirectURL(archive);
+        }
+
         private SourceArchive DownloadDirectURL(SourceArchive archive)
         {
             var client = new HttpClient();
+            
             client.DefaultRequestHeaders.Add("User-Agent", "requestor");
             if (archive.HttpHeaders != null)
             {

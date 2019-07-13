@@ -10,6 +10,7 @@ using System.IO.Compression;
 using Automaton.Common.Model;
 using SevenZipExtractor;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Hephaestus
 {
@@ -89,12 +90,13 @@ namespace Hephaestus
                 });
             }
 
-            foreach (var pairing in need_patches)
+            Parallel.ForEach(need_patches,
+            pairing =>
             {
                 Log.Info("Generating Patch for: {0} ", Path.GetFileName(pairing.pairing.To));
                 var ss = extracted[pairing.pairing.From];
                 var patched_file = Path.Combine(ModsFolder, pairing.mod.Name, pairing.pairing.To);
-                using (var origin = new MemoryStream(ss.ToArray())) 
+                using (var origin = new MemoryStream(ss.ToArray()))
                 using (var dest = File.OpenRead(patched_file))
                 using (var output = File.OpenWrite(Path.Combine(patch_folder, pairing.pairing.patch_id)))
                 {
@@ -103,7 +105,7 @@ namespace Hephaestus
                     BSDiff.Create(a, b, output);
                 }
 
-            }
+            });
 
 
             return archive;
@@ -449,7 +451,7 @@ namespace Hephaestus
             Log.Info("Hashing latest MO2");
             result = client.GetStreamAsync(archive.DirectURL);
             result.Wait();
-            archive.SHA256 = Utils.SHA256(result.Result); ;
+            archive.SHA256 = Utils.SHA256(result.Result, "MO2_Stream_HASH_" + use_archive.name); ;
             archive.Size = use_archive.size;
             return archive;
 

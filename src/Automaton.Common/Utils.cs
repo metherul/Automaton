@@ -204,7 +204,10 @@ namespace Automaton.Common
                 var hash = ToHex(sha.ComputeHash(stream));
 
                 if (cache_file != null)
+                {
+                    Directory.CreateDirectory("stream_caches");
                     File.WriteAllText(cache_file, hash);
+                }
 
                 return hash;
             }
