@@ -2,10 +2,13 @@
 using Newtonsoft.Json;
 using SevenZipExtractor;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using WebSocketSharp;
 
 namespace Automaton.Common
 {
@@ -67,14 +70,23 @@ namespace Automaton.Common
             return new DynamicIniData(fi.ReadFile(filename));
         }
 
-        public static string FileSHA256(string filename)
+        public static string FileSHA256(string filename, bool use_caching = false)
         {
+            var sha_path = filename + ".sha256_hash";
+
+            if (use_caching && File.Exists(sha_path) && new FileInfo(filename).LastWriteTime <= new FileInfo(sha_path).LastWriteTime)
+                return Slurp(sha_path);
+
             using (var stream = File.OpenRead(filename))
             {
                 var sha = new SHA256Managed();
-                return ToHex(sha.ComputeHash(stream));
+                var hash = ToHex(sha.ComputeHash(stream));
+                if (use_caching)
+                    File.WriteAllText(sha_path, hash);
+                return hash;
             }
         }
+
 
         public static string FileMD5(string filePath)
         {
@@ -126,6 +138,14 @@ namespace Automaton.Common
             return value.Substring(prefix.Length + 1);
         }
 
+        public static string Slurp(Stream s)
+        {
+            using (var rdr = new StreamReader(s))
+            {
+                return rdr.ReadToEnd();
+            }
+        }
+
         /// <summary>
         /// Reads in a complete text file and returns the contents as a string
         /// </summary>
@@ -170,6 +190,59 @@ namespace Automaton.Common
             entry.Extract(memoryStream);
 
             return memoryStream;
+        }
+
+        public static string SHA256(Stream result, string cache_name = null)
+        {
+            var cache_file = cache_name == null ? null : Path.Combine("stream_caches", cache_name);
+            if (cache_file != null && File.Exists(cache_file))
+                return File.ReadAllText(cache_file);
+
+            using (var stream = result)
+            {
+                var sha = new SHA256Managed();
+                var hash = ToHex(sha.ComputeHash(stream));
+
+                if (cache_file != null)
+                    File.WriteAllText(cache_file, hash);
+
+                return hash;
+            }
+        }
+
+        public static string GetNexusAPIKey()
+        {
+            FileInfo fi = new FileInfo("nexus.key_cache");
+            if (fi.Exists && fi.LastWriteTime > DateTime.Now.AddHours(-12))
+            {
+                return Utils.Slurp("nexus.key_cache");
+            }
+
+            var guid = Guid.NewGuid();
+            var _websocket = new WebSocket("wss://sso.nexusmods.com")
+            {
+                SslConfiguration =
+            {
+                EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12
+            }
+            };
+
+            TaskCompletionSource<string> api_key = new TaskCompletionSource<string>();
+            _websocket.OnMessage += (sender, msg) =>
+            {
+                api_key.SetResult(msg.Data);
+                return;
+            };
+
+            _websocket.Connect();
+            _websocket.Send("{\"id\": \"" + guid + "\", \"appid\": \"Automaton\"}");
+
+            Process.Start($"https://www.nexusmods.com/sso?id={guid}&application=Automaton");
+
+            api_key.Task.Wait();
+            var result = api_key.Task.Result;
+            File.WriteAllText("nexus.key_cache", result);
+            return result;
         }
     }
 }

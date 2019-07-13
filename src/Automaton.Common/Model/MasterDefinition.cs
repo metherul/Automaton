@@ -36,6 +36,9 @@ namespace Automaton.Common.Model
 
         [JsonProperty("scan_game_directory")]
         public bool ScanGameDirectory { get; set; }
+
+        [JsonProperty("mo2_archive")]
+        public SourceArchive MO2Archive { get; set; }
         
         public MasterDefinition Clone()
         {

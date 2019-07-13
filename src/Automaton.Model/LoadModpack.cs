@@ -91,6 +91,10 @@ namespace Automaton.Model
                                        .ToDictionary(x => Path.GetFileName(x.FileName));
 
 
+            // Add the MO2 archive. 
+            archives.Add(ClassExtensions.ToDerived<SourceArchive, ExtendedArchive>(_lifetimeData.MasterDefinition.MO2Archive)
+                                        .Initialize(_components, null, patches, ExtendedArchive.InstallerTypeEnum.ModOrganizer2));
+
             foreach (var mod in mods)
             {
                 var archive = mod.InstallPlans
