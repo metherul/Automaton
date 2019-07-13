@@ -24,6 +24,12 @@ namespace Automaton.Common.Model
         [JsonProperty("author_id")]
         public long AuthorId { get; set; }
 
+        [JsonProperty("direct_url")]
+        public string DirectURL { get; set; }
+
+        [JsonProperty("http_headers")]
+        public List<string> HttpHeaders { get; set; }
+
         [JsonProperty("donate_urls")]
         public List<string> DonateURLs { get; set; }
 
@@ -57,7 +63,5 @@ namespace Automaton.Common.Model
         [JsonProperty("size")]
         public long Size { get; set; }
 
-        [JsonProperty("direct_url")]
-        public string DirectURL { get; set; }
     }
 }

@@ -34,9 +34,12 @@ namespace Automaton.Common
             {
                 int read_a = read_all(source_a, buff_a);
                 int read_b = read_all(source_b, buff_b);
+               
 
                 if (read_a == read_b)
                 {
+                    if (read_a == 0) break;
+
                     xor_copy(buff_a, buff_b, dest_buff, read_a);
                     dest.Write(dest_buff, 0, read_a);
                     read += read_a;

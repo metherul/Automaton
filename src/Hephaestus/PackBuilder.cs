@@ -9,6 +9,8 @@ using Hephaestus.Nexus;
 using System.IO.Compression;
 using Automaton.Common.Model;
 using SevenZipExtractor;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Hephaestus
 {
@@ -26,8 +28,8 @@ namespace Hephaestus
 
         public void LoadPrefs(string filepath)
         {
-            Preferences = Utils.LoadJson<Preferences>(filepath);
-            NexusClient = new NexusClient(Preferences.ApiKey);
+            //Preferences = Utils.LoadJson<Preferences>(filepath);
+            NexusClient = new NexusClient(Utils.GetNexusAPIKey());
         }
 
         public IList<InstalledMod> InstalledMods { get; private set; }
@@ -88,19 +90,22 @@ namespace Hephaestus
                 });
             }
 
-            foreach (var pairing in need_patches)
+            Parallel.ForEach(need_patches,
+            pairing =>
             {
+                Log.Info("Generating Patch for: {0} ", Path.GetFileName(pairing.pairing.To));
                 var ss = extracted[pairing.pairing.From];
                 var patched_file = Path.Combine(ModsFolder, pairing.mod.Name, pairing.pairing.To);
-                using (var origin = new MemoryStream(ss.ToArray())) 
+                using (var origin = new MemoryStream(ss.ToArray()))
                 using (var dest = File.OpenRead(patched_file))
                 using (var output = File.OpenWrite(Path.Combine(patch_folder, pairing.pairing.patch_id)))
                 {
-                    var ps = new PatchingStream(origin, dest, output, new FileInfo(patched_file).Length);
-                    ps.Patch();
+                    var a = origin.ReadAll();
+                    var b = dest.ReadAll();
+                    BSDiff.Create(a, b, output);
                 }
 
-            }
+            });
 
 
             return archive;
@@ -250,13 +255,13 @@ namespace Hephaestus
             else
             {
                 compiled_mod.ModType = ModType.InstalledArchive;
-                ScanDirectory(mod.FullPath, compiled_mod, primary_source, null);
+                ScanDirectory(mod.FullPath, compiled_mod, primary_source, null, false);
             }
             Log.Info("Done Compiling {0}", mod.ModName);
             return compiled_mod;
         }
 
-        private void ScanDirectory(string full_path, Mod compiled_mod, Model.SourceArchive primary_source, ISet<string> ignore)
+        private void ScanDirectory(string full_path, Mod compiled_mod, Model.SourceArchive primary_source, ISet<string> ignore, bool supress_warning)
         {
             foreach (var file in Directory.EnumerateFiles(full_path, "*", SearchOption.AllDirectories))
             {
@@ -287,21 +292,23 @@ namespace Hephaestus
 
 
                 // Find a file in the primary source with the same name?
-                var primary_source_file = (from archive_file in primary_source.ArchiveEntries
-                                           where Path.GetFileName(archive_file.FileName) == Path.GetFileName(archive_file.FileName)
-                                           select archive_file).FirstOrDefault();
-
-                if (primary_source_file != null)
+                if (primary_source != null)
                 {
-                    Log.Info("Found name match for {0} in primary mod source, building patch.", file);
+                    var primary_source_file = (from archive_file in primary_source.ArchiveEntries
+                                               where Path.GetFileName(archive_file.FileName) == Path.GetFileName(file)
+                                               select archive_file).FirstOrDefault();
 
-                    var pairing = AddPairToMod(compiled_mod, to_path, primary_source, primary_source_file);
-                    pairing.is_patched = true;
-                    continue;
+                    if (primary_source_file != null)
+                    {
+                        Log.Info("Found name match for {0} in primary mod source, building patch.", file);
+
+                        var pairing = AddPairToMod(compiled_mod, to_path, primary_source, primary_source_file);
+                        pairing.is_patched = true;
+                        continue;
+                    }
                 }
-
                 
-
+                if (!supress_warning)
                 {
                     Log.Warn("No match: {0}", file);
                 }
@@ -337,7 +344,9 @@ namespace Hephaestus
             var game_dir_mod = new Mod();
             CompiledMods.Add(game_dir_mod);
             game_dir_mod.ModType = ModType.GameDirectoryMod;
-            ScanDirectory(MO2Ini.General.gamePath, game_dir_mod, null, new HashSet<string>() { ".bsa", ".psc", ".bak" });
+            game_dir_mod.Name = "Game Directory Files";
+            Log.Info("Scanning Game Folder");
+            ScanDirectory(MO2Ini.General.gamePath, game_dir_mod, null, new HashSet<string>() { ".bsa", ".psc", ".bak" }, true);
         }
 
         public void ExportPack()
@@ -352,30 +361,50 @@ namespace Hephaestus
                 var master = ModPackMasterDefinition.Clone();
                 master.MO2Directory = null;
                 master.AlternateArchiveLocations = new List<string>();
+                master.MO2Archive = GetMO2ARchiveInfo();
                 Utils.SpitJsonInto(zip, "pack.auto_definition", master);
 
                 foreach (var mod in CompiledMods)
                 {
-                    Log.Info("Exporting {0}", mod.Name);
-                    Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "install.json"), mod);
-                    zip.CreateEntryFromFile(Path.Combine(ModsFolder, mod.Name, "meta.ini"), Path.Combine("mods", mod.Name, "meta.ini"));
+                    if (mod.ModType == ModType.GameDirectoryMod)
+                    {
+                        Log.Info("Exporting Game Directory Files");
+                        Utils.SpitJsonInto(zip, "game_folder_mod.json", mod);
+                    }
+                    else
+                    {
+                        Log.Info("Exporting {0}", mod.Name);
+                        Utils.SpitJsonInto(zip, Path.Combine("mods", mod.Name, "install.json"), mod);
+                        zip.CreateEntryFromFile(Path.Combine(ModsFolder, mod.Name, "meta.ini"), Path.Combine("mods", mod.Name, "meta.ini"));
+                    }
                 }
 
-                var extra_files = new List<string>{"modlist.txt", "lockedorder.txt", "plugins.txt",
-                                                   "archives.txt"};
-                foreach (var file in extra_files)
+                string full_path;
+                foreach (var file in Directory.EnumerateFiles(ProfileFolder).Where(f => File.Exists(f)))
                 {
-                    var full_path = Path.Combine(ProfileFolder, file);
-                    if (File.Exists(full_path))
-                        zip.CreateEntryFromFile(full_path, file);
+                    if (Path.GetFileName(file) == "modlist.txt") continue;
 
+                    full_path = Path.Combine("profile", Path.GetFileName(file));
+                    zip.CreateEntryFromFile(file, full_path);
+                    
                 }
 
+                // Scrub the mod list of disabled mods
+                var mod_list = File.ReadAllLines(Path.Combine(ProfileFolder, "modlist.txt"))
+                                   .Where(x => !x.StartsWith("-") || x.EndsWith("_separator"))
+                                   .ToArray();
+                
+                full_path = Path.Combine("profile", "modlist.txt");
+                Utils.SpitInto(zip, full_path, String.Join("\n", mod_list));
+
+
+                // Write Patches
                 foreach (var file in Directory.EnumerateFiles("./temp_patches"))
                 {
-                    zip.CreateEntryFromFile(file, "patches/" + Path.GetFileName(file));
+                    zip.CreateEntryFromFile(file, "patches\\" + Path.GetFileName(file));
                 }
 
+                // Write Mod metadata
                 foreach (var file in Directory.EnumerateFiles(ProfileFolder, "*.meta"))
                 {
                     zip.CreateEntryFromFile(file, Path.GetFileName(file));
@@ -384,6 +413,49 @@ namespace Hephaestus
             }
         }
 
+
+        class GitHubRelease
+        {
+            public bool prerelease;
+            public List<GitHubAsset> assets { get; set; }
+        }
+
+        class GitHubAsset
+        {
+            public string name;
+            public long size;
+            public string browser_download_url;
+        }
+
+        public Automaton.Common.Model.SourceArchive GetMO2ARchiveInfo()
+        {
+            Log.Info("Loading latest MO2 Archive Info from GitHub");
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "request");
+            var result = client.GetStreamAsync("https://api.github.com/repos/ModOrganizer2/modorganizer/releases");
+            result.Wait();
+            var releases = Utils.LoadJson<List<GitHubRelease>>(result.Result);
+            var use_archive = (from release in releases
+                               where !release.prerelease
+                               from asset in release.assets
+                               where !asset.name.EndsWith(".exe")
+                               select asset).First();
+
+            var archive = new Automaton.Common.Model.SourceArchive();
+            archive.Name = use_archive.name;
+            archive.ArchiveName = use_archive.name;
+            archive.Repository = "GitHub";
+            archive.DirectURL = use_archive.browser_download_url;
+
+            Log.Info("Hashing latest MO2");
+            result = client.GetStreamAsync(archive.DirectURL);
+            result.Wait();
+            archive.SHA256 = Utils.SHA256(result.Result, "MO2_Stream_HASH_" + use_archive.name); ;
+            archive.Size = use_archive.size;
+            return archive;
+
+        }
 
     }
 }
