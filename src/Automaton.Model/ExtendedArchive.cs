@@ -30,6 +30,8 @@ namespace Automaton.Model
         private INexusApi _nexusApi;
         private IDialogRedirector _dialogRedirector;
 
+        private ExtendedArchive _boundArchive;
+
         public string ArchivePath { get; set; }
         public string AuthenticationParams { get; set; }
         public double MbPerSecond { get; set; }
@@ -51,6 +53,15 @@ namespace Automaton.Model
             Patches = patches;
 
             return this;
+        }
+
+        public void BindToOther(ExtendedArchive archive)
+        {
+            // So in some instances we may have multiple ExtendedArchives that all source back to a single archive file. We limit this to one, 
+            // and just save the class's ref
+
+            _boundArchive = archive;
+            IsValidationComplete = true; // We can get this out of the way, since we cannot continue the installation until the bound archive is validated
         }
 
         public void Install()
@@ -184,11 +195,11 @@ namespace Automaton.Model
 
             if (File.Exists(partPath))
             {
-                IsValidationComplete = true;
-                IsDownloading = false;
-                _lifetimeData.CurrentDownloads--;
+                //IsValidationComplete = true;
+                //IsDownloading = false;
+                //_lifetimeData.CurrentDownloads--;
 
-                ArchivePath = archivePath;
+                //ArchivePath = archivePath;
 
                 return; // A hack
 

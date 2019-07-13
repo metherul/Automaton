@@ -3,6 +3,7 @@ using Automaton.Model.Interfaces;
 using Microsoft.Win32;
 using NamedPipeWrapper;
 using System;
+using System.Windows.Forms;
 
 namespace Automaton.Model
 {
@@ -34,6 +35,7 @@ namespace Automaton.Model
             // This is temp
             Registry.SetValue(@"HKEY_CURRENT_USER\Software\Classes\nxm\shell\open\command", "", $"\"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Automaton.exe")}\" \"%1\"");
             Registry.SetValue(@"HKEY_CURRENT_USER\Software\Classes\nxm", "", $"URL:NXM Protocol");
+            Registry.SetValue(@"HKEY_CURRENT_USER\Software\Classes\nxm", "URL Protocol", "");
         }
 
         /// <summary>
@@ -53,7 +55,14 @@ namespace Automaton.Model
         /// <param name="message"></param>
         public void SendToServer(string message)
         {
-            _client.PushMessage(message);
+            try
+            {
+                _client.PushMessage(message);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         public PipedData ToPipedData(string nxmString)

@@ -102,8 +102,6 @@ namespace Automaton.ViewModel
 
             var cliArgs = Environment.GetCommandLineArgs();
 
-            MessageBox.Show(cliArgs[1]);
-
             if (cliArgs.Length == 2 && cliArgs[0] == Assembly.GetEntryAssembly().Location)
             {
                 builder.RegisterAssemblyTypes(assembly)

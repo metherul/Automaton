@@ -37,7 +37,9 @@ namespace Automaton.ViewModel
 
         public ObservableCollection<ExtendedArchive> Archives { get; set; }
         public ICollectionView ArchivesView { get; set; }
+
         public int MissingArchivesCount { get; set; }
+
 
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -54,7 +56,7 @@ namespace Automaton.ViewModel
         private void _NXMRoute_RecieveMessageEvent(string message)
         {
             var pipedData = _NXMRoute.ToPipedData(message);
-            var matchingArchives = Archives.Where(x => x.ModId == pipedData.ModId && x.FileId == pipedData.FileId);
+            var matchingArchives = Archives.Where(x => x.ModId == pipedData.ModId && x.FileId == pipedData.FileId && !x.IsValidationComplete).ToList();
 
             if (matchingArchives != null)
             {
@@ -154,6 +156,8 @@ namespace Automaton.ViewModel
 
         private void OpenNexusLink(ExtendedArchive archive)
         {
+            var test = Archives.ToList().Where(x => x.ArchiveName.ToLower().Contains("draugr")).ToList();
+
             if (archive.Repository == "Nexus" && !string.IsNullOrEmpty(archive.ModId))
             {
                 Process.Start($"https://nexusmods.com/{archive.GameName}/mods/{archive.ModId}/");

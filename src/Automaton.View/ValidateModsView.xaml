@@ -36,7 +36,6 @@
                             VerticalAlignment="Center"
                             FontSize="15"
                             Foreground="{DynamicResource FontColor}"
-                            IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}"
                             ToolTip="This is a Nexus Premium ONLY feature">
                             <TextBlock.Style>
                                 <Style BasedOn="{StaticResource HeaderText}" TargetType="{x:Type TextBlock}">
@@ -58,8 +57,7 @@
                             VerticalAlignment="Center"
                             Background="{DynamicResource ButtonColor}"
                             Foreground="{DynamicResource FontColor}"
-                            IsChecked="{Binding AutodownloadsEnabled}"
-                            IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}" />
+                            IsChecked="{Binding AutodownloadsEnabled}" />
 
                         <Grid
                             Width="2"
@@ -73,7 +71,6 @@
                             VerticalAlignment="Center"
                             ClipToBounds="True"
                             Command="{Binding ScanDirectoryCommand}"
-                            IsEnabled="{Binding IsInitialValidating, Converter={StaticResource BoolToInverseConverter}}"
                             Style="{DynamicResource MaterialDesignToolButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock

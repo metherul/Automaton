@@ -28,6 +28,7 @@ namespace Automaton.Model
         {
             await Task.Run(() => Load(modpackPath));
         }
+
         public void Load(string modpackPath)
         {
             var archiveHandle = _archiveHandle.New(modpackPath);
@@ -98,6 +99,23 @@ namespace Automaton.Model
                     .ToList();
 
                 archives.AddRange(archive);
+            }
+
+            // Last cycle through, we need to consolidate the archive objects
+            foreach (var archive in archives)
+            {
+                if (archive.IsValidationComplete)
+                {
+                    continue;
+                }
+
+                // Agg a list of somewhat matching archive objects
+                var somewhatMatching = archives.Where(x => x.ModId == archive.ModId && x.FileId == archive.FileId && x != archive).ToList();
+
+                foreach (var somewhatMatch in somewhatMatching) // Bad design for nest
+                {
+                    somewhatMatch.BindToOther(archive);
+                }
             }
 
             _lifetimeData.Archives = archives;
