@@ -293,7 +293,7 @@ namespace Hephaestus
                 if (primary_source != null)
                 {
                     var primary_source_file = (from archive_file in primary_source.ArchiveEntries
-                                               where Path.GetFileName(archive_file.FileName) == Path.GetFileName(archive_file.FileName)
+                                               where Path.GetFileName(archive_file.FileName) == Path.GetFileName(file)
                                                select archive_file).FirstOrDefault();
 
                     if (primary_source_file != null)
