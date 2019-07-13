@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:Automaton.View"
     xmlns:vm="clr-namespace:Automaton.ViewModel;assembly=Automaton.ViewModel"
     d1p1:Ignorable="d"
-    ShutdownMode="OnExplicitShutdown"
+    ShutdownMode="OnMainWindowClose"
     Startup="Application_Startup"
     StartupUri="MainWindow.xaml">
     <Application.Resources>

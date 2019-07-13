@@ -74,7 +74,12 @@ namespace Automaton.Model
             // Verify to ensure that the SourceArchive path exists
             if (!File.Exists(ArchivePath))
             {
-                return;
+                if (!File.Exists(_boundArchive.ArchivePath))
+                {
+                    return;
+                }
+
+                ArchivePath = _boundArchive.ArchivePath;
             }
 
             // Verify to ensure that the mod's installation directory exists
