@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -426,12 +427,15 @@ namespace Automaton.Winforms
             else if (archive.DirectURL != null)
                 if (archive.DirectURL.StartsWith("https://www.dropbox.com/"))
                     return DownloadDropboxURL(archive);
-                else if (archive.DirectURL.StartsWith("https://drive.google.com/")) {
+                else if (archive.DirectURL.StartsWith("https://drive.google.com/"))
+                {
                     Info("Cannot download {0} Google Drive links are not currently supported", archive.ArchiveName);
                     return archive;
                 }
                 else if (archive.DirectURL.StartsWith("https://mega.nz/"))
                     return DownloadMegaURL(archive);
+                else if (archive.DirectURL.StartsWith("https://www.moddb.com/downloads/start/"))
+                    return DownloadModDBArchive(archive);
                 else
                     return DownloadDirectURL(archive);
             else
@@ -439,6 +443,16 @@ namespace Automaton.Winforms
 
 
             return archive;
+        }
+
+        private SourceArchive DownloadModDBArchive(SourceArchive archive)
+        {
+            var client = new HttpClient();
+            var result = client.GetStringSync(archive.DirectURL);
+            var regex = new Regex("https:\\/\\/www\\.moddb\\.com\\/downloads\\/mirror\\/.*(?=\\\")");
+            var match = regex.Match(result);
+            archive.DirectURL = match.Value;
+            return DownloadDirectURL(archive);
         }
 
         private SourceArchive DownloadMegaURL(SourceArchive archive)
