@@ -39,6 +39,16 @@ namespace Automaton.Common
             return test;
         }
 
+        public static T LoadJson<T>(Entry entry)
+        {
+            var entryStream = new MemoryStream();
+
+            entry.Extract(entryStream);
+            entryStream.Seek(0, SeekOrigin.Begin);
+
+            return LoadJson<T>(entryStream);
+        }
+
         public static void WriteJson<T>(T inst, string filename)
         {
             using (var os = File.OpenWrite(filename))

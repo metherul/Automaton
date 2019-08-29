@@ -10,6 +10,7 @@ namespace Automaton.Model
     public class LifetimeData : ILifetimeData
     {
         public MasterDefinition MasterDefinition { get; set; }
+        public Manager ManagerDefinition { get; set; }
         public List<Mod> Mods { get; set; }
         public List<ExtendedArchive> Archives { get; set; }
         public List<ModpackItem> ModpackContent { get; set; }

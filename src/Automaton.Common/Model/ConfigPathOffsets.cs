@@ -4,6 +4,7 @@
     {
         public static readonly string PackDefinitionConfig = "pack.auto_definition";
         public static readonly string InstallConfig = "install.json";
+        public static readonly string ManagerConfig = "manager.json";
 
         public static readonly string DefaultContentDir = "content";
         public static readonly string DefaultModsDir = "mods";

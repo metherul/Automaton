@@ -1,0 +1,1086 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Pathoschild.Http.Client</name>
+    </assembly>
+    <members>
+        <member name="T:Pathoschild.Http.Client.ApiException">
+            <summary>Represents an error returned by the upstream server.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.ApiException.Status">
+            <summary>The HTTP status of the response.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.ApiException.Response">
+            <summary>The HTTP response which caused the exception.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.ApiException.ResponseMessage">
+            <summary>The HTTP response message which caused the exception.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.ApiException.#ctor(Pathoschild.Http.Client.IResponse,System.String,System.Exception)">
+            <summary>Construct an instance.</summary>
+            <param name="response">The HTTP response which caused the exception.</param>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception (or <c>null</c> for no inner exception).</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Extensibility.DefaultErrorFilter">
+            <summary>An HTTP filter which detects failed HTTP requests and throws an exception.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Extensibility.DefaultErrorFilter.OnRequest(Pathoschild.Http.Client.IRequest)">
+            <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
+            <param name="request">The HTTP request.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Extensibility.DefaultErrorFilter.OnResponse(Pathoschild.Http.Client.IResponse,System.Boolean)">
+            <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
+            <param name="response">The HTTP response.</param>
+            <param name="httpErrorAsException">Whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Extensibility.IHttpFilter">
+            <summary>A middleware class which can intercept and modify HTTP requests and responses. This can be used to implement common authentication, error-handling, etc.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Extensibility.IHttpFilter.OnRequest(Pathoschild.Http.Client.IRequest)">
+            <summary>Method invoked just before the HTTP request is submitted. This method can modify the outgoing HTTP request.</summary>
+            <param name="request">The HTTP request.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Extensibility.IHttpFilter.OnResponse(Pathoschild.Http.Client.IResponse,System.Boolean)">
+            <summary>Method invoked just after the HTTP response is received. This method can modify the incoming HTTP response.</summary>
+            <param name="response">The HTTP response.</param>
+            <param name="httpErrorAsException">Whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.FluentClient">
+            <summary>Sends HTTP requests and receives responses from REST URIs.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.FluentClient.IsDisposed">
+            <summary>Whether the instance has been disposed.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.FluentClient.MustDisposeBaseClient">
+            <summary>Whether to dispose the <see cref="P:Pathoschild.Http.Client.FluentClient.BaseClient"/> when disposing.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.FluentClient.Defaults">
+            <summary>The default behaviours to apply to all requests.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.FluentClient.Options">
+            <summary>Options for the fluent client.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.FluentClient.Filters">
+            <summary>Interceptors which can read and modify HTTP requests and responses.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.FluentClient.BaseClient">
+            <summary>The underlying HTTP client.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.FluentClient.Formatters">
+            <summary>The formatters used for serializing and deserializing message bodies.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.FluentClient.RequestCoordinator">
+            <summary>The request coordinator.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.#ctor(System.String,System.Net.IWebProxy)">
+            <summary>Construct an instance.</summary>
+            <param name="baseUri">The base URI prepended to relative request URIs.</param>
+            <param name="proxy">The web proxy.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.#ctor(System.Uri,System.Net.IWebProxy)">
+            <summary>Construct an instance.</summary>
+            <param name="baseUri">The base URI prepended to relative request URIs.</param>
+            <param name="proxy">The web proxy.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>Construct an instance.</summary>
+            <param name="baseUri">The base URI prepended to relative request URIs.</param>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.#ctor(System.Uri,System.Net.Http.HttpClient)">
+            <summary>Construct an instance.</summary>
+            <param name="baseUri">The base URI prepended to relative request URIs.</param>
+            <param name="client">The underlying HTTP client.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SendAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>Create an asynchronous HTTP request message (but don't dispatch it yet).</summary>
+            <param name="message">The HTTP request message to send.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SetAuthentication(System.String,System.String)">
+            <summary>Specify the authentication that will be used with every request.</summary>
+            <param name="scheme">The scheme to use for authorization. e.g.: "Basic", "Bearer".</param>
+            <param name="parameter">The credentials containing the authentication information.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SetHttpErrorAsException(System.Boolean)">
+            <summary>Set whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions by default.</summary>
+            <param name="enabled">Whether to raise HTTP errors as exceptions by default.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SetOptions(Pathoschild.Http.Client.FluentClientOptions)">
+            <summary>Set default options for all requests.</summary>
+            <param name="options">The options to set. (Fields set to <c>null</c> won't change the current value.)</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SetUserAgent(System.String)">
+            <summary>Set the default user agent header.</summary>
+            <param name="userAgent">The user agent header value.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SetRequestCoordinator(Pathoschild.Http.Client.Retry.IRequestCoordinator)">
+            <summary>Set the default request coordinator</summary>
+            <param name="requestCoordinator">The request coordinator.</param>
+            <remarks>If the request coordinator is null, it will cause requests to be executed once without any retry attempts.</remarks>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.AddDefault(System.Func{Pathoschild.Http.Client.IRequest,Pathoschild.Http.Client.IRequest})">
+            <summary>Add a default behaviour for all subsequent HTTP requests.</summary>
+            <param name="apply">The default behaviour to apply.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.Dispose">
+            <summary>Free resources used by the client.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SetDefaultUserAgent">
+            <summary>Set the default user agent header.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.SendImplAsync(Pathoschild.Http.Client.IRequest)">
+            <summary>Dispatch an HTTP request message and fetch the response message.</summary>
+            <param name="request">The request to send.</param>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.AssertNotDisposed">
+            <summary>Assert that the instance has not been disposed.</summary>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.Dispose(System.Boolean)">
+            <summary>Free resources used by the client.</summary>
+            <param name="isDisposing">Whether the dispose method was explicitly called.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.GetDefaultHandler">
+            <summary>Get a default HTTP client handler.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.GetDefaultHandler(System.Net.IWebProxy)">
+            <summary>Get a default HTTP client handler.</summary>
+            <param name="proxy">The web proxy to use.</param>
+            <remarks>Whereas <see cref="M:Pathoschild.Http.Client.FluentClient.GetDefaultHandler"/> leaves the default proxy unchanged, this method will explicitly override it (e.g. setting a null proxy will disable the default proxy).</remarks>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClient.Finalize">
+            <summary>Destruct the instance.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.FluentClientExtensions">
+            <summary>Provides convenience methods for configuring the HTTP client.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.Remove``1(System.Collections.Generic.ICollection{Pathoschild.Http.Client.Extensibility.IHttpFilter})">
+            <summary>Remove all HTTP filters of the specified type.</summary>
+            <typeparam name="TFilter">The filter type.</typeparam>
+            <param name="filters">The filters to adjust.</param>
+            <returns>Returns whether a filter was removed.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.DeleteAsync(Pathoschild.Http.Client.IClient,System.String)">
+            <summary>Create an asynchronous HTTP DELETE request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.GetAsync(Pathoschild.Http.Client.IClient,System.String)">
+            <summary>Create an asynchronous HTTP GET request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.PostAsync(Pathoschild.Http.Client.IClient,System.String)">
+            <summary>Create an asynchronous HTTP POST request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.PostAsync``1(Pathoschild.Http.Client.IClient,System.String,``0)">
+            <summary>Create an asynchronous HTTP POST request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <typeparam name="TBody">The request body type.</typeparam>
+            <param name="resource">The URI to send the request to.</param>
+            <param name="body">The request body.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.PutAsync(Pathoschild.Http.Client.IClient,System.String)">
+            <summary>Create an asynchronous HTTP PUT request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.PutAsync``1(Pathoschild.Http.Client.IClient,System.String,``0)">
+            <summary>Create an asynchronous HTTP PUT request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <typeparam name="TBody">The request body type.</typeparam>
+            <param name="resource">The URI to send the request to.</param>
+            <param name="body">The request body.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.PatchAsync(Pathoschild.Http.Client.IClient,System.String)">
+            <summary>Create an asynchronous HTTP PATCH request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.PatchAsync``1(Pathoschild.Http.Client.IClient,System.String,``0)">
+            <summary>Create an asynchronous HTTP PATCH request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <typeparam name="TBody">The request body type.</typeparam>
+            <param name="resource">The URI to send the request to.</param>
+            <param name="body">The request body.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SendAsync(Pathoschild.Http.Client.IClient,System.Net.Http.HttpMethod,System.String)">
+            <summary>Create an asynchronous HTTP request message (but don't dispatch it yet).</summary>
+            <param name="client">The client.</param>
+            <param name="method">The HTTP method.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <returns>Returns a request builder.</returns>
+            <exception cref="T:System.ObjectDisposedException">The instance has been disposed.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SetBasicAuthentication(Pathoschild.Http.Client.IClient,System.String,System.String)">
+            <summary>Set the default authentication header using basic auth.</summary>
+            <param name="client">The client.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SetBearerAuthentication(Pathoschild.Http.Client.IClient,System.String)">
+            <summary>Set the default authentication header using a bearer token.</summary>
+            <param name="client">The client.</param>
+            <param name="token">The bearer token (typically an API key).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SetRequestCoordinator(Pathoschild.Http.Client.IClient,System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.TimeSpan[])">
+            <summary>Set the default request coordinator.</summary>
+            <param name="client">The client.</param>
+            <param name="shouldRetry">A method which returns whether a request should be retried.</param>
+            <param name="intervals">The intervals between each retry attempt.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SetRequestCoordinator(Pathoschild.Http.Client.IClient,System.Int32,System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.Func{System.Int32,System.Net.Http.HttpResponseMessage,System.TimeSpan})">
+            <summary>Set the default request coordinator.</summary>
+            <param name="client">The client.</param>
+            <param name="maxRetries">The maximum number of times to retry a request before failing.</param>
+            <param name="shouldRetry">A method which returns whether a request should be retried.</param>
+            <param name="getDelay">A method which returns the time to wait until the next retry. This is passed the retry index (starting at 1) and the last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SetRequestCoordinator(Pathoschild.Http.Client.IClient,Pathoschild.Http.Client.Retry.IRetryConfig)">
+            <summary>Set the default request coordinator.</summary>
+            <param name="client">The client.</param>
+            <param name="config">The retry configuration (or null for the default coordinator).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.SetOptions(Pathoschild.Http.Client.IClient,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>Set default options for all requests.</summary>
+            <param name="client">The client.</param>
+            <param name="ignoreHttpErrors">Whether to ignore null arguments when the request is dispatched (or <c>null</c> to leave the option unchanged).</param>
+            <param name="ignoreNullArguments">Whether HTTP error responses like HTTP 404 should be ignored; else raised as exceptions (or <c>null</c> to leave the option unchanged).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithBasicAuthentication(Pathoschild.Http.Client.IRequest,System.String,System.String)">
+            <summary>Add an authentication header using basic auth.</summary>
+            <param name="request">The request.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithBearerAuthentication(Pathoschild.Http.Client.IRequest,System.String)">
+            <summary>Add an authentication header using a bearer token.</summary>
+            <param name="request">The request.</param>
+            <param name="token">The bearer token (typically an API key).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithBody``1(Pathoschild.Http.Client.IRequest,``0)">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="request">The request.</param>
+            <param name="body">The model to serialize into the HTTP body content, or an <c>HttpContent</c> instance.</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <exception cref="T:System.InvalidOperationException">No MediaTypeFormatters are available on the API client for this content type.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithBody``1(Pathoschild.Http.Client.IRequest,``0,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="request">The request.</param>
+            <param name="body">The model to serialize into the HTTP body content.</param>
+            <param name="contentType">The request body format (or <c>null</c> to use the first supported Content-Type in the <see cref="N:Pathoschild.Http.Client.Formatters"/>).</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <exception cref="T:System.InvalidOperationException">No MediaTypeFormatters are available on the API client for this content type.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithBody``1(Pathoschild.Http.Client.IRequest,``0,System.Net.Http.Formatting.MediaTypeFormatter,System.String)">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="request">The request.</param>
+            <param name="body">The model to serialize into the HTTP body content.</param>
+            <param name="formatter">The media type formatter with which to format the request body format.</param>
+            <param name="mediaType">The HTTP media type (or <c>null</c> for the <paramref name="formatter"/>'s default).</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithRequestCoordinator(Pathoschild.Http.Client.IRequest,System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.TimeSpan[])">
+            <summary>Set the request coordinator for this request</summary>
+            <param name="request">The request.</param>
+            <param name="shouldRetry">A lambda which returns whether a request should be retried.</param>
+            <param name="intervals">The intervals between each retry attempt.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithRequestCoordinator(Pathoschild.Http.Client.IRequest,System.Int32,System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.Func{System.Int32,System.Net.Http.HttpResponseMessage,System.TimeSpan})">
+            <summary>Set the request coordinator for this request</summary>
+            <param name="request">The request.</param>
+            <param name="maxRetries">The maximum number of times to retry a request before failing.</param>
+            <param name="shouldRetry">A method which returns whether a request should be retried.</param>
+            <param name="getDelay">A method which returns the time to wait until the next retry. This is passed the retry index (starting at 1) and the last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithRequestCoordinator(Pathoschild.Http.Client.IRequest,Pathoschild.Http.Client.Retry.IRetryConfig)">
+            <summary>Set the request coordinator for this request</summary>
+            <param name="request">The request.</param>
+            <param name="config">The retry config (or null to use the default behaviour).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.WithOptions(Pathoschild.Http.Client.IRequest,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>Set options for this request.</summary>
+            <param name="request">The request.</param>
+            <param name="ignoreHttpErrors">Whether to ignore null arguments when the request is dispatched (or <c>null</c> to leave the option unchanged).</param>
+            <param name="ignoreNullArguments">Whether HTTP error responses like HTTP 404 should be ignored; else raised as exceptions (or <c>null</c> to leave the option unchanged).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.CloneAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>Get a copy of the request.</summary>
+            <param name="request">The request to copy.</param>
+            <remarks>Note that cloning a request isn't possible after it's dispatched, because the content stream is automatically disposed after the request.</remarks>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.CloneAsync(System.Net.Http.HttpContent)">
+            <summary>Get a copy of the request content.</summary>
+            <param name="content">The content to copy.</param>
+            <remarks>Note that cloning content isn't possible after it's dispatched, because the stream is automatically disposed after the request.</remarks>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientExtensions.ResolveFinalUrl(System.Uri,System.String)">
+            <summary>Resolve the final URL for a request.</summary>
+            <param name="baseUrl">The base URL.</param>
+            <param name="resource">The requested resource.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.FluentClientOptions">
+            <summary>Options for the fluent client.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.FluentClientOptions.IgnoreNullArguments">
+            <summary>Whether to ignore null arguments when the request is dispatched.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.FluentClientOptions.IgnoreHttpErrors">
+            <summary>Whether HTTP error responses (e.g. HTTP 404) should be ignored (else raised as exceptions).</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.FluentClientOptions.ToRequestOptions">
+            <summary>Get the equivalent request options.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Formatters.BsonFormatter">
+            <summary>Serializes and deserializes data as BSON.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.BsonFormatter.#ctor">
+            <summary>Construct a new instance.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.BsonFormatter.Deserialize(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
+            <summary>Deserialize an object from the stream.</summary>
+            <param name="type">The type of object to read.</param>
+            <param name="stream">The stream from which to read.</param>
+            <param name="content">The HTTP content being read.</param>
+            <param name="formatterLogger">The trace message logger.</param>
+            <returns>Returns a deserialized object.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.BsonFormatter.Serialize(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
+            <summary>Serialize an object into the stream.</summary>
+            <param name="type">The type of object to write.</param>
+            <param name="value">The object instance to write.</param>
+            <param name="stream">The stream to which to write.</param>
+            <param name="content">The HTTP content being written.</param>
+            <param name="transportContext">The <see cref="T:System.Net.TransportContext"/>.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Formatters.JsonNetBsonFormatter">
+            <summary>Serializes and deserializes data as BSON.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase">
+            <summary>Base implementation of an HTTP <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> for serialization providers.</summary>
+            <remarks>This class handles the common code for implementing a media type formatter, so most subclasses only need to implement the <see cref="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.Serialize(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)"/> and <see cref="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.Deserialize(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)"/> methods.</remarks>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.CanReadType(System.Type)">
+            <summary>Determines whether this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can deserialize an object of the specified type.</summary>
+            <param name="type">The type of object that will be deserialized.</param>
+            <returns>true if this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can deserialize an object of that type; otherwise false.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.CanWriteType(System.Type)">
+            <summary>Determines whether this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can serialize an object of the specified type. </summary>
+            <param name="type">The type of object that will be serialized.</param>
+            <returns>true if this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can serialize an object of that type; otherwise false.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
+            <summary>Reads an object from the stream asynchronously.</summary>
+            <param name="type">The type of object to read.</param>
+            <param name="stream">The stream from which to read.</param>
+            <param name="content">The HTTP content being read.</param>
+            <param name="formatterLogger">The trace message logger.</param>
+            <returns>A task which writes the object to the stream asynchronously.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
+            <summary>Writes an object to the stream asynchronously.</summary>
+            <param name="type">The type of object to write.</param>
+            <param name="value">The object instance to write.</param>
+            <param name="stream">The stream to which to write.</param>
+            <param name="content">The HTTP content being written.</param>
+            <param name="transportContext">The <see cref="T:System.Net.TransportContext"/>.</param>
+            <returns>A task which writes the object to the stream asynchronously.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.AddMediaType(System.String,System.Nullable{System.Double})">
+            <summary>Add a media type which can be read or written by this formatter.</summary>
+            <param name="mediaType">The media type string.</param>
+            <param name="quality">The relative quality factor.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.Deserialize(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
+            <summary>Deserialize an object from the stream.</summary>
+            <param name="type">The type of object to read.</param>
+            <param name="stream">The stream from which to read.</param>
+            <param name="content">The HTTP content being read.</param>
+            <param name="formatterLogger">The trace message logger.</param>
+            <returns>Returns a deserialized object.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.Serialize(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
+            <summary>Serialize an object into the stream.</summary>
+            <param name="type">The type of object to write.</param>
+            <param name="value">The object instance to write.</param>
+            <param name="stream">The stream to which to write.</param>
+            <param name="content">The HTTP content being written.</param>
+            <param name="transportContext">The <see cref="T:System.Net.TransportContext"/>.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.MediaTypeFormatterBase.#ctor">
+            <summary>Construct an instance.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Formatters.PlainTextFormatter">
+            <summary>Serializes and deserializes data as plaintext.</summary>
+            <remarks>This formatter is derived from <a href="http://github.com/WebApiContrib">WebApiContrib</a>, which was not compatible with the release candidate at the time of creation.</remarks>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Formatters.PlainTextFormatter.AllowIrreversibleSerialization">
+            <summary>Whether to allow formatting of types that cannot be deserialized using a <see cref="T:Pathoschild.Http.Client.Formatters.PlainTextFormatter"/>.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.PlainTextFormatter.#ctor">
+            <summary>Construct an instance.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.PlainTextFormatter.CanReadType(System.Type)">
+            <summary>Determines whether this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can deserialize an object of the specified type.</summary>
+            <param name="type">The type of object that will be deserialized.</param>
+            <returns>true if this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can deserialize an object of that type; otherwise false.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.PlainTextFormatter.CanWriteType(System.Type)">
+            <summary>Determines whether this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can serialize an object of the specified type. </summary>
+            <param name="type">The type of object that will be serialized.</param>
+            <returns>true if this <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> can serialize an object of that type; otherwise false.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.PlainTextFormatter.Deserialize(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
+            <summary>Deserialize an object from the stream.</summary>
+            <param name="type">The type of object to read.</param>
+            <param name="stream">The stream from which to read.</param>
+            <param name="content">The HTTP content being read.</param>
+            <param name="formatterLogger">The trace message logger.</param>
+            <returns>Returns a deserialized object.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Formatters.PlainTextFormatter.Serialize(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
+            <summary>Serialize an object into the stream.</summary>
+            <param name="type">The type of object to write.</param>
+            <param name="value">The object instance to write.</param>
+            <param name="stream">The stream to which to write.</param>
+            <param name="content">The HTTP content being written.</param>
+            <param name="transportContext">The <see cref="T:System.Net.TransportContext"/>.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.IBodyBuilder">
+            <summary>Constructs HTTP request bodies.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IBodyBuilder.FormUrlEncoded(System.Object)">
+            <summary>Get a form URL-encoded body.</summary>
+            <param name="arguments">An anonymous object containing the property names and values to set.</param>
+            <example><code>client.WithArguments(new { id = 14, name = "Joe" })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IBodyBuilder.FormUrlEncoded(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Get a form URL-encoded body.</summary>
+            <param name="arguments">An anonymous object containing the property names and values to set.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IBodyBuilder.FormUrlEncoded(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Object}})">
+            <summary>Get a form URL-encoded body.</summary>
+            <param name="arguments">An anonymous object containing the property names and values to set.</param>
+            <example><code>client.WithArguments(new[] { new KeyValuePair&lt;string, string&gt;("genre", "drama"), new KeyValuePair&lt;string, int&gt;("genre", "comedy") })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IBodyBuilder.Model``1(``0,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>Get a serialized model body.</summary>
+            <param name="body">The value to serialize into the HTTP body content.</param>
+            <param name="contentType">The request body format (or <c>null</c> to use the first supported Content-Type in the client's formatter).</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <exception cref="T:System.InvalidOperationException">No MediaTypeFormatters are available on the API client for this content type.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IBodyBuilder.Model``1(``0,System.Net.Http.Formatting.MediaTypeFormatter,System.String)">
+            <summary>Get a serialised model body.</summary>
+            <param name="body">The value to serialize into the HTTP body content.</param>
+            <param name="formatter">The media type formatter with which to format the request body format.</param>
+            <param name="mediaType">The HTTP media type (or <c>null</c> for the <paramref name="formatter"/>'s default).</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="T:Pathoschild.Http.Client.IClient">
+            <summary>Sends HTTP requests and receives responses from REST URIs.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IClient.BaseClient">
+            <summary>The underlying HTTP client.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IClient.Formatters">
+            <summary>The formatters used for serializing and deserializing message bodies.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IClient.Filters">
+            <summary>Interceptors which can read and modify HTTP requests and responses.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.SendAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>Create an asynchronous HTTP request message (but don't dispatch it yet).</summary>
+            <param name="message">The HTTP request message to send.</param>
+            <returns>Returns a request builder.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.SetAuthentication(System.String,System.String)">
+            <summary>Specify the authentication that will be used with every request.</summary>
+            <param name="scheme">The scheme to use for authorization. e.g.: "Basic", "Bearer".</param>
+            <param name="parameter">The credentials containing the authentication information.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.SetHttpErrorAsException(System.Boolean)">
+            <summary>Set whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions by default.</summary>
+            <param name="enabled">Whether to raise HTTP errors as exceptions by default.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.SetOptions(Pathoschild.Http.Client.FluentClientOptions)">
+            <summary>Set default options for all requests.</summary>
+            <param name="options">The options to set. (Fields set to <c>null</c> won't change the current value.)</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.SetUserAgent(System.String)">
+            <summary>Set the default user agent header.</summary>
+            <param name="userAgent">The user agent header value.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.SetRequestCoordinator(Pathoschild.Http.Client.Retry.IRequestCoordinator)">
+            <summary>Set the default request coordinator.</summary>
+            <param name="requestCoordinator">The request coordinator (or null to use the default behaviour).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IClient.AddDefault(System.Func{Pathoschild.Http.Client.IRequest,Pathoschild.Http.Client.IRequest})">
+            <summary>Add a default behaviour for all subsequent HTTP requests.</summary>
+            <param name="apply">The default behaviour to apply.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Internal.BodyBuilder">
+            <summary>Constructs HTTP request bodies.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.Internal.BodyBuilder.Request">
+            <summary>The underlying request.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.BodyBuilder.#ctor(Pathoschild.Http.Client.IRequest)">
+            <summary>Construct an instance.</summary>
+            <param name="request">The underlying request.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.BodyBuilder.FormUrlEncoded(System.Object)">
+            <summary>Get a form URL-encoded body.</summary>
+            <param name="arguments">An anonymous object containing the property names and values to set.</param>
+            <example><code>client.WithArguments(new { id = 14, name = "Joe" })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.BodyBuilder.FormUrlEncoded(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Get a form URL-encoded body.</summary>
+            <param name="arguments">An anonymous object containing the property names and values to set.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.BodyBuilder.FormUrlEncoded(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Object}})">
+            <summary>Get a form URL-encoded body.</summary>
+            <param name="arguments">An anonymous object containing the property names and values to set.</param>
+            <example><code>client.WithArguments(new[] { new KeyValuePair&lt;string, string&gt;("genre", "drama"), new KeyValuePair&lt;string, int&gt;("genre", "comedy") })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.BodyBuilder.Model``1(``0,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>Get the serialized model body.</summary>
+            <param name="body">The value to serialize into the HTTP body content.</param>
+            <param name="contentType">The request body format (or <c>null</c> to use the first supported Content-Type in the client's formatter).</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <exception cref="T:System.InvalidOperationException">No MediaTypeFormatters are available on the API client for this content type.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.BodyBuilder.Model``1(``0,System.Net.Http.Formatting.MediaTypeFormatter,System.String)">
+            <summary>Get a serialised model body.</summary>
+            <param name="body">The value to serialize into the HTTP body content.</param>
+            <param name="formatter">The media type formatter with which to format the request body format.</param>
+            <param name="mediaType">The HTTP media type (or <c>null</c> for the <paramref name="formatter"/>'s default).</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Internal.Factory">
+            <summary>Internal helper for constructing instances.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Factory.GetFormatter(System.Net.Http.Formatting.MediaTypeFormatterCollection,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>Get the formatter for an HTTP content type.</summary>
+            <param name="formatters">The formatters used for serializing and deserializing message bodies.</param>
+            <param name="contentType">The HTTP content type (or <c>null</c> to automatically select one).</param>
+            <exception cref="T:System.InvalidOperationException">No MediaTypeFormatters are available on the API client for this content type.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Factory.GetRequestMessage(System.Net.Http.HttpMethod,System.Uri,System.Net.Http.Formatting.MediaTypeFormatterCollection)">
+            <summary>Construct an HTTP request message.</summary>
+            <param name="method">The HTTP method.</param>
+            <param name="resource">The URI to send the request to.</param>
+            <param name="formatters">The formatters used for serializing and deserializing message bodies.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Internal.ObjectExtensions">
+            <summary>Provides extension methods for <see cref="T:System.Object"/>.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.ObjectExtensions.GetKeyValueArguments(System.Object)">
+            <summary>Get the key/value arguments from an object representation.</summary>
+            <param name="arguments">The arguments to parse.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Internal.Request">
+            <summary>Builds and dispatches an asynchronous HTTP request, and asynchronously parses the response.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.Internal.Request.Dispatcher">
+            <summary>Dispatcher that executes the request.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Request.Message">
+            <summary>The underlying HTTP request message.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Request.Formatters">
+            <summary>The formatters used for serializing and deserializing message bodies.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Request.Filters">
+            <summary>Middleware classes which can intercept and modify HTTP requests and responses.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Request.CancellationToken">
+            <summary>The optional token used to cancel async operations.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Request.RequestCoordinator">
+            <summary>The request coordinator.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Request.Options">
+            <summary>The request options.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.#ctor(System.Net.Http.HttpRequestMessage,System.Net.Http.Formatting.MediaTypeFormatterCollection,System.Func{Pathoschild.Http.Client.IRequest,System.Threading.Tasks.Task{System.Net.Http.HttpResponseMessage}},System.Collections.Generic.ICollection{Pathoschild.Http.Client.Extensibility.IHttpFilter})">
+            <summary>Construct an instance.</summary>
+            <param name="message">The underlying HTTP request message.</param>
+            <param name="formatters">The formatters used for serializing and deserializing message bodies.</param>
+            <param name="dispatcher">Executes an HTTP request.</param>
+            <param name="filters">Middleware classes which can intercept and modify HTTP requests and responses.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithBodyContent(System.Net.Http.HttpContent)">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="body">The formatted HTTP body content.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithBody(System.Func{Pathoschild.Http.Client.IBodyBuilder,System.Net.Http.HttpContent})">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="bodyBuilder">The HTTP body builder.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithHeader(System.String,System.String)">
+            <summary>Set an HTTP header.</summary>
+            <param name="key">The key of the HTTP header.</param>
+            <param name="value">The value of the HTTP header.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithAuthentication(System.String,System.String)">
+            <summary>Add an authentication header.</summary>
+            <param name="scheme">The scheme to use for authorization. e.g.: "Basic", "Bearer".</param>
+            <param name="parameter">The credentials containing the authentication information.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithArgument(System.String,System.Object)">
+            <summary>Add an HTTP query string argument.</summary>
+            <param name="key">The key of the query argument.</param>
+            <param name="value">The value of the query argument.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithArguments``2(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{``0,``1}})">
+            <summary>Add HTTP query string arguments.</summary>
+            <param name="arguments">The arguments to add.</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <example><code>client.WithArguments(new[] { new KeyValuePair&lt;string, string&gt;("genre", "drama"), new KeyValuePair&lt;string, int&gt;("genre", "comedy") })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithArguments(System.Object)">
+            <summary>Add HTTP query string arguments.</summary>
+            <param name="arguments">An anonymous object where the property names and values are used.</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <example><code>client.WithArguments(new { id = 14, name = "Joe" })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithCustom(System.Action{System.Net.Http.HttpRequestMessage})">
+            <summary>Customize the underlying HTTP request message.</summary>
+            <param name="request">The HTTP request message.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithCancellationToken(System.Threading.CancellationToken)">
+            <summary>Specify the token that can be used to cancel the async operation.</summary>
+            <param name="cancellationToken">The cancellationtoken.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithHttpErrorAsException(System.Boolean)">
+            <summary>Set whether HTTP errors (e.g. HTTP 500) should be raised an exceptions for this request.</summary>
+            <param name="enabled">Whether to raise HTTP errors as exceptions.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithOptions(Pathoschild.Http.Client.RequestOptions)">
+            <summary>Set options for this request.</summary>
+            <param name="options">The options to set. (Fields set to <c>null</c> won't change the current value.)</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.WithRequestCoordinator(Pathoschild.Http.Client.Retry.IRequestCoordinator)">
+            <summary>Specify the request coordinator for this request.</summary>
+            <param name="requestCoordinator">The request coordinator</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.GetAwaiter">
+            <summary>Get an object that waits for the completion of the request. This enables support for the <c>await</c> keyword.</summary>
+            <example>
+            <code>await client.PostAsync("api/ideas", idea);</code>
+            <code>await client.GetAsync("api/ideas").AsString();</code>
+            </example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsResponse">
+            <summary>Asynchronously retrieve the HTTP response.</summary>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsMessage">
+            <summary>Asynchronously retrieve the HTTP response.</summary>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.As``1">
+            <summary>Asynchronously retrieve the response body as a deserialized model.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsArray``1">
+            <summary>Asynchronously retrieve the response body as a list of deserialized models.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsByteArray">
+            <summary>Asynchronously retrieve the response body as an array of <see cref="T:System.Byte"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsString">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.String"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsStream">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.IO.Stream"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsRawJson">
+            <summary>Get a raw JSON representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsRawJsonObject">
+            <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.AsRawJsonArray">
+            <summary>Get a raw JSON array representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Request.Execute">
+            <summary>Execute the HTTP request and fetch the response.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Internal.Response">
+            <summary>Asynchronously parses an HTTP response.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Response.IsSuccessStatusCode">
+            <summary>Whether the HTTP response was successful.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Response.Message">
+            <summary>The underlying HTTP response message.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Response.Formatters">
+            <summary>The formatters used for serializing and deserializing message bodies.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Internal.Response.Status">
+            <summary>The HTTP status code.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.#ctor(System.Net.Http.HttpResponseMessage,System.Net.Http.Formatting.MediaTypeFormatterCollection)">
+            <summary>Construct an instance.</summary>
+            <param name="message">The underlying HTTP request message.</param>
+            <param name="formatters">The formatters used for serializing and deserializing message bodies.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.As``1">
+            <summary>Asynchronously retrieve the response body as a deserialized model.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsArray``1">
+            <summary>Asynchronously retrieve the response body as a list of deserialized models.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsByteArray">
+            <summary>Asynchronously retrieve the response body as an array of <see cref="T:System.Byte"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsString">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.String"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsStream">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.IO.Stream"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsRawJson">
+            <summary>Get a raw JSON representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsRawJsonObject">
+            <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.Response.AsRawJsonArray">
+            <summary>Get a raw JSON array representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Internal.UriExtensions">
+            <summary>Provides extension methods for <see cref="T:System.Uri"/>.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Internal.UriExtensions.WithArguments(System.Uri,System.Boolean,System.Collections.Generic.KeyValuePair{System.String,System.Object}[])">
+            <summary>Add raw arguments to the URI's query string.</summary>
+            <param name="uri">The URI to extend.</param>
+            <param name="arguments">The raw arguments to add.</param>
+            <param name="ignoreNullArguments">Whether to ignore arguments with a null value.</param>
+            <remarks>This method can't use <see cref="M:System.Net.Http.UriExtensions.ParseQueryString(System.Uri)" /> because it isn't compatible with portable class libraries.</remarks>
+        </member>
+        <member name="T:Pathoschild.Http.Client.IRequest">
+            <summary>Builds and dispatches an asynchronous HTTP request, and asynchronously parses the response.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IRequest.Message">
+            <summary>The underlying HTTP request message.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IRequest.CancellationToken">
+            <summary>The optional token used to cancel async operations.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IRequest.Formatters">
+            <summary>The formatters used for serializing and deserializing message bodies.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IRequest.Filters">
+            <summary>Middleware classes which can intercept and modify HTTP requests and responses.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IRequest.Options">
+            <summary>The request options.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithBodyContent(System.Net.Http.HttpContent)">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="body">The formatted HTTP body content.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithBody(System.Func{Pathoschild.Http.Client.IBodyBuilder,System.Net.Http.HttpContent})">
+            <summary>Set the body content of the HTTP request.</summary>
+            <param name="bodyBuilder">The HTTP body builder.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithHeader(System.String,System.String)">
+            <summary>Set an HTTP header.</summary>
+            <param name="key">The key of the HTTP header.</param>
+            <param name="value">The value of the HTTP header.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithArgument(System.String,System.Object)">
+            <summary>Add an HTTP query string argument.</summary>
+            <param name="key">The key of the query argument.</param>
+            <param name="value">The value of the query argument.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithArguments``2(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{``0,``1}})">
+            <summary>Add HTTP query string arguments.</summary>
+            <param name="arguments">The arguments to add.</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <example><code>client.WithArguments(new[] { new KeyValuePair&lt;string, string&gt;("genre", "drama"), new KeyValuePair&lt;string, int&gt;("genre", "comedy") })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithArguments(System.Object)">
+            <summary>Add HTTP query string arguments.</summary>
+            <param name="arguments">An anonymous object where the property names and values are used.</param>
+            <returns>Returns the request builder for chaining.</returns>
+            <example><code>client.WithArguments(new { id = 14, name = "Joe" })</code></example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithCustom(System.Action{System.Net.Http.HttpRequestMessage})">
+            <summary>Customize the underlying HTTP request message.</summary>
+            <param name="request">The HTTP request message.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithCancellationToken(System.Threading.CancellationToken)">
+            <summary>Specify the token that can be used to cancel the async operation.</summary>
+            <param name="cancellationToken">The cancellationtoken.</param>
+            <returns>Returns the request builder for chaining.</returns>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithAuthentication(System.String,System.String)">
+            <summary>Add an authentication header for this request.</summary>
+            <param name="scheme">The authentication header scheme to use for authorization (like 'basic' or 'bearer').</param>
+            <param name="parameter">The authentication header value (e.g. the bearer token).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithHttpErrorAsException(System.Boolean)">
+            <summary>Set whether HTTP error responses (e.g. HTTP 404) should be raised as exceptions for this request.</summary>
+            <param name="enabled">Whether to raise HTTP errors as exceptions.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithOptions(Pathoschild.Http.Client.RequestOptions)">
+            <summary>Set options for this request.</summary>
+            <param name="options">The options to set. (Fields set to <c>null</c> won't change the current value.)</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.WithRequestCoordinator(Pathoschild.Http.Client.Retry.IRequestCoordinator)">
+            <summary>Set the request coordinator for this request.</summary>
+            <param name="requestCoordinator">The request coordinator (or null to use the default behaviour).</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.GetAwaiter">
+            <summary>Get an object that waits for the completion of the request. This enables support for the <c>await</c> keyword.</summary>
+            <example>
+            <code>await client.GetAsync("api/ideas").AsString();</code>
+            <code>await client.PostAsync("api/ideas", idea);</code>
+            </example>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsResponse">
+            <summary>Asynchronously retrieve the HTTP response. This method exists for discoverability but isn't strictly needed; you can just await the request (like <c>await GetAsync()</c>) to get the response.</summary>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsMessage">
+            <summary>Asynchronously retrieve the HTTP response message.</summary>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.As``1">
+            <summary>Asynchronously retrieve the response body as a deserialized model.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsArray``1">
+            <summary>Asynchronously retrieve the response body as a list of deserialized models.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsByteArray">
+            <summary>Asynchronously retrieve the response body as an array of <see cref="T:System.Byte"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsString">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.String"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsStream">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.IO.Stream"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsRawJson">
+            <summary>Get a raw JSON representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsRawJsonObject">
+            <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IRequest.AsRawJsonArray">
+            <summary>Get a raw JSON array representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.IResponse">
+            <summary>Asynchronously parses an HTTP response.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IResponse.IsSuccessStatusCode">
+            <summary>Whether the HTTP response was successful.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IResponse.Status">
+            <summary>The HTTP status code.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IResponse.Message">
+            <summary>The underlying HTTP response message.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.IResponse.Formatters">
+            <summary>The formatters used for serializing and deserializing message bodies.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.As``1">
+            <summary>Asynchronously retrieve the response body as a deserialized model.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsArray``1">
+            <summary>Asynchronously retrieve the response body as a list of deserialized models.</summary>
+            <typeparam name="T">The response model to deserialize into.</typeparam>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsByteArray">
+            <summary>Asynchronously retrieve the response body as an array of <see cref="T:System.Byte"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsString">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.String"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsStream">
+            <summary>Asynchronously retrieve the response body as a <see cref="T:System.IO.Stream"/>.</summary>
+            <returns>Returns the response body, or <c>null</c> if the response has no body.</returns>
+            <exception cref="T:Pathoschild.Http.Client.ApiException">An error occurred processing the response.</exception>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsRawJson">
+            <summary>Get a raw JSON representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsRawJsonObject">
+            <summary>Get a raw JSON object representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.IResponse.AsRawJsonArray">
+            <summary>Get a raw JSON array representation of the response, which can also be accessed as a <c>dynamic</c> value.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.RequestOptions">
+            <summary>Options for a request.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.RequestOptions.IgnoreNullArguments">
+            <summary>Whether to ignore null arguments when the request is dispatched.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.RequestOptions.IgnoreHttpErrors">
+            <summary>Whether HTTP error responses (e.g. HTTP 404) should be ignored (else raised as exceptions).</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Retry.IRequestCoordinator">
+            <summary>Defines how the HTTP client should dispatch requests and process responses at a low level, for example to handle transient failures and errors. Only one may be used by the client.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.IRequestCoordinator.ExecuteAsync(Pathoschild.Http.Client.IRequest,System.Func{Pathoschild.Http.Client.IRequest,System.Threading.Tasks.Task{System.Net.Http.HttpResponseMessage}})">
+            <summary>Dispatch an HTTP request.</summary>
+            <param name="request">The request.</param>
+            <param name="dispatcher">A method which executes the request.</param>
+            <returns>The final HTTP response.</returns>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Retry.IRetryConfig">
+            <summary>Configures a request retry strategy.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Retry.IRetryConfig.MaxRetries">
+            <summary>The maximum number of times to retry a request before failing.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.IRetryConfig.ShouldRetry(System.Net.Http.HttpResponseMessage)">
+            <summary>Get whether a request should be retried.</summary>
+            <param name="response">The last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.IRetryConfig.GetDelay(System.Int32,System.Net.Http.HttpResponseMessage)">
+            <summary>Get the time to wait until the next retry.</summary>
+            <param name="retry">The retry index (starting at 1).</param>
+            <param name="response">The last HTTP response received.</param>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Retry.RetryConfig">
+            <summary>Configures a request retry strategy.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Retry.RetryConfig.ShouldRetryCallback">
+            <summary>A method which indicates whether a request should be retried.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Retry.RetryConfig.GetDelayCallback">
+            <summary>A method which returns the time to wait until the next retry. This is passed the retry index (starting at 1) and the last HTTP response received.</summary>
+        </member>
+        <member name="P:Pathoschild.Http.Client.Retry.RetryConfig.MaxRetries">
+            <summary>The maximum number of times to retry a request before failing.</summary>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryConfig.#ctor(System.Int32,System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.Func{System.Int32,System.Net.Http.HttpResponseMessage,System.TimeSpan})">
+            <summary>Initializes a new instance of the <see cref="T:Pathoschild.Http.Client.Retry.RetryConfig"/> class.</summary>
+            <param name="maxRetries">The maximum number of retries.</param>
+            <param name="shouldRetry">A method which indicates whether a request should be retried.</param>
+            <param name="getDelay">A method which returns the time to wait until the next retry. This is passed the retry index (starting at 1) and the last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryConfig.ShouldRetry(System.Net.Http.HttpResponseMessage)">
+            <summary>Get whether a request should be retried.</summary>
+            <param name="response">The last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryConfig.GetDelay(System.Int32,System.Net.Http.HttpResponseMessage)">
+            <summary>Get the time to wait until the next retry.</summary>
+            <param name="retry">The retry index (starting at 1).</param>
+            <param name="response">The last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryConfig.None">
+            <summary>Get a retry config indicating no request should be retried.</summary>
+        </member>
+        <member name="T:Pathoschild.Http.Client.Retry.RetryCoordinator">
+            <summary>A request coordinator which retries failed requests with a delay between each attempt.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.Retry.RetryCoordinator.Config">
+            <summary>The retry configuration.</summary>
+        </member>
+        <member name="F:Pathoschild.Http.Client.Retry.RetryCoordinator.TimeoutStatusCode">
+            <summary>The status code representing a request timeout.</summary>
+            <remarks>HTTP 598 Network Read Timeout is the closest match, though it's non-standard so there's no <see cref="T:System.Net.HttpStatusCode"/> constant. This is needed to avoid passing <c>null</c> into <see cref="M:Pathoschild.Http.Client.Retry.IRetryConfig.ShouldRetry(System.Net.Http.HttpResponseMessage)"/>, which isn't intuitive and would cause errors.</remarks>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryCoordinator.#ctor(System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.TimeSpan[])">
+            <summary>Construct an instance.</summary>
+            <param name="shouldRetry">A method which returns whether a request should be retried.</param>
+            <param name="intervals">The intervals between each retry attempt.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryCoordinator.#ctor(System.Int32,System.Func{System.Net.Http.HttpResponseMessage,System.Boolean},System.Func{System.Int32,System.Net.Http.HttpResponseMessage,System.TimeSpan})">
+            <summary>Construct an instance.</summary>
+            <param name="maxRetries">The maximum number of times to retry a request before failing.</param>
+            <param name="shouldRetry">A method which returns whether a request should be retried.</param>
+            <param name="getDelay">A method which returns the time to wait until the next retry. This is passed the retry index (starting at 1) and the last HTTP response received.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryCoordinator.#ctor(Pathoschild.Http.Client.Retry.IRetryConfig)">
+            <summary>Construct an instance.</summary>
+            <param name="config">The retry configuration.</param>
+        </member>
+        <member name="M:Pathoschild.Http.Client.Retry.RetryCoordinator.ExecuteAsync(Pathoschild.Http.Client.IRequest,System.Func{Pathoschild.Http.Client.IRequest,System.Threading.Tasks.Task{System.Net.Http.HttpResponseMessage}})">
+            <summary>Dispatch an HTTP request.</summary>
+            <param name="request">The response message to validate.</param>
+            <param name="dispatcher">A method which executes the request.</param>
+            <returns>The final HTTP response.</returns>
+        </member>
+    </members>
+</doc>

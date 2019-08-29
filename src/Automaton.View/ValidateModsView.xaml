@@ -32,32 +32,27 @@
 
                 <Grid Grid.Column="2">
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="15"
-                            Foreground="{DynamicResource FontColor}"
-                            ToolTip="This is a Nexus Premium ONLY feature">
-                            <TextBlock.Style>
-                                <Style BasedOn="{StaticResource HeaderText}" TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Text" Value="Manual Downloader" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding AutodownloadsEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                            <Setter Property="Text" Value="Auto Downloader" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding AutodownloadsEnabled, UpdateSourceTrigger=PropertyChanged}" Value="False">
-                                            <Setter Property="Text" Value="Manual Downloader" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
 
-                        <ToggleButton
+                        <Button
                             Margin="5,0,5,0"
+                            HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Background="{DynamicResource ButtonColor}"
-                            Foreground="{DynamicResource FontColor}"
-                            IsChecked="{Binding AutodownloadsEnabled}" />
+                            ClipToBounds="True"
+                            Command="{Binding ToggleAutomatedDownloadCommand}"
+                            Style="{DynamicResource MaterialDesignToolButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="15"
+                                    Style="{DynamicResource HeaderText}"
+                                    Text="Download Mods" />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource FontColor}"
+                                    Kind="DownloadMultiple" />
+                            </StackPanel>
+                        </Button>
 
                         <Grid
                             Width="2"
@@ -219,7 +214,7 @@
                                     Background="{DynamicResource FontColor}" />
                                 <Label
                                     VerticalAlignment="Center"
-                                    Content="{Binding Name}"
+                                    Content="{Binding DisplayName}"
                                     FontFamily="{StaticResource RobotoMono}"
                                     FontSize="13"
                                     Foreground="{DynamicResource FontColor}"

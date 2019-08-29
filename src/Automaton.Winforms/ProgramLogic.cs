@@ -112,11 +112,6 @@ namespace Automaton.Winforms
             this._logfn = logLine;
         }
 
-
-
-
-
-
         public void LoadModPack(string filename)
         {
             PackFilename = filename;
@@ -178,7 +173,7 @@ namespace Automaton.Winforms
                     Name = "MO2 Folder",
                     ModType = ModType.MO2Mod,
                     InstallPlans = new List<InstallPlan>() {
-                        new InstallPlan()
+                    new InstallPlan()
                     {
                         SourceArchive = InstallerData.MasterDefinition.MO2Archive
                     }}

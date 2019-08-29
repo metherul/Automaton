@@ -28,6 +28,7 @@ namespace Automaton.Common.Model
 
         [JsonProperty("mo2_path")]
         public string MO2Directory { get; set; }
+
         [JsonProperty("mo2_profile")]
         public string MO2Profile { get; set; }
 

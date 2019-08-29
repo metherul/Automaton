@@ -1,6 +1,7 @@
 ﻿using Alphaleonis.Win32.Filesystem;
 using Autofac;
 using Automaton.Model;
+using Automaton.Model.HandyUtils.Interfaces;
 using Automaton.Model.Interfaces;
 using Automaton.ViewModel.Controllers;
 using Automaton.ViewModel.Controllers.Interfaces;
@@ -29,19 +30,20 @@ namespace Automaton.ViewModel
         private readonly ILifetimeData _lifetimeData;
         private readonly INXMRoute _NXMRoute;
         private readonly INexusApi _nexusApi;
+        private readonly IDownloadQueue _downloadQueue;
         private readonly ILogger _logger;
 
         public AsyncCommand ScanDirectoryCommand => new AsyncCommand(ScanDirectory);
         public GenericAsyncCommand<ExtendedArchive> FindAndValidateModCommand => new GenericAsyncCommand<ExtendedArchive>(FindAndValidateMod);
         public GenericAsyncCommand<ExtendedArchive> CancelDownloadCommand => new GenericAsyncCommand<ExtendedArchive>(CancelDownload);
         public RelayCommand<ExtendedArchive> OpenNexusLinkCommand => new RelayCommand<ExtendedArchive>(OpenNexusLink);
+        public AsyncCommand ToggleAutomatedDownloadCommand => new AsyncCommand(ToggleAutomatedDownload);
 
         public ObservableCollection<ExtendedArchive> Archives { get; set; }
         public ICollectionView ArchivesView { get; set; }
 
         public int MissingArchivesCount { get; set; }
         public bool AutodownloadsEnabled { get; set; }
-
 
         public ValidateModsViewModel(IComponentContext components)
         {
@@ -51,11 +53,11 @@ namespace Automaton.ViewModel
             _lifetimeData = components.Resolve<ILifetimeData>();
             _NXMRoute = components.Resolve<INXMRoute>();
             _nexusApi = components.Resolve<INexusApi>();
+            _downloadQueue = components.Resolve<IDownloadQueue>();
 
             _viewController.ViewIndexChangedEvent += ViewControllerOnViewIndexChangedEvent;
             _NXMRoute.RecieveMessageEvent += _NXMRoute_RecieveMessageEvent;
         }
-
 
         private async void ViewControllerOnViewIndexChangedEvent(object sender, int e)
         {
@@ -67,13 +69,12 @@ namespace Automaton.ViewModel
             _dialogController.OpenLoadingDialog();
 
             Archives = new ObservableCollection<ExtendedArchive>(_lifetimeData.Archives);
-
             ArchivesView = CollectionViewSource.GetDefaultView(Archives);
 
-            foreach (var archive in Archives)
+            await Archives.ToList().ParallelForEachAsync(async archive =>
             {
                 await archive.SearchInDirAsync(_lifetimeData.DownloadPath);
-            }
+            }, maxDegreeOfParalellism: 4);
 
             var controllerThread = new Thread(() =>
             {
@@ -100,23 +101,8 @@ namespace Automaton.ViewModel
             }
         }
 
-
         private async Task ScanDirectory()
         {
-            foreach (var thing in Archives)
-            {
-                while (_lifetimeData.CurrentDownloads >= 5)
-                {
-                    await Task.Delay(500);
-                }
-
-                thing.DownloadThreaded();
-
-                await Task.Delay(250);
-            }
-
-            return;
-
             var directoryPath = await _fileSystemBrowser.OpenDirectoryBrowserAsync("Select a folder to scan.");
 
             if (!string.IsNullOrEmpty(directoryPath))
@@ -127,11 +113,6 @@ namespace Automaton.ViewModel
                 {
                     await archive.SearchInDirAsync(directoryPath);
                 }, maxDegreeOfParalellism: 4);
-
-                //foreach (var archive in Archives)
-                //{
-                //    await archive.SearchInDirAsync(directoryPath);
-                //}
             }
 
             _dialogController.CloseCurrentDialog();
@@ -172,6 +153,38 @@ namespace Automaton.ViewModel
             archive.CancelDownload();
         }
 
+        private async Task ToggleAutomatedDownload()
+        {
+            AutodownloadsEnabled = !AutodownloadsEnabled;
+
+            if (AutodownloadsEnabled)
+            {
+                if (_nexusApi.IsPremium && _nexusApi.IsLoggedIn)
+                {
+                    foreach (var thing in Archives)
+                    {
+                        _downloadQueue.Enqueue(thing);
+                    }
+                }
+
+                else
+                {
+                    _dialogController.OpenLogDialog("You must be a Nexus Premium member to use the auto-downloading feature of Automaton.");
+                    AutodownloadsEnabled = false;
+                }
+            }
+
+            if (!AutodownloadsEnabled)
+            {
+                _downloadQueue.ClearQueue();
+
+                foreach (var archive in Archives)
+                {
+                    archive.CancelDownloadThreaded();
+                }
+            }
+        }
+
         private void ValidateController()
         {
             var startingMissingModsCount = Archives.ToList().Count(x => !x.IsValidationComplete);
@@ -193,28 +206,6 @@ namespace Automaton.ViewModel
                     _viewController.IncrementCurrentViewIndex();
 
                     return;
-                }
-
-                if (AutodownloadsEnabled && !lastAutodownloadsStatus)
-                {
-                    // We queue up each for downloads
-                    lastAutodownloadsStatus = AutodownloadsEnabled;
-
-                    if (_nexusApi.IsPremium && _nexusApi.IsLoggedIn)
-                    {
-                        foreach (var archive in Archives)
-                        {
-                            archive.DownloadThreaded();
-
-                            Thread.Sleep(400);
-                        }
-                    }
-
-                    else
-                    {
-                        _dialogController.OpenLogDialog("You must be a Nexus Premium member to use the auto-downloading feature of Automaton.");
-                        AutodownloadsEnabled = false;
-                    }
                 }
 
                 if (!AutodownloadsEnabled && lastAutodownloadsStatus)

@@ -42,12 +42,7 @@ namespace Automaton.Model
                 return;
             }
 
-            var mDefinitionStream = new MemoryStream();
-            entryMDefinition.Extract(mDefinitionStream);
-
-            mDefinitionStream.Seek(0, SeekOrigin.Begin);
-
-            var mDefinition = Utils.LoadJson<MasterDefinition>(mDefinitionStream);
+            var mDefinition = Utils.LoadJson<MasterDefinition>(entryMDefinition);
 
             var modEntries = archiveEntries.Where(x => x.FileName.ToLower().Contains("mods\\"))
                 .Where(x => x.FileName.EndsWith(ConfigPathOffsets.InstallConfig)).ToList();
@@ -55,15 +50,7 @@ namespace Automaton.Model
 
             foreach (var entry in modEntries)
             {
-                var entryStream = new MemoryStream();
-                entry.Extract(entryStream);
-
-                entryStream.Seek(0, SeekOrigin.Begin);
-
-                // This has the chance of spitting out some errors further down the line, will get back to later.
-                var modObject = Utils.LoadJson<Mod>(entryStream);
-
-                mods.Add(modObject);
+                mods.Add(Utils.LoadJson<Mod>(entry));
             }
 
             _lifetimeData.MasterDefinition = mDefinition;
@@ -90,10 +77,8 @@ namespace Automaton.Model
                                        .Where(x => x.FileName.StartsWith("patches\\"))
                                        .ToDictionary(x => Path.GetFileName(x.FileName));
 
-
-            // Add the MO2 archive. 
-            archives.Add(ClassExtensions.ToDerived<SourceArchive, ExtendedArchive>(_lifetimeData.MasterDefinition.MO2Archive)
-                                        .Initialize(_components, null, patches, ExtendedArchive.InstallerTypeEnum.ModOrganizer2));
+            var managerEntry = archiveEntries.Find(x => Path.GetFileName(x.FileName) == ConfigPathOffsets.ManagerConfig);
+            _lifetimeData.ManagerDefinition = Utils.LoadJson<Manager>(managerEntry);
 
             foreach (var mod in mods)
             {

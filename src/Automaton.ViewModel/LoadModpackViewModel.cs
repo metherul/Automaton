@@ -29,7 +29,7 @@ namespace Automaton.ViewModel
 
         private async Task ChooseModpack()
         {
-            var modpackPath = await _filesystemBrowser.OpenFileBrowserAsync("Automaton Modpacks (*.auto, *.7z, *.rar, *.zip) | *.auto; *.7z; *.rar; *.zip|All Files (*.*)|*.*", "Select an Automaton Modpack");
+            var modpackPath = await _filesystemBrowser.OpenFileBrowserAsync("Automaton Modpacks (*.auto) | *.auto|All Files (*.*)|*.*", "Select an Automaton Modpack");
 
             if (!string.IsNullOrEmpty(modpackPath))
             {
