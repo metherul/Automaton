@@ -1,0 +1,30 @@
+﻿<Application
+    x:Class="Automaton.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Automaton"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:s="https://github.com/canton7/Stylet">
+    <Application.Resources>
+        <s:ApplicationLoader x:Key="">
+            <!--  Stylet bootstrapper  -->
+            <s:ApplicationLoader.Bootstrapper>
+                <local:Bootstrapper />
+            </s:ApplicationLoader.Bootstrapper>
+
+            <!--  Material Design in XAML imports  -->
+            <s:ApplicationLoader.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </s:ApplicationLoader.MergedDictionaries>
+
+            <!--  Custom theme resources  -->
+            <SolidColorBrush x:Key="BackgroundColor" Color="#282c35" />
+
+            <SolidColorBrush x:Key="ButtonBackgroundColor" Color="#42464f" />
+            <SolidColorBrush x:Key="ButtonForegroundColor" Color="#ffffff" />
+
+            <SolidColorBrush x:Key="FontColor" Color="#ffffff" />
+        </s:ApplicationLoader>
+    </Application.Resources>
+</Application>
