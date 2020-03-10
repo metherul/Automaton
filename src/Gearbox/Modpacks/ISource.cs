@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Gearbox.Repositories;
+using LanguageExt;
 
 namespace Gearbox.Modpacks
 {

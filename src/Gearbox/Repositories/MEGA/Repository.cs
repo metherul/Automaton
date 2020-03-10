@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using CG.Web.MegaApiClient;
+using System;
+using System.Threading.Tasks;
 
 namespace Gearbox.Repositories.MEGA
 {
@@ -10,7 +12,11 @@ namespace Gearbox.Repositories.MEGA
         
         public async Task DownloadFile(string targetLocation)
         {
+            var client = new MegaApiClient();
+            await client.LoginAnonymousAsync();
+            await client.DownloadFileAsync(new Uri(Url), targetLocation, null);
 
+            await client.LogoutAsync();
         }
 
         public async Task DownloadFile(string downloadPath, string targetLocation)
