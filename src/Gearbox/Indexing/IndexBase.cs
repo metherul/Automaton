@@ -2,7 +2,7 @@
 
 namespace Gearbox.Indexing
 {
-    public class IndexBase
+    public class Index
     {
         public readonly string ModOrganizerDir;
         public readonly string ModsDir;
@@ -15,7 +15,7 @@ namespace Gearbox.Indexing
         public readonly string GameDirIndexDir;
         public readonly string UtilitiesIndexDir;
 
-        public IndexBase(string moExePath)
+        public Index(string moExePath)
         {
             ModOrganizerDir = Path.GetDirectoryName(moExePath);
             ModsDir = Path.Combine(ModOrganizerDir, "mods");

@@ -4,8 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Gearbox.Modpacks.Base;
+using LanguageExt;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pathoschild.FluentNexus;
+using Pathoschild.FluentNexus.Models;
+using static LanguageExt.Prelude;
 
 namespace Gearbox.NexusMods
 {
@@ -67,6 +71,29 @@ namespace Gearbox.NexusMods
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns the download URL of the specified archive data.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Option<ModFileDownloadLink[]>> GetDownloadPaths(Domain domain, int modId, int fileId)
+        {
+            var results = await _nexusClient.ModFiles.GetDownloadLinks(domain.ToNexusString(), modId, fileId);
+
+            return Some(results);
+        }
+
+        /// <summary>
+        /// Returns the download URL of the specified archive data.
+        /// </summary>
+        /// <param name="authenticationParams">Additional authentication parameters for non-nexus-premium downloads.</param>
+        /// <returns></returns>
+        public async Task<Option<ModFileDownloadLink[]>> GetDownloadPath(Domain domain, int modId, int fileId, string nexusId, int nexusTimeout)
+        {
+            var results = await _nexusClient.ModFiles.GetDownloadLinks(domain.ToNexusString(), modId, fileId, nexusId, nexusTimeout);
+
+            return Some(results);
         }
     }
 }

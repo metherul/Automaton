@@ -1,8 +1,11 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Gearbox.IO;
 using Gearbox.Modpacks.OMS.Base;
 using Gearbox.Repositories;
+using LanguageExt;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 
 namespace Gearbox.Modpacks.OMS
@@ -13,8 +16,8 @@ namespace Gearbox.Modpacks.OMS
         public string Author => throw new System.NotImplementedException();
         public string FilePath => _downloadPath;
 
-        private IRepository _repository;
-        public IRepository Repository
+        private Option<IRepository> _repository;
+        public Option<IRepository> Repository
         {
             get
             {
@@ -40,6 +43,10 @@ namespace Gearbox.Modpacks.OMS
         public async Task DownloadFile(string downloadPath)
         {
             _downloadPath = downloadPath;
+            await Repository.IfSomeAsync(async (f) =>
+            {
+                await f.DownloadFile(downloadPath);
+            });
         }
 
         public async Task Validate()
@@ -47,9 +54,22 @@ namespace Gearbox.Modpacks.OMS
             throw new System.NotImplementedException();
         }
 
-        public async Task Register()
+        public void Register(string archivePath)
         {
-            throw new System.NotImplementedException();
+            _downloadPath = archivePath;
+        }
+
+        public async Task<string> FindMatchInDir(string dir)
+        {
+            var fileContents = Directory.GetFiles(dir);
+            var fileLengthQuery = fileContents.Where(x => new FileInfo(x).Length == _sourceBase.Length);
+
+            if (fileLengthQuery.Count() >= 1)
+            {
+                return fileLengthQuery.First();
+            }
+
+            return null;
         }
 
     }

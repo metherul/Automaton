@@ -10,12 +10,14 @@ namespace Gearbox.Modpacks
         
         string FilePath { get; }
         
-        IRepository Repository { get; }
+        Option<IRepository> Repository { get; }
 
         Task DownloadFile(string downloadPath);
         
         Task Validate();
 
-        Task Register();
+        void Register(string archivePath);
+
+        Task<string> FindMatchInDir(string dir);
     }
 }

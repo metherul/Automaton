@@ -3,7 +3,7 @@
     public class InstallEntry
     {
         public string ModName;
-        public string Source;
+        public ISource Source;
         public string From;
         public string To;
     }

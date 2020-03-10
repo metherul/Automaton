@@ -6,7 +6,7 @@ namespace Gearbox.Indexing.Factories
 {
     public class IndexerFactory
     {
-        public static IIndexer Create(IndexBase indexBase, string path)
+        public static IIndexer Create(Index indexBase, string path)
         {
             return File.Exists(path) switch
             {

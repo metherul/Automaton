@@ -1,13 +1,6 @@
 ﻿using Automaton.UserControls;
-using Gearbox.Indexing;
-using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using Gearbox;
-using Gearbox.Compiling;
 using Gearbox.Modpacks;
 
 namespace Automaton.Pages
@@ -19,7 +12,7 @@ namespace Automaton.Pages
         public TaskbarViewModel Taskbar { get; private set; }
         public BrowseModpackViewModel BrowseModpack { get; private set; }
 
-        public ObservableCollection<string> DebugOut { get; set; } = new ObservableCollection<string>();
+        public string DebugOut { get; set; }
 
         public RootViewModel()
         {
@@ -42,12 +35,29 @@ namespace Automaton.Pages
             //     Version = "0.0.1"
             // });
 
+            const string archive = @"E:\Mod Archive";
             var pack = await PackFactory.FromFile(
                 @"E:\Mod Organizer\Ultimate Skyrim 4.0.5 (Full)\automaton\build\TestModpack.oms");
 
+            var manager = new Gearbox.Managers.ModOrganizer.Manager();
+            await manager.InstallManager("test");
+
             foreach (var source in pack.Sources)
             {
-                var test = source.Repository;
+                var match = await source.FindMatchInDir(archive);
+
+                if (match == null)
+                {
+                    continue;
+                }
+
+                source.Register(match);
+            }
+
+            foreach (var mod in pack.Mods)
+            {
+                DebugOut = $"Installing: {mod.Name}";
+                await manager.InstallMod(mod);
             }
         }
     }

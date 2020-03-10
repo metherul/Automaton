@@ -5,9 +5,9 @@ namespace Gearbox.Compiling
 {
     public class Compiler
     {
-        private readonly IndexBase _indexBase;
+        private readonly Index _indexBase;
 
-        public Compiler(IndexBase indexBase)
+        public Compiler(Index indexBase)
         {
             _indexBase = indexBase;
         }

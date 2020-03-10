@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using LanguageExt;
+using Newtonsoft.Json.Linq;
+
+using static LanguageExt.Prelude;
 
 namespace Gearbox.Repositories
 {
     public class RepositoryFactory
     {
-        public static IRepository FromJson(JObject json)
+        public static Option<IRepository> FromJson(JObject json)
         {
             if (json == null || !json.HasValues)
             {
@@ -19,7 +22,7 @@ namespace Gearbox.Repositories
                 "Direct" => json.ToObject<Direct.Repository>(),
                 "Github" => json.ToObject<Github.Repository>(),
                 "MEGA" => json.ToObject<MEGA.Repository>(),
-                _ => null
+                _ => None
             };
         }
     }

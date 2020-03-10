@@ -6,7 +6,7 @@ namespace Gearbox.Compiling.Factories
 {
     public class CompilerFactory
     {
-        public static ICompiler Create(IndexBase indexBase)
+        public static ICompiler Create(Index indexBase)
         {
             return null;
         }

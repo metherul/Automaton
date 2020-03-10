@@ -9,7 +9,11 @@ namespace Gearbox.Repositories.Github
         public string RepoUrl;
         public string Version;
         
-        public async Task DownloadFile()
+        public async Task DownloadFile(string targetLocation)
+        {
+        }
+
+        public async Task DownloadFile(string downloadPath, string targetLocation)
         {
             throw new System.NotImplementedException();
         }

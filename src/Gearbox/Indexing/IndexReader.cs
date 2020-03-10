@@ -10,9 +10,9 @@ namespace Gearbox.Indexing
 {
     public class IndexReader
     {
-        private readonly IndexBase _indexBase;
+        private readonly Index _indexBase;
 
-        public IndexReader(IndexBase indexBase)
+        public IndexReader(Index indexBase)
         {
             _indexBase = indexBase;
         }

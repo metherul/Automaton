@@ -13,11 +13,11 @@ namespace Gearbox.Compiling
 {
     public class ModLinker
     {
-        private readonly IndexBase _indexBase;
+        private readonly Indexing.Index _indexBase;
         private readonly ICollection<IIndexEntry> _entriesWithoutMatches = new List<IIndexEntry>();
 
         private ICollection<MatchResult> _sourceEntries;
-        public ModLinker(IndexBase indexBase)
+        public ModLinker(Indexing.Index indexBase)
         {
             _indexBase = indexBase;
         }

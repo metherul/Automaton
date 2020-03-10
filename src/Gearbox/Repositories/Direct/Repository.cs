@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Gearbox.Repositories.Direct
 {
@@ -7,10 +9,17 @@ namespace Gearbox.Repositories.Direct
         public string RepositoryType { get; set; }
 
         public string Url;
-        
-        public async Task DownloadFile()
+
+        public async Task DownloadFile(string targetLocation)
         {
-            throw new System.NotImplementedException();
+            var client = new WebClient();
+            await client.DownloadFileTaskAsync(new Uri(Url), targetLocation);
+        }
+
+        public async Task DownloadFile(string downloadPath, string targetLocation)
+        {
+            var client = new WebClient();
+            await client.DownloadFileTaskAsync(new Uri(downloadPath), targetLocation);
         }
     }
 }

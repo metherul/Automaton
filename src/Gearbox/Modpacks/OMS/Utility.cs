@@ -32,7 +32,7 @@ namespace Gearbox.Modpacks.OMS
                     
                     installEntries.Add(new InstallEntry()
                     {
-                        Source = Sources[Convert.ToInt32(sourceIndex)],
+                        // Source = Sources[Convert.ToInt32(sourceIndex)],
                         From = installSet.Source[tempIndex..],
                         To = installSet.Target
                     });

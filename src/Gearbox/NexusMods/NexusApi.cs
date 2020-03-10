@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pathoschild.FluentNexus;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,12 +11,16 @@ namespace Gearbox.NexusMods
 {
     public partial class NexusApi
     {
+        private static string _apiKey;
+
         private readonly HttpClient _baseHttpClient;
 
         private int _hourlyRequestsRemaining;
         private int _dailyRequestsRemaning;
 
-        public NexusApi(string apiKey)
+        private readonly NexusClient _nexusClient;
+
+        public NexusApi()
         {
             var platformType = Environment.Is64BitProcess ? "x64" : "x86";
             var headerString =
@@ -28,11 +33,18 @@ namespace Gearbox.NexusMods
                 Timeout = TimeSpan.FromSeconds(5)
             };
 
-            _baseHttpClient.DefaultRequestHeaders.Add("APIKEY", apiKey);
+            _baseHttpClient.DefaultRequestHeaders.Add("APIKEY", _apiKey);
             _baseHttpClient.DefaultRequestHeaders.Add("User-Agent", headerString);
             _baseHttpClient.DefaultRequestHeaders.Add("Application-Version", "0.0.1");
             _baseHttpClient.DefaultRequestHeaders.Add("Application-Name", "Automaton");
             _baseHttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            _nexusClient = new NexusClient(_apiKey, "Automaton", "0.0.1");
+        }
+
+        public static void SetApiKey(string apiKey)
+        {
+            _apiKey = apiKey;
         }
 
         public async Task<string?> MakeGenericRequest(string address)

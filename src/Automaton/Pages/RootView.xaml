@@ -21,14 +21,12 @@
             FontSize="15"
             Foreground="White" />-->
 
-        <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <ItemsControl
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                FontSize="17"
-                Foreground="White"
-                ItemsSource="{Binding DebugOut}" />
-        </ScrollViewer>
+        <Label
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="{Binding DebugOut}"
+            FontSize="16"
+            Foreground="White" />
 
     </Grid>
 </Window>

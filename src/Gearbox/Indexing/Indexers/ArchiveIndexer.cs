@@ -9,10 +9,10 @@ namespace Gearbox.Indexing.Indexers
 {
     public class ArchiveIndexer : IIndexer
     {
-        private readonly IndexBase _indexBase;
+        private readonly Index _indexBase;
         private readonly string _path;
 
-        public ArchiveIndexer(IndexBase indexBase, string path)
+        public ArchiveIndexer(Index indexBase, string path)
         {
             _indexBase = indexBase;
             _path = path;

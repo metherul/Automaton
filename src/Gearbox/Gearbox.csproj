@@ -27,7 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Indexers" />
+    <Folder Include="Next\Indexing\" />
+    <Folder Include="Next\Repos\" />
   </ItemGroup>
 
 </Project>

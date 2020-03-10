@@ -19,7 +19,7 @@ namespace Gearbox.Compiling
     {
         private List<IIndexHeader> _requiredArchives = new List<IIndexHeader>();
         
-        private IndexBase _indexBase;
+        private Index _indexBase;
         private IndexReader _indexReader;
         private ModLinker _modLinker;
         
@@ -30,7 +30,7 @@ namespace Gearbox.Compiling
         private string _outGameDir;
         private string _outUtilitiesDir;
         
-        internal async Task<CompilerWriter> LoadSources(IndexBase indexBase)
+        internal async Task<CompilerWriter> LoadSources(Index indexBase)
         {
             _indexBase = indexBase;
             _indexReader = new IndexReader(indexBase);

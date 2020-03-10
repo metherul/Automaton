@@ -16,10 +16,10 @@ namespace Gearbox.Indexing
 {
     public partial class IndexWriter
     {
-        private readonly IndexBase _indexBase;
+        private readonly Index _indexBase;
         private readonly IndexReader _indexReader;
 
-        public IndexWriter(IndexBase indexBase)
+        public IndexWriter(Index indexBase)
         {
             _indexBase = indexBase;
             

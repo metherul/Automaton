@@ -6,10 +6,10 @@ namespace Gearbox.Indexing.Indexers
 {
     public class ModIndexer : IIndexer
     {
-        private readonly IndexBase _indexBase;
+        private readonly Index _indexBase;
         private readonly string _path;
 
-        public ModIndexer(IndexBase indexBase, string path)
+        public ModIndexer(Index indexBase, string path)
         {
             _indexBase = indexBase;
             _path = path;

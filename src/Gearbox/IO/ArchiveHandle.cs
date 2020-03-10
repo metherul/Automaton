@@ -39,5 +39,30 @@ namespace Gearbox.IO
             stopwatch.Stop();
             var time = stopwatch.ElapsedMilliseconds;
         }
+
+        public async Task Extract(List<string> sourceEntries, string extractDir)
+        {
+            var listPath = Path.GetTempFileName();
+            await File.WriteAllLinesAsync(listPath, sourceEntries);
+            
+            using var process = new Process();
+            var procArguments = $"x \"{_archivePath}\" -ir@\"{listPath}\" -o\"{extractDir}\" -y";
+
+            var processStartInfo = new ProcessStartInfo()
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.exe"),
+                Arguments = procArguments,
+                RedirectStandardOutput = true
+            };
+
+            process.StartInfo = processStartInfo;
+            process.Start();
+
+            await Task.Run(() => process.WaitForExit());
+
+            File.Delete(listPath);
+        }
     }
 }
