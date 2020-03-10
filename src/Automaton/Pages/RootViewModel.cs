@@ -45,13 +45,10 @@ namespace Automaton.Pages
             foreach (var source in pack.Sources)
             {
                 var match = await source.FindMatchInDir(archive);
-
-                if (match == null)
+                match.IfSome((f) =>
                 {
-                    continue;
-                }
-
-                source.Register(match);
+                    source.Register(f);
+                });
             }
 
             foreach (var mod in pack.Mods)

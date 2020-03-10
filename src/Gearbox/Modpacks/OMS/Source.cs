@@ -8,6 +8,8 @@ using LanguageExt;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 
+using static LanguageExt.Prelude;
+
 namespace Gearbox.Modpacks.OMS
 {
     public class Source : ISource, IJsonSource
@@ -59,7 +61,7 @@ namespace Gearbox.Modpacks.OMS
             _downloadPath = archivePath;
         }
 
-        public async Task<string> FindMatchInDir(string dir)
+        public async Task<Option<string>> FindMatchInDir(string dir)
         {
             var fileContents = Directory.GetFiles(dir);
             var fileLengthQuery = fileContents.Where(x => new FileInfo(x).Length == _sourceBase.Length);
@@ -69,7 +71,7 @@ namespace Gearbox.Modpacks.OMS
                 return fileLengthQuery.First();
             }
 
-            return null;
+            return None;
         }
 
     }

@@ -19,6 +19,6 @@ namespace Gearbox.Modpacks
 
         void Register(string archivePath);
 
-        Task<string> FindMatchInDir(string dir);
+        Task<Option<string>> FindMatchInDir(string dir);
     }
 }
