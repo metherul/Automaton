@@ -5,5 +5,7 @@
         public string ModpackName;
         public string Author;
         public string Version;
+        public bool CanUpdate;
+        public bool MaintainUpdateSaves;
     }
 }
