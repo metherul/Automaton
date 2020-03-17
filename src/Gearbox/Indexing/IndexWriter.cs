@@ -86,6 +86,29 @@ namespace Gearbox.Indexing
         }
 
         /// <summary>
+        /// Indexes all archives found in the target directory and writes to the index.
+        /// Duplicate archives are ignored.
+        /// </summary>
+        /// <param name="targetDir">The directory to scan for archives.</param>
+        /// <returns></returns>
+        public async Task IndexArchives(string targetDir)
+        {
+            var archives = (await AsyncFs.GetDirectoryFiles(targetDir, "*", SearchOption.TopDirectoryOnly))
+                .Where(x => ArchiveHandle.IsSupportedExtension(Path.GetExtension(x)));
+
+            foreach (var archive in archives)
+            {
+                Debug.WriteLine($"Indexing archive: {archive}");
+
+                var jsonPath = Path.Combine(_indexBase.ArchiveIndexDir, Path.GetFileNameWithoutExtension(archive));
+                var archiveIndexer = IndexerFactory.Create(_indexBase, archive);
+                var archiveThing = await archiveIndexer.Index();
+
+                await JsonUtils.WriteJson(archiveThing, jsonPath);
+            }
+        }
+
+        /// <summary>
         /// Indexes files from the game directory itself.
         /// </summary>
         /// <returns></returns>

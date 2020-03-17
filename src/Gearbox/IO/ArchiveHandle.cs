@@ -8,6 +8,7 @@ namespace Gearbox.IO
 {
     public class ArchiveHandle
     {
+        private static readonly string _supportedExtensions = ".7z.bz2.bzip2.tbz2.tbz.gz.gzip.tgz.tar.xz.txz.zip.zipx.jar.lzma.rar.r00";
         private readonly string _archivePath;
 
         public ArchiveHandle(string archivePath)
@@ -63,6 +64,11 @@ namespace Gearbox.IO
             await Task.Run(() => process.WaitForExit());
 
             File.Delete(listPath);
+        }
+
+        public static bool IsSupportedExtension(string extension)
+        {
+            return _supportedExtensions.Contains(extension);
         }
     }
 }

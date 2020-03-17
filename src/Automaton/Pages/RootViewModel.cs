@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Gearbox.Modpacks;
+using Gearbox.Indexing;
 
 namespace Automaton.Pages
 {
@@ -35,27 +36,38 @@ namespace Automaton.Pages
             //     Version = "0.0.1"
             // });
 
-            const string archive = @"E:\Mod Archive";
-            var pack = await PackFactory.FromFile(
-                @"E:\Mod Organizer\Ultimate Skyrim 4.0.5 (Full)\automaton\build\TestModpack.oms");
+            var index = new Index(@"E:\Mod Organizer\Ultimate Skyrim 4.0.5 (Full)\ModOrganizer.exe");
+            var indexWriter = new IndexWriter(index);
+            var manager = new Gearbox.Managers.ModOrganizer.ManagerReader(@"E:\Mod Organizer\Ultimate Skyrim 4.0.5 (Full)\ModOrganizer.exe");
 
-            var manager = new Gearbox.Managers.ModOrganizer.Manager();
-            await manager.InstallManager("test");
+            var sourceDirs = await manager.GetSourceDirs();
 
-            foreach (var source in pack.Sources)
+            foreach (var dir in sourceDirs)
             {
-                var match = await source.FindMatchInDir(archive);
-                match.IfSome((f) =>
-                {
-                    source.Register(f);
-                });
+                await indexWriter.IndexArchives(dir);
             }
 
-            foreach (var mod in pack.Mods)
-            {
-                DebugOut = $"Installing: {mod.Name}";
-                await manager.InstallMod(mod);
-            }
+            // const string archive = @"E:\Mod Archive";
+            // var pack = await PackFactory.FromFile(
+            //     @"E:\Mod Organizer\Ultimate Skyrim 4.0.5 (Full)\automaton\build\TestModpack.oms");
+
+            // var manager = new Gearbox.Managers.ModOrganizer.Manager();
+            // await manager.InstallManager("test");
+
+            // foreach (var source in pack.Sources)
+            // {
+            //     var match = await source.FindMatchInDir(archive);
+            //     match.IfSome((f) =>
+            //     {
+            //         source.Register(f);
+            //     });
+            // }
+
+            // foreach (var mod in pack.Mods)
+            // {
+            //     DebugOut = $"Installing: {mod.Name}";
+            //     await manager.InstallMod(mod);
+            // }
         }
     }
 }

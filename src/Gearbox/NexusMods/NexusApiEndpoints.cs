@@ -10,7 +10,7 @@ using static LanguageExt.Prelude;
 
 namespace Gearbox.NexusMods
 {
-    public partial class NexusApi 
+    public partial class NexusApi  
     {
         /// <summary>
         /// Searches the target domain for Md5 archive metadata.

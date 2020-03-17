@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Gearbox.IO;
 using Gearbox.Modpacks;
-using SevenZip;
+using IniParser;
 
 namespace Gearbox.Managers.ModOrganizer
 {
@@ -17,6 +16,7 @@ namespace Gearbox.Managers.ModOrganizer
         private const string Version =
             @"https://github.com/ModOrganizer2/modorganizer/releases/download/v2.2.2.1/Mod.Organizer-2.2.2.1.7z";
 
+        private string _managerDir;
         private string _modDir;
             
         public async Task InstallManager(string installDir)
@@ -28,10 +28,11 @@ namespace Gearbox.Managers.ModOrganizer
             var archive = new ArchiveHandle(downloadFilePath);
             await archive.Extract(installDir);
 
+            _managerDir = installDir;
             _modDir = Path.Combine(installDir, "mods");
         }
 
-        public async Task InstallMod(IMod mod)
+        public async Task InstallMod(IMod mod) 
         {
             var installEntries = mod.InstallEntries;
             var extractDirs = new List<string>();
@@ -62,7 +63,6 @@ namespace Gearbox.Managers.ModOrganizer
                     Directory.CreateDirectory(Path.GetDirectoryName(outPath));
                 }
 
-
                 if (installEntries.Count(x => x.From == entry.From) > 1)
                 {
                     using var fromStream = File.Open(Path.Combine(extractDir, entry.From), FileMode.Open);
@@ -83,6 +83,19 @@ namespace Gearbox.Managers.ModOrganizer
                 }
             }
 
+            // Write mod metadata.
+            var metaDataDir = Path.Combine(_managerDir, "automaton");
+
+            Directory.CreateDirectory(metaDataDir);
+
+            var jsonPath = Path.Combine(metaDataDir, mod.Name + ".json");
+            var installMeta = new InstallMetadata()
+            {
+                TimeOf = DateTime.UtcNow,
+                FilesystemHash = (await AsyncFs.GetFilesystemHash(Path.Combine(_modDir, mod.Name)))
+            };
+            await JsonUtils.WriteJson(installMeta, jsonPath);
+
             Debug.WriteLine("Cleaning up...");
 
             foreach (var dir in extractDirs)
@@ -90,5 +103,12 @@ namespace Gearbox.Managers.ModOrganizer
                 Directory.Delete(dir, true);
             }
         }
+    
+    }
+
+    internal class InstallMetadata
+    {
+        public DateTime TimeOf;
+        public string FilesystemHash;
     }
 }
