@@ -7,5 +7,6 @@
         public bool ReduceBySimilarName = true;
         public bool ReduceBySimilarPath = true;
         public bool GuessLikelySourceArchive = true;
+        public string PreferredArchiveName;
     }
 }

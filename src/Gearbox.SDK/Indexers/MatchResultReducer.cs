@@ -18,6 +18,7 @@ namespace Gearbox.SDK.Indexers
         /// 4. No matches were found, so return the most similar entry.
         /// </summary>
         /// <param name="matchResults">The list of <see cref="MatchResult"/> to reduce.</param>
+        /// <param name="modEntry">The source mod entry.</param>
         /// <param name="modFileEntry">The mod file entry to reduce against.</param>
         /// <param name="reduceOptions">Additional reduce options.</param>
         /// <returns>A singular <see cref="MatchResult"/> which is the most similar to <paramref name="modFileEntry"/>.</returns>
@@ -36,6 +37,14 @@ namespace Gearbox.SDK.Indexers
             if (reduceOptions == null)
             {
                 reduceOptions = new ReduceOptions();
+            }
+
+            var preferredArchive = reduceOptions.PreferredArchiveName;
+
+            // If there is a valid preferredArchiveName, presort the possible source entries.
+            if (!string.IsNullOrEmpty(preferredArchive))
+            {
+                matchResults = matchResults.OrderByDescending(x => x.SourceArchive.Name == preferredArchive).ToList();
             }
 
             // Attempt to reduce by removing all non-matching file sizes.
@@ -69,9 +78,12 @@ namespace Gearbox.SDK.Indexers
             }
 
             // Use a fast string distance algorithm to sort each remaining archive file entry by its name and full path.
-            var sortedDistanceByName = reducedFileName.OrderBy(x => 
-                Levenshtein.Distance(x.FileEntry.Name, modFileEntry.Name) + 
-                Levenshtein.Distance(Path.GetFileNameWithoutExtension(x.SourceArchive.Name), modEntry.Name))
+            // This algorithm is expanded upon when the preferredArchive is not null. Since we already know the preferredArchive,
+            // we negate the negativity of the second distance call.
+            var sortedDistanceByName = reducedFileName.OrderBy(x =>
+                Levenshtein.Distance(x.FileEntry.Name, modFileEntry.Name) +
+                (Levenshtein.Distance(Path.GetFileNameWithoutExtension(x.SourceArchive.Name), modEntry.Name) * 
+                (preferredArchive == x.SourceArchive.Name ? 0 : 1)))
                 .ToList();
 
             // Try to select the first value which has a matching file extensions.

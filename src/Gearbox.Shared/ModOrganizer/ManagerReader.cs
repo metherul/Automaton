@@ -136,5 +136,26 @@ namespace Gearbox.Shared.ModOrganizer
 
             return new ProfileReader(profileDir);
         }
+
+        /// <summary>
+        /// Gets the source archive path in the mod meta.ini, if it exists.
+        /// </summary>
+        /// <param name="modName">The name of the mod as it appears in Mod Organizer.</param>
+        /// <returns>The path of the source archive (this path is not guaranteed to exist).</returns>
+        public string GetModSourceArchive(string modName)
+        {
+            var modDir = Path.Combine(_modDir, modName);
+            var metaIni = Path.Combine(modDir, "meta.ini");
+
+            if (!File.Exists(metaIni))
+            {
+                return null;
+            }
+
+            var reader = new FileIniDataParser();
+            var archivePath = reader.ReadFile(metaIni)["General"]["installationFile"];
+
+            return archivePath;
+        }
     }
 }
