@@ -29,17 +29,18 @@ namespace Automaton
                 await Indexer.CreateIndex(managerExe);
             }
 
-            var indexFile = Indexer.GetIndexFile(managerExe);
-            var indexWriter = Indexer.OpenWrite(indexFile);
+            var indexDir = Indexer.GetIndexDir(managerExe);
+            var indexWriter = await Indexer.OpenWrite(indexDir);
+            // var indexReader = await Indexer.OpenRead(indexDir);
 
-            var manager = ModOrganizer.OpenExecutable(managerExe);
-            var compiler = PackCompiler.Bootstrap(await Indexer.OpenRead(indexFile), manager);
-            await compiler.Build(new CompilerOptions()
-            {
-                Profile = manager.GetProfile("Ultimate Skyrim 4.0.5 (Full)"),
-                Author = "metherul",
-                PackName = "test pack"
-            });
+            // var manager = ModOrganizer.OpenExecutable(managerExe);
+            // var compiler = PackCompiler.Bootstrap(await Indexer.OpenRead(indexDir), manager);
+            // await compiler.Build(new CompilerOptions()
+            // {
+            //     Profile = manager.GetProfile("Ultimate Skyrim 4.0.5 (Full)"),
+            //     Author = "metherul",
+            //     PackName = "test pack"
+            // });
 
             var modOrganizerReader = ModOrganizer.OpenExecutable(managerExe);
             var archives = await modOrganizerReader.FindSourceArchives(new ArchiveSearchOption()
@@ -55,19 +56,12 @@ namespace Automaton
                 var archiveEntry = await ArchiveEntry.CreateAsync(archive);
                 indexWriter.Push(archiveEntry);
 
-                if (counter % 5 == 0)
-                {
-                    Debug.WriteLine("Flushing to index.");
-                    await indexWriter.Flush();
-                }
-
                 counter++;
             }
 
             await indexWriter.Flush();
 
-            var modDir = Path.Combine(Path.GetDirectoryName(managerExe), "mods");
-            var mods = await DirectoryExt.GetDirectoriesAsync(modDir);
+            var mods = await modOrganizerReader.GetModDirs();
 
             counter = 1;
             foreach (var mod in mods)
@@ -78,12 +72,6 @@ namespace Automaton
                 indexWriter.Push(modEntry);
 
                 counter++;
-
-                if (counter % 5 == 0)
-                {
-                    Debug.WriteLine("Flushing to index.");
-                    await indexWriter.Flush();
-                }
             }
 
             await indexWriter.Flush();

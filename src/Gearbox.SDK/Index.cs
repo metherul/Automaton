@@ -19,21 +19,24 @@ namespace Gearbox.SDK
         public static async Task CreateIndex(string modOrganizerExe)
         {
             var modOrganizerDir = Path.GetDirectoryName(modOrganizerExe);
-            var indexFile = Path.Combine(modOrganizerDir, "index.automaton");
+            var archiveIndexFile = Path.Combine(modOrganizerDir, "archives.index");
+            var modIndexFile = Path.Combine(modOrganizerDir, "mods.index");
 
-            if (File.Exists(indexFile))
+            if (File.Exists(archiveIndexFile))
             {
-                File.Delete(indexFile);
+                File.Delete(archiveIndexFile);
             }
 
-            var indexRoot = new IndexRoot()
+            if (File.Exists(modIndexFile))
             {
-                ModOrganizerPath = modOrganizerExe,
-                ModEntries = new List<ModEntry>(),
-                ArchiveEntries = new List<ArchiveEntry>()
-            };
+                File.Delete(modIndexFile);
+            }
 
-            await JsonExt.WriteJson(indexRoot, indexFile);
+            var archiveIndex = new Dictionary<string, ArchiveEntry>();
+            var modIndex = new Dictionary<string, ModEntry>();
+
+            await JsonExt.WriteJson(archiveIndex, archiveIndexFile);
+            await JsonExt.WriteJson(modIndex, modIndexFile);
         }
 
         /// <summary>
@@ -43,7 +46,11 @@ namespace Gearbox.SDK
         /// <returns>True if the index exists, false if it does not.</returns>
         public static bool IndexExists(string modOrganizerExe)
         {
-            return File.Exists(Path.Combine(Path.GetDirectoryName(modOrganizerExe), "index.automaton"));
+            var modOrganizerDir = Path.GetDirectoryName(modOrganizerExe);
+            var archiveFile = Path.Combine(modOrganizerDir, "archives.index");
+            var modFile = Path.Combine(modOrganizerDir, "mods.index");
+
+            return File.Exists(archiveFile) && File.Exists(modFile);
         }
 
         /// <summary>
@@ -51,9 +58,9 @@ namespace Gearbox.SDK
         /// </summary>
         /// <param name="modOrganizerExe">The path of the Mod Organizer executable.</param>
         /// <returns></returns>
-        public static string GetIndexFile(string modOrganizerExe)
+        public static string GetIndexDir(string modOrganizerExe)
         {
-            return Path.Combine(Path.GetDirectoryName(modOrganizerExe), "index.automaton");
+            return Path.GetDirectoryName(modOrganizerExe);
         }
 
         /// <summary>
@@ -74,9 +81,15 @@ namespace Gearbox.SDK
         /// </summary>
         /// <param name="indexFile">The path of the Mod Organizer instance's index file.</param>
         /// <returns>An <see cref="IndexWriter"/> instance.</returns>
-        public static IndexWriter OpenWrite(string indexFile)
+        public static async Task<IndexWriter> OpenWrite(string indexDir)
         {
-            return new IndexWriter(indexFile);
+            var modIndex = Path.Combine(indexDir, "mods.index");
+            var archiveIndex = Path.Combine(indexDir, "archives.index");
+
+            var indexWriter = new IndexWriter(modIndex, archiveIndex);
+            await indexWriter.Load();
+
+            return indexWriter;
         }
     }
 }

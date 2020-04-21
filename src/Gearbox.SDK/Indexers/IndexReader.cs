@@ -1,5 +1,6 @@
 ﻿using Gearbox.Shared.JsonExt;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,9 +15,11 @@ namespace Gearbox.SDK.Indexers
         public IReadOnlyList<ModEntry> ModEntries;
         public IReadOnlyList<ArchiveEntry> ArchiveEntries;
 
-        public async Task LoadIndex(string indexFile)
+        public async Task LoadIndex(string indexDir)
         {
-            _index = await JsonExt.ReadJson<IndexRoot>(indexFile);
+            var archiveIndex = Path.Combine(indexDir, "archives.index");
+            var modsIndex = Path.Combine(indexDir, "mods.index");
+            _index = await JsonExt.ReadJson<IndexRoot>(indexDir);
 
             // Construct dictionaries for quick MD5 hash search.
             var archiveFiles = _index.ArchiveEntries.SelectMany(x => x.FileEntries.Select(y => new MatchResult()

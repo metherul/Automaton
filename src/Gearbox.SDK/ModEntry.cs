@@ -23,6 +23,16 @@ namespace Gearbox.SDK
         public static async Task<ModEntry> CreateAsync(string modDir)
         {
             var dirInfo = new DirectoryInfo(modDir);
+
+            var contents = await DirectoryExt.GetFilesAsync(modDir, "*", SearchOption.AllDirectories);
+            var entryTasks = new List<Task<FileEntry>>();
+
+            foreach (var file in contents)
+            {
+                var fileEntry = FileEntry.CreateAsync(file, modDir);
+                entryTasks.Add(fileEntry);
+            }
+
             var modEntry = new ModEntry()
             {
                 Name = dirInfo.Name,
@@ -30,13 +40,8 @@ namespace Gearbox.SDK
                 FilesystemHash = await FsHash.MakeFilesystemHash(modDir)
             };
 
-            var contents = await DirectoryExt.GetFilesAsync(modEntry.Directory, "*", SearchOption.AllDirectories);
-
-            foreach (var file in contents)
-            {
-                var fileEntry = await FileEntry.CreateAsync(file, modDir);
-                modEntry.FileEntries.Add(fileEntry);
-            }
+            await Task.WhenAll(entryTasks);
+            modEntry.FileEntries = entryTasks.Select(x => x.Result).ToList();
 
             return modEntry;
         }

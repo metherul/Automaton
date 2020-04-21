@@ -26,7 +26,7 @@ namespace Gearbox.Shared.ModOrganizer
 
         public Task<string[]> GetModDirs()
         {
-            return DirectoryExt.GetDirectoriesAsync(_rootDir);
+            return DirectoryExt.GetDirectoriesAsync(_modDir);
         }
 
         /// <summary>

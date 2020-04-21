@@ -1,45 +1,65 @@
 ﻿using Gearbox.Shared.JsonExt;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Gearbox.SDK.Indexers
 {
     public class IndexWriter
     {
-        private readonly string _indexFile;
-        private readonly string _indexDir;
+        private readonly string _modIndex;
+        private readonly string _archiveIndex;
 
-        private List<ModEntry> _modEntries = new List<ModEntry>();
-        private List<ArchiveEntry> _archiveEntries = new List<ArchiveEntry>();
+        private Dictionary<string, ModEntry> _modEntries = new Dictionary<string, ModEntry>(StringComparer.InvariantCultureIgnoreCase);
+        private Dictionary<string, ArchiveEntry> _archiveEntries = new Dictionary<string, ArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
 
-        public IndexWriter(string indexFile)
+        public IndexWriter(string modIndex, string archiveIndex)
         {
-            _indexFile = indexFile;
-            _indexDir = Path.GetDirectoryName(indexFile);
+            _modIndex = modIndex;
+            _archiveIndex = archiveIndex;
+        }
+
+        internal async Task Load()
+        {
+            var modIndexTask = JsonExt.ReadJson<Dictionary<string, ModEntry>>(_modIndex);
+            var archiveIndexTask = JsonExt.ReadJson<Dictionary<string, ArchiveEntry>>(_archiveIndex);
+
+            await Task.WhenAll(modIndexTask, archiveIndexTask);
+
+            _modEntries = modIndexTask.Result;
+            _archiveEntries = archiveIndexTask.Result;
         }
 
         public void Push(ModEntry modEntry)
         {
-            _modEntries.Add(modEntry);
+            if (_modEntries.ContainsKey(modEntry.Name))
+            {
+                _modEntries[modEntry.Name] = modEntry;
+
+                return;
+            }
+
+            _modEntries.Add(modEntry.Name, modEntry);
         }
 
         public void Push(ArchiveEntry archiveEntry)
         {
-            _archiveEntries.Add(archiveEntry);
+            if (_archiveEntries.ContainsKey(archiveEntry.Name))
+            {
+                _archiveEntries[archiveEntry.Name] = archiveEntry;
+
+                return;
+            }
+
+            _archiveEntries.Add(archiveEntry.Name, archiveEntry);
         }
 
         public async Task Flush()
         {
-            var indexRoot = await JsonExt.ReadJson<IndexRoot>(_indexFile);
+            var modTask = JsonExt.WriteJson(_modEntries, _modIndex);
+            var archiveTask = JsonExt.WriteJson(_archiveEntries, _archiveIndex);
 
-            indexRoot.ModEntries.AddRange(_modEntries);
-            indexRoot.ArchiveEntries.AddRange(_archiveEntries);
-
-            _modEntries = new List<ModEntry>();
-            _archiveEntries = new List<ArchiveEntry>();
-
-            await JsonExt.WriteJson(indexRoot, _indexFile);
+            await Task.WhenAll(modTask, archiveTask);
         }
     }
 }
