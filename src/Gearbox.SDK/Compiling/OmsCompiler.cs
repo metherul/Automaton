@@ -2,8 +2,6 @@
 using Gearbox.SDK.Indexers;
 using Gearbox.Shared.JsonExt;
 using Gearbox.Shared.ModOrganizer;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -49,10 +47,10 @@ namespace Gearbox.SDK
                     var matches = _indexReader.GetArchiveEntriesByHash(entry.Hash)
                         .Reduce(modEntry, entry, new ReduceOptions { PreferredArchiveName = preferredArchive });
 
+                    // TODO
                     // No matches, so we need to implement an auxillary matcher / patching method.
                     if (matches == null)
                     {
-                        // At this point we need to generate a patch file.
                         continue;
                     }
 
@@ -76,7 +74,7 @@ namespace Gearbox.SDK
                             FileName = matches.SourceArchive.Name,
                             Hash = matches.SourceArchive.Hash,
                             FilesystemHash = matches.SourceArchive.FilesystemHash,
-                            Length = 0
+                            Length = matches.SourceArchive.Length
                         };
 
                         archives.Add(archive);

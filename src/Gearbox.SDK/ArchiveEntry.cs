@@ -15,6 +15,7 @@ namespace Gearbox.SDK
     {
         public string Name { get; set; }
         public string ArchivePath { get; set; }
+        public long Length { get; set; }
         public DateTime LastModified { get; set; }
         public string FilesystemHash { get; set; }
         public string Hash { get; set; }
@@ -61,7 +62,8 @@ namespace Gearbox.SDK
                 LastModified = archiveInfo.LastWriteTimeUtc,
                 FilesystemHash = await FsHash.MakeFilesystemHash(extractDir),
                 Hash = await FsHash.GetMd5Async(File.OpenRead(archivePath)),
-                FileEntries = entryTasks.Select(x => x.Result).ToList()
+                FileEntries = entryTasks.Select(x => x.Result).ToList(),
+                Length = archiveInfo.Length
             };
 
             // Delete the extraction directory.
