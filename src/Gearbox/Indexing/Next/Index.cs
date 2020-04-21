@@ -9,7 +9,7 @@ namespace Gearbox.Indexing.Next
         internal string IndexPath;
         internal string ModsDir;
 
-        public static Index FromInstance(string managerPath)
+        public static Index FromManager(string managerPath)
         {
             var managerDir = Path.GetDirectoryName(managerPath);
 

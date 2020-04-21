@@ -1,5 +1,4 @@
-﻿using Automaton.Pages;
-using Stylet;
+﻿using Stylet;
 
 namespace Automaton
 {

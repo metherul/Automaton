@@ -5,7 +5,13 @@ VisualStudioVersion = 16.0.29318.209
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Automaton", "Automaton\Automaton.csproj", "{FF17744E-E79A-44F2-8388-F900D2A3BA9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gearbox", "Gearbox\Gearbox.csproj", "{03D973DE-8EEC-4AD8-BD67-2DA8A2232140}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gearbox", "Gearbox\Gearbox.csproj", "{03D973DE-8EEC-4AD8-BD67-2DA8A2232140}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gearbox.SDK", "Gearbox.SDK\Gearbox.SDK.csproj", "{97F8CF83-6310-4143-9925-5C8F690E4D75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gearbox.Shared", "Gearbox.Shared\Gearbox.Shared.csproj", "{4B603DB4-C9A9-4923-8B5D-969445F001FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gearbox.Formats", "Gearbox.Formats\Gearbox.Formats.csproj", "{7A6CC77F-3041-420F-B53B-2BE34DFCD038}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{03D973DE-8EEC-4AD8-BD67-2DA8A2232140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03D973DE-8EEC-4AD8-BD67-2DA8A2232140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03D973DE-8EEC-4AD8-BD67-2DA8A2232140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97F8CF83-6310-4143-9925-5C8F690E4D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97F8CF83-6310-4143-9925-5C8F690E4D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97F8CF83-6310-4143-9925-5C8F690E4D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97F8CF83-6310-4143-9925-5C8F690E4D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B603DB4-C9A9-4923-8B5D-969445F001FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B603DB4-C9A9-4923-8B5D-969445F001FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B603DB4-C9A9-4923-8B5D-969445F001FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B603DB4-C9A9-4923-8B5D-969445F001FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A6CC77F-3041-420F-B53B-2BE34DFCD038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6CC77F-3041-420F-B53B-2BE34DFCD038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6CC77F-3041-420F-B53B-2BE34DFCD038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6CC77F-3041-420F-B53B-2BE34DFCD038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

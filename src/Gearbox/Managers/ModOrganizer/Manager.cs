@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Gearbox.IO;
 using Gearbox.Modpacks;
 using IniParser;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace Gearbox.Managers.ModOrganizer
 {
@@ -104,6 +106,13 @@ namespace Gearbox.Managers.ModOrganizer
             }
         }
     
+        public async Task<Option<string>> TryGetGameDir()
+        {
+            var iniReader = new FileIniDataParser();
+            var ini = iniReader.ReadFile(Path.Combine(_managerDir, "ModOrganizer.exe"));
+
+            return None;
+        }
     }
 
     internal class InstallMetadata

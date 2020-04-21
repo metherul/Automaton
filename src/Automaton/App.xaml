@@ -4,27 +4,30 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Automaton"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:s="https://github.com/canton7/Stylet">
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:ui="http://schemas.modernwpf.com/2019">
     <Application.Resources>
-        <s:ApplicationLoader x:Key="">
-            <!--  Stylet bootstrapper  -->
+        <s:ApplicationLoader x:Key="ApplicationLoader">
             <s:ApplicationLoader.Bootstrapper>
                 <local:Bootstrapper />
             </s:ApplicationLoader.Bootstrapper>
 
-            <!--  Material Design in XAML imports  -->
             <s:ApplicationLoader.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ui:ThemeResources ui:RequestedTheme="Dark">
+                    <ui:ThemeResources.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Dark">
+                            <ResourceDictionary.MergedDictionaries>
+                                <ui:ColorPaletteResources
+                                    Accent="#cd7f32"
+                                    AltHigh="#1a1b1c"
+                                    BaseHigh="#d9d9d9"
+                                    TargetTheme="Dark" />
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </ui:ThemeResources.ThemeDictionaries>
+                </ui:ThemeResources>
+                <ui:XamlControlsResources />
             </s:ApplicationLoader.MergedDictionaries>
-
-            <!--  Custom theme resources  -->
-            <SolidColorBrush x:Key="BackgroundColor" Color="#282c35" />
-
-            <SolidColorBrush x:Key="ButtonBackgroundColor" Color="#42464f" />
-            <SolidColorBrush x:Key="ButtonForegroundColor" Color="#ffffff" />
-
-            <SolidColorBrush x:Key="FontColor" Color="#ffffff" />
         </s:ApplicationLoader>
     </Application.Resources>
 </Application>
