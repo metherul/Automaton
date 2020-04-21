@@ -2,8 +2,9 @@
 {
     public class Set
     {
-        public string PatchId { get; set; }
         public string Source { get; set; }
         public string Target { get; set; }
+        public string SourceArchiveHash { get; set; }
+        public string PatchId { get; set; }
     }
 }

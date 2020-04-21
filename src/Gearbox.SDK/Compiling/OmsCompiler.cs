@@ -58,7 +58,8 @@ namespace Gearbox.SDK
                     var set = new Set()
                     {
                         Target = entry.FilePath,
-                        Source = matches.FileEntry.FilePath
+                        Source = matches.FileEntry.FilePath,
+                        SourceArchiveHash = matches.SourceArchive.Hash
                     };
 
                     sets.Push(set);
