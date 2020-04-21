@@ -32,6 +32,9 @@ namespace Gearbox.SDK
             var modEntries = (await compilerOptions.Profile.GetModList())
                 .Select(x => _indexReader.GetModByName(x));
 
+            var mods = new List<Mod>();
+            var archives = new List<Archive>();
+
             var referencedArchives = new Dictionary<string, ArchiveEntry>();
 
             foreach (var modEntry in modEntries)
@@ -40,7 +43,6 @@ namespace Gearbox.SDK
                 var entries = modEntry.FileEntries;
                 var temp = new List<FileEntry>();
                 var sets = new Stack<Set>();
-                var archives = new List<ArchiveEntry>();
                 foreach (var entry in entries)
                 {
                     // Grab our possible matches by hash and reduce to one by comparing to the current modEntry.
@@ -67,6 +69,17 @@ namespace Gearbox.SDK
                     if (!referencedArchives.ContainsKey(matches.SourceArchive.Hash))
                     {
                         referencedArchives.Add(matches.SourceArchive.Hash, matches.SourceArchive);
+
+                        // Map the archiveEntry to an OMS Archive object.
+                        var archive = new Archive()
+                        {
+                            FileName = matches.SourceArchive.Name,
+                            Hash = matches.SourceArchive.Hash,
+                            FilesystemHash = matches.SourceArchive.FilesystemHash,
+                            Length = 0
+                        };
+
+                        archives.Add(archive);
                     }
                 }
 
@@ -78,11 +91,17 @@ namespace Gearbox.SDK
                     Install = sets.ToArray()
                 };
 
-                // Write the new Mod object into a .json document.
-                // This is a temporary solution for performance testing. The format will most likely change.
-                var outPath = Path.Combine(Directory.GetCurrentDirectory(), "test", mod.Name + ".json");
-                await JsonExt.WriteJson(mod, outPath);
+                mods.Add(mod);
             }
+
+            var outDir = Path.Combine(Directory.GetCurrentDirectory(), "working");
+            var outMods = Path.Combine(outDir, "mods.json");
+            var outArchives = Path.Combine(outDir, "archives.json");
+
+            var outModsTask = JsonExt.WriteJson(mods, outMods);
+            var outArchivesTask = JsonExt.WriteJson(archives, outArchives);
+
+            await Task.WhenAll(outModsTask, outArchivesTask);
 
             stopwatch.Stop();
         }

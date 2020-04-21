@@ -86,7 +86,7 @@ namespace Gearbox.SDK.Indexers
                 (preferredArchive == x.SourceArchive.Name ? 0 : 1)))
                 .ToList();
 
-            // Try to select the first value which has a matching file extensions.
+            // Try to select the first value which has a matching file extension.
             var firstWithExt = sortedDistanceByName.FirstOrDefault(x => Path.GetExtension(x.FileEntry.Name) == Path.GetExtension(modFileEntry.Name));
 
             // The most similar looking file name with the matching extension.
