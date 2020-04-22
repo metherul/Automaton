@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SevenZipExtractor;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,6 +75,13 @@ namespace Gearbox.Shared.ArchiveHandle
 
             await Task.Run(() => process.WaitForExit());
             process.Close();
+        }
+
+        public List<Entry> GetArchiveEntries()
+        {
+            using var archiveFile = new ArchiveFile(_archivePath, Path.Combine(Directory.GetCurrentDirectory(), "7z.dll"));
+
+            return archiveFile.Entries.ToList();
         }
     }
 }

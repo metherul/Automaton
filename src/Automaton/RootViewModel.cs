@@ -22,6 +22,8 @@ namespace Automaton
 
         public async void Test()
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var managerExe = @"E:\Mod Organizer\Ultimate Skyrim 4.0.5 (Full)\ModOrganizer.exe";
 
             if (!Indexer.IndexExists(managerExe))
@@ -53,7 +55,7 @@ namespace Automaton
             {
                 Debug.WriteLine($"[{counter}/{archives.Count}] {new FileInfo(archive).Name}");
 
-                var archiveEntry = await ArchiveEntry.CreateAsync(archive);
+                var archiveEntry = await ArchiveEntry.CreateFastAsync(archive);
                 indexWriter.Push(archiveEntry);
 
                 counter++;
@@ -75,6 +77,7 @@ namespace Automaton
             }
 
             await indexWriter.Flush();
+            stopwatch.Stop();
         }
     }
 }

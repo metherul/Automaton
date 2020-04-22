@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Gearbox.Shared.FsExtensions;
+using Force.Crc32;
 
 namespace Gearbox.Shared.HashUtils
 {
@@ -46,6 +47,20 @@ namespace Gearbox.Shared.HashUtils
         public static Task<string> GetMd5Async(Stream stream)
         {
             return Task.Run(() => GetMd5(stream));
+        }
+    
+        public static uint GetCrc32(Stream stream)
+        {
+            using var crc = new Crc32Algorithm();
+            var crcBytes = crc.ComputeHash(stream);
+            var crcInt = BitConverter.ToUInt32(crcBytes);
+
+            return crcInt;
+        }
+
+        public static async Task<uint> GetCrc32Async(Stream stream)
+        {
+            return await Task.Run(() => GetCrc32(stream));
         }
     }
 }

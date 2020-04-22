@@ -71,5 +71,27 @@ namespace Gearbox.SDK
 
             return archiveEntry;
         }
+
+        public static async Task<ArchiveEntry> CreateFastAsync(string archivePath)
+        {
+            var archiveEntries = new ArchiveHandle(archivePath).GetArchiveEntries();
+            var archiveInfo = new FileInfo(archivePath);
+            var archiveEntry = new ArchiveEntry()
+            {
+                Name = archiveInfo.Name,
+                ArchivePath = archivePath,
+                LastModified = archiveInfo.LastWriteTimeUtc,
+                Hash = await FsHash.GetMd5Async(File.OpenRead(archivePath)),
+                FileEntries = archiveEntries.Select(x => new FileEntry()
+                {
+                    FilePath = x.FileName,
+                    Length = (long)x.Size,
+                    Hash = Convert.ToUInt32(x.CRC).ToString()
+                }).ToList(),
+                Length = archiveInfo.Length
+            };
+
+            return archiveEntry;
+        }
     }
 }

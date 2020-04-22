@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Crc32.NET" Version="1.2.0" />
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
+    <PackageReference Include="SevenZipExtractor" Version="1.0.15" />
     <PackageReference Include="Syroot.Windows.IO.KnownFolders" Version="1.2.3" />
   </ItemGroup>
 

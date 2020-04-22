@@ -27,7 +27,7 @@ namespace Gearbox.SDK.Indexers
                 Name = fileInfo.Name,
                 FilePath = Path.GetFullPath(file),
                 LastModified = fileInfo.LastWriteTimeUtc,
-                Hash = await FsHash.GetMd5Async(File.OpenRead(file)),
+                Hash = (await FsHash.GetCrc32Async(File.OpenRead(file))).ToString(),
                 Length = fileInfo.Length
             };
 

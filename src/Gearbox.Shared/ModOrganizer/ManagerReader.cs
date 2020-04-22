@@ -100,7 +100,6 @@ namespace Gearbox.Shared.ModOrganizer
                 ".rar",
                 ".zip",
                 ".tar",
-                ".tgz",
                 ".lzma"
             };
 

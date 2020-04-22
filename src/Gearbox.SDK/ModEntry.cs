@@ -45,5 +45,31 @@ namespace Gearbox.SDK
 
             return modEntry;
         }
+    
+        public static async Task<ModEntry> CreateFastAsync(string modDir)
+        {
+            var dirInfo = new DirectoryInfo(modDir);
+
+            var contents = await DirectoryExt.GetFilesAsync(modDir, "*", SearchOption.AllDirectories);
+            var entryTasks = new List<Task<FileEntry>>();
+
+            foreach (var file in contents)
+            {
+                var fileEntry = FileEntry.CreateAsync(file, modDir);
+                entryTasks.Add(fileEntry);
+            }
+
+            var modEntry = new ModEntry()
+            {
+                Name = dirInfo.Name,
+                Directory = modDir,
+                FilesystemHash = await FsHash.MakeFilesystemHash(modDir)
+            };
+
+            await Task.WhenAll(entryTasks);
+            modEntry.FileEntries = entryTasks.Select(x => x.Result).ToList();
+
+            return modEntry;
+        }
     }
 }
