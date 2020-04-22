@@ -29,7 +29,7 @@ namespace Gearbox.SDK
 
             foreach (var file in contents)
             {
-                var fileEntry = FileEntry.CreateAsync(file, modDir);
+                var fileEntry = FileEntry.CreateAsync(file, FileHashType.Md5, modDir);
                 entryTasks.Add(fileEntry);
             }
 
@@ -45,7 +45,16 @@ namespace Gearbox.SDK
 
             return modEntry;
         }
-    
+
+        /// <summary>
+        /// Creates an ModEntry from the target mod dir.
+        /// This function uses the quicker CRC32 hash algorithm instead of MD5.
+        /// Due to the nature of CRC32, this function should not be considered 100% accurate. 
+        /// These innaccuracies are mitigated in <see cref="MatchResultReducer.Reduce(List{MatchResult}, ModEntry, FileEntry, ReduceOptions)"/>
+        /// but it cannot be considered to be completely fail-safe.
+        /// </summary>
+        /// <param name="modDir"></param>
+        /// <returns></returns>
         public static async Task<ModEntry> CreateFastAsync(string modDir)
         {
             var dirInfo = new DirectoryInfo(modDir);
@@ -55,7 +64,7 @@ namespace Gearbox.SDK
 
             foreach (var file in contents)
             {
-                var fileEntry = FileEntry.CreateAsync(file, modDir);
+                var fileEntry = FileEntry.CreateAsync(file, FileHashType.Crc32, modDir);
                 entryTasks.Add(fileEntry);
             }
 

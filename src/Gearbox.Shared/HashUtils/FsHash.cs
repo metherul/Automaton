@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Gearbox.Shared.FsExtensions;
 using Force.Crc32;
+using SevenZipExtractor;
 
 namespace Gearbox.Shared.HashUtils
 {
@@ -28,6 +29,21 @@ namespace Gearbox.Shared.HashUtils
                 var fileInfo = new FileInfo(file);
 
                 hashBuilder.Append($"{offsetPath}{fileInfo.Name}{fileInfo.Length}");
+            }
+
+            var hashBytes = Encoding.ASCII.GetBytes(hashBuilder.ToString());
+            return await GetMd5Async(new MemoryStream(hashBytes));
+        }
+
+        public static async Task<string> MakeFilesystemHash(List<Entry> archiveEntries)
+        {
+            var hashBuilder = new StringBuilder();
+
+            foreach (var entry in archiveEntries)
+            {
+                var fileName = Path.GetFileName(entry.FileName);
+
+                hashBuilder.Append($"{entry.FileName}{fileName}{entry.Size}");
             }
 
             var hashBytes = Encoding.ASCII.GetBytes(hashBuilder.ToString());

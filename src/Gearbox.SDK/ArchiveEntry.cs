@@ -72,6 +72,17 @@ namespace Gearbox.SDK
             return archiveEntry;
         }
 
+        /// <summary>
+        /// Creates an ArchiveEntry from the target archive.
+        /// Instead of extracting the archive, collecting all files and then hashing them, 
+        /// this function will instead read directly from the metadata of the archive,
+        /// using the embedded CRC32 hashes for each entry.
+        /// Due to the nature of CRC32, this function should not be considered 100% accurate. 
+        /// These innaccuracies are mitigated in <see cref="MatchResultReducer.Reduce(List{MatchResult}, ModEntry, FileEntry, ReduceOptions)"/>
+        /// but it cannot be considered to be completely accurate.
+        /// </summary>
+        /// <param name="archivePath"></param>
+        /// <returns></returns>
         public static async Task<ArchiveEntry> CreateFastAsync(string archivePath)
         {
             var archiveEntries = new ArchiveHandle(archivePath).GetArchiveEntries();
@@ -82,12 +93,8 @@ namespace Gearbox.SDK
                 ArchivePath = archivePath,
                 LastModified = archiveInfo.LastWriteTimeUtc,
                 Hash = await FsHash.GetMd5Async(File.OpenRead(archivePath)),
-                FileEntries = archiveEntries.Select(x => new FileEntry()
-                {
-                    FilePath = x.FileName,
-                    Length = (long)x.Size,
-                    Hash = Convert.ToUInt32(x.CRC).ToString()
-                }).ToList(),
+                FileEntries = archiveEntries.Select(FileEntry.Create).ToList(),
+                FilesystemHash = await FsHash.MakeFilesystemHash(archiveEntries),
                 Length = archiveInfo.Length
             };
 
