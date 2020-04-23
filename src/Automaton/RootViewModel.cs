@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Gearbox.SDK;
-using Gearbox.Shared.FsExtensions;
 using Gearbox.Shared.ModOrganizer;
 
 namespace Automaton
@@ -17,7 +16,7 @@ namespace Automaton
         public RootViewModel()
         {
             PackList = new PackListViewModel();
-            Task.Run(() => Test());
+            Task.Run(Test);
         }
 
         public async void Test()
@@ -33,16 +32,6 @@ namespace Automaton
 
             var indexDir = Indexer.GetIndexDir(managerExe);
             var indexWriter = await Indexer.OpenWrite(indexDir);
-            // var indexReader = await Indexer.OpenRead(indexDir);
-
-            // var manager = ModOrganizer.OpenExecutable(managerExe);
-            // var compiler = PackCompiler.Bootstrap(await Indexer.OpenRead(indexDir), manager);
-            // await compiler.Build(new CompilerOptions()
-            // {
-            //     Profile = manager.GetProfile("Ultimate Skyrim 4.0.5 (Full)"),
-            //     Author = "metherul",
-            //     PackName = "test pack"
-            // });
 
             var modOrganizerReader = ModOrganizer.OpenExecutable(managerExe);
             var archives = await modOrganizerReader.FindSourceArchives(new ArchiveSearchOption()
@@ -70,7 +59,7 @@ namespace Automaton
             {
                 Debug.WriteLine($"[{counter}/{mods.Length}] {new DirectoryInfo(mod).Name}");
 
-                var modEntry = await ModEntry.CreateAsync(mod);
+                var modEntry = await ModEntry.CreateFastAsync(mod);
                 indexWriter.Push(modEntry);
 
                 counter++;

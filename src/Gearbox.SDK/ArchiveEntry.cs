@@ -49,7 +49,7 @@ namespace Gearbox.SDK
             var entryTasks = new List<Task<FileEntry>>();
             archiveHandle.FileExtractedEvent += (path) =>
             {
-                var fileEntry = FileEntry.CreateAsync(path, relativeTo: extractDir);
+                var fileEntry = FileEntry.CreateAsync(path, FileHashType.Md5, relativeTo: extractDir);
                 entryTasks.Add(fileEntry);
             };
             await archiveHandle.Extract(extractDir);

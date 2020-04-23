@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Gearbox.Shared.FsExtensions;
 using Force.Crc32;
 using SevenZipExtractor;
+using System.IO.MemoryMappedFiles;
 
 namespace Gearbox.Shared.HashUtils
 {
